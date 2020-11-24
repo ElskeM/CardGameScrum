@@ -5,12 +5,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * @author elske
+ *Entity that saves the different categories in the database
+ */
 @Entity
 public class Category {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
+	
 	private String category;
 
 	public Category() {

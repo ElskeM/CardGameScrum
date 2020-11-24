@@ -11,6 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 
+/**
+ * @author elske
+ *Entity that saves a player and its favourite cards in the database
+ */
 @Entity
 public class Player {
 	
