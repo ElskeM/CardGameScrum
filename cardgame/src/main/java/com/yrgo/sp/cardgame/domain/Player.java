@@ -73,7 +73,7 @@ public class Player {
 		return id;
 	}
 
-	public void addStudentToTeachingGroup(Card newCard) {
+	public void addCardsToFavorites(Card newCard) {
 		this.favoriteCards.add(newCard);
 	}
 
