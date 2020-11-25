@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -133,6 +134,13 @@ public class Deck {
 		if (this.cards.remove(c)) {
 			autoComputeCategories();
 		}
+	}
+	
+	public Card draw() {
+		List<Card> cardlist = this.cards.stream().collect(Collectors.toList());
+		Card random = cardlist.remove(new Random().nextInt(cardlist.size()));
+		this.cards = cardlist.stream().collect(Collectors.toSet());
+		return random;
 	}
 	
 	public List<Card> getShuffled(){
