@@ -25,6 +25,13 @@ public class Game {
 		this.userNumber = userNumber;
 	}
 	
+	public int getNumber() {
+		return number;
+	}
+	
+	public int getUserNumber() {
+		return userNumber;
+	}
 	
 
 }
