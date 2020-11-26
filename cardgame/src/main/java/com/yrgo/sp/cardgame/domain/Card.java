@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  * @author simon 
@@ -24,9 +26,11 @@ public class Card {
 	private String description;
 	@Column(nullable=false)
 	private String score;
+	
+	@ManyToOne
 	private Category category;
 	private String author = "Admin";
-	private int interval;// Enum? Tänkt att kopplas till ikonerna i klimatkoll
+	private Integer frequence;// Enum? Tänkt att kopplas till ikonerna i klimatkoll
 
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
@@ -99,12 +103,12 @@ public class Card {
 		return this;
 	}
 
-	public int getInterval() {
-		return interval;
+	public Integer getInterval() {
+		return frequence;
 	}
 
-	public Card setInterval(int interval) {
-		this.interval = interval;
+	public Card setInterval(Integer interval) {
+		this.frequence = interval;
 		return this;
 	}
 

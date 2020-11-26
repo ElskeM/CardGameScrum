@@ -27,7 +27,7 @@ public class Player {
 	private String email;
 	private String password;
 	
-	@OneToMany(mappedBy = "player")
+	@OneToMany//(mappedBy = "player")
 	private Set<Card> favoriteCards;
 	
 	public Player() {}

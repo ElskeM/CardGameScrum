@@ -46,7 +46,8 @@ public class Deck {
 
 	/**
 	 * One card can belong to many different decks and one deck can have many
-	 * different cards Duplicates not allowed (should they be?)
+	 * different cards.
+	 * Duplicates not allowed
 	 */
 	@ManyToMany
 	private Set<Card> cards;
@@ -59,6 +60,7 @@ public class Deck {
 
 	/**
 	 * Create a deck builder instead?
+	 * @param cards - may be null, empty deck will be created
 	 */
 	public Deck(String name, String creator, Set<Card> cards) {
 		super();
