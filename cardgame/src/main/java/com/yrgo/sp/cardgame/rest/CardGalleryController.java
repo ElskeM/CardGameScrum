@@ -14,13 +14,13 @@ import com.yrgo.sp.cardgame.domain.Card;
 
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8081")
 public class CardGalleryController {
 	
 
 	@Autowired
 	private CardRepository cardData;
 	
-	@CrossOrigin(origins = "http://localhost:8081")
 	@GetMapping("/allCards")
 	public CardList allCards() {
 		List<Card> allCards = cardData.findAll();
@@ -28,7 +28,7 @@ public class CardGalleryController {
 		return new CardList(allCards);
 	}
 	
-	@CrossOrigin(origins = "http://localhost:8081")
+	
 	@PostMapping("/newCard")
 	public ResponseEntity<Card> createNewCard(@RequestBody Card card) {
 		cardData.save(card);
