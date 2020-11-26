@@ -25,7 +25,7 @@ public class Card {
 	private String title;
 	private String description;
 	@Column(nullable=false)
-	private String score;
+	private Integer score;
 	
 	@ManyToOne
 	private Category category;
@@ -40,7 +40,7 @@ public class Card {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Card(String title, String score) {
+	public Card(String title, Integer score) {
 		this.title = title;
 		this.score = score;
 	}
@@ -85,11 +85,11 @@ public class Card {
 		return this;
 	}
 
-	public String getScore() {
+	public Integer getScore() {
 		return score;
 	}
 
-	public Card setScore(String score) {
+	public Card setScore(Integer score) {
 		this.score = score;
 		return this;
 	}
