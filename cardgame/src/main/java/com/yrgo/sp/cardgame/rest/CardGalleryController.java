@@ -15,11 +15,11 @@ public class CardGalleryController {
 	public List<Card> allCards() {
 		Card card1 = new Card("Klippa gräs", 1000);
 		card1.setId(1);
-		Card card2 = new Card("Klippa gräs", 1000);
+		Card card2 = new Card("Äta korv", 1200);
 		card2.setId(2);
-		Card card3 = new Card("Klippa gräs", 1000);
+		Card card3 = new Card("Cykla", 100);
 		card3.setId(3);
-		Card card4 = new Card("Klippa gräs", 1000);
+		Card card4 = new Card("Flyga", 5000);
 		card4.setId(4);
 		
 		List<Card> allCards = new ArrayList<Card>();
