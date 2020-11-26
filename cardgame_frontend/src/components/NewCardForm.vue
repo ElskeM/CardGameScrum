@@ -7,16 +7,13 @@
     method="post"
   >
     <span>Title</span>
-    <input v-model="cardData.cardTitle">
-    <p>Message is: {{ cardData.cardTitle }}</p>
+    <input v-model="cardData.title">
+    <p>Message is: {{ cardData.title }}</p>
 
     <span>Description</span>
     <p style="white-space: pre-line;">{{ cardData.description }}</p>
     <br>
-    <textarea
-      v-model="cardData.description"
-      placeholder="add multiple lines"
-    ></textarea>
+    
     <br>
     <span>Score</span>
     <input
@@ -34,8 +31,7 @@ export default {
   data() {
     return {
       cardData: {
-        cardTitle: "",
-        description: "",
+        title: "",
         score: ""
       }
     };
@@ -44,7 +40,7 @@ export default {
     createCard(e) {
       console.warn(this.cardData);
       e.preventDefault();
-      axios.post("http://localhost:8080/newcard",this.cardData).then((result)=>{console.warn(result)})
+      axios.post("http://localhost:8080/newCard",this.cardData).then((result)=>{console.warn(result)})
     }
   }
 };
