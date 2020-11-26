@@ -2,6 +2,7 @@ package com.yrgo.sp.cardgame.rest;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -30,9 +32,13 @@ public class DeckController {
 	
 	@CrossOrigin(origins = "http://localhost:8081")
 	@GetMapping("/decks")
-	public List<Deck> allCards() {
+	public List<Deck> decks(@RequestParam(required = false) String name) {
+		if (name != null) {
+			return deckData.findByName(name);
+		}
 		return deckData.findAll();
 	}
+	
 	@GetMapping("/decks/{id}")
 	public Deck findDeck(@PathVariable long id) {
 		return deckData.findById(id).get();
@@ -45,14 +51,22 @@ public class DeckController {
 		return ResponseEntity.created(location).build();
 	}
 	
-	@PutMapping("/decks")
-	public String createDeck() {
-		return "Not implemented";
+	@PutMapping("/decks/{id}")
+	public ResponseEntity<Object> updateDeck(@RequestBody Deck deck, @PathVariable Long id) {
+		Optional<Deck> d = deckData.findById(id);
+		if (!d.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		Deck oldDeck = d.get();
+		deck.setId(oldDeck.getId());
+		deckData.save(deck);
+		return ResponseEntity.noContent().build();
 	}
 	
 	@DeleteMapping("/decks/{id}")
-	public String deleteDeck() {
-		return "Not implemented";
+	public void deleteDeck(@PathVariable Long id) {
+		deckData.deleteById(id);
 	}
 	
 	@GetMapping("/decks/setUpData")

@@ -25,7 +25,7 @@ public class Deck {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private Long id;
 
 	/**
 	 * The name of this deck
@@ -78,11 +78,11 @@ public class Deck {
 		this.categories = this.cards.stream().map(c -> c.getCategory()).collect(Collectors.toSet());
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
