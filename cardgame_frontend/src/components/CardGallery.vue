@@ -11,7 +11,7 @@
 
 <script>
 
-import {mapGetters} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 import DisplayCard from './DisplayCard.vue'
 
 
@@ -23,6 +23,9 @@ export default {
     },
     components : {
         DisplayCard
+    },
+    methods : {
+        ...mapActions(['fetchFullDeck'])
     }
 
     

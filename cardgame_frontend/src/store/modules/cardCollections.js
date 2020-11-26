@@ -89,6 +89,10 @@ const getters = {
 }
 
 const actions = {
+    async fetchFullDeck() {
+        const response = await axios.get('https://localhost:8080/allCards')
+        console.log(response.data)
+    }
 
 
 }
