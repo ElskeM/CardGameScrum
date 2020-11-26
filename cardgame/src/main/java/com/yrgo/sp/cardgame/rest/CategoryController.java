@@ -2,6 +2,7 @@ package com.yrgo.sp.cardgame.rest;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class CategoryController {
 		return foundCat;
 	}
 
-	@PostMapping("/categories/")
+	@PostMapping("/categories")
 	public ResponseEntity<Object> createCategory(@RequestBody Category category) {
 		Category newCategory = categoryData.save(category);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -48,13 +49,21 @@ public class CategoryController {
 	}
 
 	@PutMapping("/categories/{id}")
-	public String updateCategory() {
-		return "Todo: Implement";
+	public ResponseEntity<Object> updateCategory(@RequestBody Category category, @PathVariable Long id) {
+		Optional<Category> c = categoryData.findById(id);
+		if (!c.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		Category catToUpdate = c.get();
+		category.setId(catToUpdate.getId());
+		categoryData.save(category);
+		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("/categories/{id}")
-	public String deleteCategory() {
-		return "Todo: Implement!";
+	public void deleteCategory(@PathVariable Long id) {
+		categoryData.deleteById(id);
 	}
 
 }
