@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,9 +32,9 @@ public class PlayerController {
 		return playerByUN;
 	}
 	
-	@GetMapping("/player/{email}")
-	public Player findByEmail(@PathVariable String email) {
-		Player playerByEmail = playerData.findByUserName(email);
+	@GetMapping("/player")
+	public Player findByEmail(@RequestParam String email) {
+		Player playerByEmail = playerData.findByEmail(email);
 		return playerByEmail;
 	}
 	
