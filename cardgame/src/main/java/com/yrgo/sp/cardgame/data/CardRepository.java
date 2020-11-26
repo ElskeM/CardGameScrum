@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.yrgo.sp.cardgame.domain.Card;
 
-public interface CardRepository extends JpaRepository<Card, Integer>{
+public interface CardRepository extends JpaRepository<Card, Long>{
 	public List<Card> findAll();
 }
