@@ -20,20 +20,23 @@ public class CardGalleryController {
 	@CrossOrigin(origins = "http://localhost:8081")
 	@GetMapping("/allCards")
 	public CardList allCards() {
-		Card card1 = new Card("Klippa gräs", 1000);
-		card1.setId(1);
-		Card card2 = new Card("Äta korv", 1200);
-		card2.setId(2);
-		Card card3 = new Card("Cykla", 100);
-		card3.setId(3);
-		Card card4 = new Card("Flyga", 5000);
-		card4.setId(4);
+		List<Card> allCards = cardData.findAll();
 		
-		List<Card> allCards = new ArrayList<Card>();
-		allCards.add(card1);
-		allCards.add(card2);
-		allCards.add(card3);
-		allCards.add(card4);
 		return new CardList(allCards);
+	}
+	
+	@GetMapping("/setUpData")
+	public String setUpData() {
+		Card card1 = new Card("Klippa gräs", 1000);
+		Card card2 = new Card("Äta korv", 1200);
+		Card card3 = new Card("Cykla", 100);
+		Card card4 = new Card("Flyga", 5000);
+		
+		cardData.save(card1);
+		cardData.save(card2);
+		cardData.save(card3);
+		cardData.save(card4);
+		
+		return "Success!";
 	}
 }
