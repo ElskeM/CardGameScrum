@@ -47,10 +47,10 @@ export default {
   data() {
     return {
       cardData: {
-        title: "",
-        score: "",
-        description: "",
-        category: ""
+        title: null,
+        score: null,
+        description: null,
+        category: null
       },
       formData: {
         categories: []
