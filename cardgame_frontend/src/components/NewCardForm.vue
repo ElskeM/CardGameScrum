@@ -2,6 +2,7 @@
 
 <template>
   <form
+  id="newCardForm"
     @submit="createCard"
     method="post"
   >
@@ -24,11 +25,11 @@
       </option>
     </select>
     <br>
-    <span>Score:</span>
+    <span>Score:</span><br>
     <input
       type="number"
       v-model="cardData.score"
-    >
+    ><br><br>
 
     <button type="submit">Send</button>
   </form>
