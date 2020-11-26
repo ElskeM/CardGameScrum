@@ -5,11 +5,14 @@ import java.util.UUID;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping(value = "game")
+@CrossOrigin(origins = "http://localhost:8081")
 public class GameController {
 	
 	@RequestMapping(value = "start")
@@ -19,7 +22,8 @@ public class GameController {
 		String id = UUID.randomUUID().toString();
 		Game theGame = new Game(id);
 		session.setAttribute("game", theGame);
-		return "redirect:/game/start";
+	//	return "redirect:/game/start";
+		return "Det gick bra";
 		
 	}
 	

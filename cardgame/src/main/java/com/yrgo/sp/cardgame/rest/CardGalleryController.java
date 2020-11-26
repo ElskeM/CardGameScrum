@@ -2,8 +2,12 @@ package com.yrgo.sp.cardgame.rest;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.yrgo.sp.cardgame.data.CardRepository;
 import com.yrgo.sp.cardgame.domain.Card;
@@ -22,6 +26,13 @@ public class CardGalleryController {
 		List<Card> allCards = cardData.findAll();
 		
 		return new CardList(allCards);
+	}
+	
+	@CrossOrigin(origins = "http://localhost:8081")
+	@PostMapping("/newCard")
+	public ResponseEntity<Card> createNewCard(@RequestBody Card card) {
+		cardData.save(card);
+		return new ResponseEntity<Card>(card,HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/setUpData")
