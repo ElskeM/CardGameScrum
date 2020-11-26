@@ -19,7 +19,7 @@ export default {
     name: 'CardGallery',
     computed: mapGetters(['wholeCollection']),
     created() {
-        console.log(this.wholeCollection)
+        this.fetchFullDeck()
     },
     components : {
         DisplayCard
