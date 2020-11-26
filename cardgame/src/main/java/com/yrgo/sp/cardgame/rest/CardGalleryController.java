@@ -3,16 +3,22 @@ package com.yrgo.sp.cardgame.rest;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yrgo.sp.cardgame.data.CardRepository;
 import com.yrgo.sp.cardgame.domain.Card;
 
 @RestController
 public class CardGalleryController {
 	
+	@Autowired
+	private CardRepository cardData;
+	
 	@GetMapping("/allCards")
-	public List<Card> allCards() {
+	public CardList allCards() {
+		//List<Card> allCards = cardData.findAll();
 		Card card1 = new Card("Klippa gräs", 1000);
 		card1.setId(1);
 		Card card2 = new Card("Äta korv", 1200);
@@ -27,6 +33,6 @@ public class CardGalleryController {
 		allCards.add(card2);
 		allCards.add(card3);
 		allCards.add(card4);
-		return allCards;
+		return new CardList(allCards);
 	}
 }
