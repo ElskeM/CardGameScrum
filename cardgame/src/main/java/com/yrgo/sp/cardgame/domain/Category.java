@@ -14,7 +14,7 @@ public class Category {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private Long id;
 	
 	private String category;
 
@@ -39,7 +39,7 @@ public class Category {
 		this.category = category;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 }

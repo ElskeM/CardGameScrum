@@ -20,7 +20,7 @@ public class Player {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private Long id;
 	
 	@Column(unique=true, nullable=false)
 	private String userName;
@@ -69,7 +69,7 @@ public class Player {
 		this.password = password;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
