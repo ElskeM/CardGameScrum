@@ -1,6 +1,7 @@
 package com.yrgo.sp.cardgame.domain;
 
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -18,11 +19,13 @@ public class Card {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
+	@Column(nullable=false)
 	private String title;
 	private String description;
+	@Column(nullable=false)
 	private String score;
 	private Category category;
-	// private Player author;?
+	private String author = "Admin";
 	private int interval;// Enum? Tänkt att kopplas till ikonerna i klimatkoll
 
 	@Lob
@@ -33,14 +36,9 @@ public class Card {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Card(String title, String description, Category category, String score, byte[] picture, int interval) {
-		super();
+	public Card(String title, String score) {
 		this.title = title;
-		this.description = description;
-		this.category = category;
 		this.score = score;
-		this.picture = picture;
-		this.interval = interval;
 	}
 
 	@Override
@@ -60,48 +58,63 @@ public class Card {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public Card setTitle(String title) {
 		this.title = title;
+		return this;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public Card setDescription(String description) {
 		this.description = description;
+		return this;
 	}
 
 	public Category getCategory() {
 		return category;
 	}
 
-	public void setCategory(Category category) {
+	public Card setCategory(Category category) {
 		this.category = category;
+		return this;
 	}
 
 	public String getScore() {
 		return score;
 	}
 
-	public void setScore(String score) {
+	public Card setScore(String score) {
 		this.score = score;
+		return this;
 	}
 
 	public byte[] getPicture() {
 		return picture;
 	}
 
-	public void setPicture(byte[] picture) {
+	public Card setPicture(byte[] picture) {
 		this.picture = picture;
+		return this;
 	}
 
 	public int getInterval() {
 		return interval;
 	}
 
-	public void setInterval(int interval) {
+	public Card setInterval(int interval) {
 		this.interval = interval;
+		return this;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public Card setAuthor(String author) {
+		this.author = author;
+		return this;
 	}
 
 }
