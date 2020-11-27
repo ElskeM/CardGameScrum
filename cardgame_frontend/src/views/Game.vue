@@ -15,7 +15,7 @@
 
 <script>
 
-import axios from 'axios'
+//import axios from 'axios'
 
 export default {
     data() {
@@ -29,15 +29,15 @@ export default {
     },
     methods : {
         createGame() {
-            axios.get('http://localhost:8080/game/start')
+            fetch('http://localhost:8080/game/start')
             .then(this.playerNumber = this.playerNumberHolder)
             .catch(error => console.log(error))
         },
         setNumber() {
-            axios.get(`http://localhost:8080/game/start/${this.playerNumber}`)
+            fetch(`http://localhost:8080/game/start/${this.playerNumber}`)
         },
         whoWins() {
-            axios.get('http://localhost:8080/game/play')
+            fetch('http://localhost:8080/game/play')
         }
     }
     
