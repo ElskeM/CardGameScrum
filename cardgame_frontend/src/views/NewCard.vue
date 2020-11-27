@@ -1,5 +1,5 @@
 <template>
-  <div class="newcard">
+  <div class="newcard" style="text-align:center">
     <NewCardForm/>
 
   </div>

@@ -2,37 +2,59 @@
 
 <template>
   <form
+  id="newCardForm"
     @submit="createCard"
-    action="https://vuejs.org/"
     method="post"
   >
-    <span>Title</span>
-    <input v-model="cardData.title">
-    <p>Message is: {{ cardData.title }}</p>
+    <span>Title:</span><br>
+    <input v-model="cardData.title"><br>
 
-    <span>Description</span>
-    <p style="white-space: pre-line;">{{ cardData.description }}</p>
+    <span>Description:</span><br>
+    <textarea v-model="cardData.description"></textarea>
     <br>
-    
+    <span>Category:</span>
     <br>
-    <span>Score</span>
+    <select v-model="cardData.category">
+
+      <option
+        v-for="category in formData.categories"
+        :value="category"
+        :key="category.id"
+      >
+        {{ category.category }}
+      </option>
+    </select>
+    <br>
+    <span>Score:</span><br>
     <input
-      type="text"
+      type="number"
       v-model="cardData.score"
-    >
+    ><br><br>
 
     <button type="submit">Send</button>
   </form>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
+
 export default {
+  async mounted() {
+    axios.get("http://localhost:8080/categories").then(response => {
+      console.warn(response);
+      this.formData.categories = response.data.categories;
+    });
+  },
   data() {
     return {
       cardData: {
-        title: "",
-        score: ""
+        title: null,
+        score: null,
+        description: null,
+        category: null
+      },
+      formData: {
+        categories: []
       }
     };
   },
@@ -40,7 +62,11 @@ export default {
     createCard(e) {
       console.warn(this.cardData);
       e.preventDefault();
-      axios.post("http://localhost:8080/newCard",this.cardData).then((result)=>{console.warn(result)})
+      axios
+        .post("http://localhost:8080/newCard", this.cardData)
+        .then(result => {
+          console.warn(result);
+        });
     }
   }
 };
