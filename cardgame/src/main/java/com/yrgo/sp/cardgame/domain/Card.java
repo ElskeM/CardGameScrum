@@ -103,12 +103,12 @@ public class Card {
 		return this;
 	}
 
-	public Integer getInterval() {
+	public Integer getFrequence() {
 		return frequence;
 	}
 
-	public Card setInterval(Integer interval) {
-		this.frequence = interval;
+	public Card setFrequence(Integer frequence) {
+		this.frequence = frequence;
 		return this;
 	}
 
