@@ -4,6 +4,29 @@ import java.util.Random;
 
 public class Game {
 	
+	/*
+	private List<Player> players;
+	
+	public void setPlayer(Player player) {
+		if players.size() == 2) {
+			players.add(player)
+			whoWins()
+		} else {
+			players.add(player)
+		}
+		
+	}
+	
+	public String whoWins() {
+		loopa listan
+		jämför players(0).guess med players(1).guess
+		kolla vem som van
+		return vinnandePlayer.name + "vann";
+	}
+	
+	*/
+	
+	
 	private long id;
 	private int number = new Random().nextInt(10);
 	private int userNumber;
