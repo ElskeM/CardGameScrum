@@ -1,12 +1,14 @@
 package com.yrgo.sp.cardgame.game;
 
-import java.util.UUID;
-
 import javax.servlet.http.HttpSession;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,30 +17,28 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:8081")
 public class GameController {
 	
-	@RequestMapping(value = "start")
-	public String startGame(HttpSession session) {
+	@Autowired
+	private GameService gameService;
+	
+	@PostMapping
+	public ResponseEntity<Game> startGame() {
 		
 		//skapar ett id för spelet - används inte nu men kan vara bra att ha för multiplayer
-		String id = UUID.randomUUID().toString();
-		Game theGame = new Game(id);
-		session.setAttribute("game", theGame);
+//		String id = UUID.randomUUID().toString();
+//		Game theGame = new Game(id);
+//		session.setAttribute("game", theGame);
 	//	return "redirect:/game/start";
-		return "Det gick bra";
-		
+		Game game = gameService.createGame();
+		this.game = game;
+		return ResponseEntity.ok(game);
 	}
 	
-	@RequestMapping(value = "/start/{userNumber}")
-	public void setUserNumber(HttpSession session, @PathVariable("userNumber") String userNumber) {
-		Game theGame = (Game) session.getAttribute("game");
-		int userNum = Integer.parseInt(userNumber);
-		theGame.setUserNumber(userNum);
-		
-	}
+	@Value(value = "game")
+	private Game game;
 	
-	@RequestMapping(value = "/start/play")
-	public String play(HttpSession session) {
-		Game theGame = (Game) session.getAttribute("game");
-		return theGame.whoWins(theGame.getNumber(), theGame.getUserNumber());
+	@GetMapping(value = "/{guess}")
+	public String play(@PathVariable int guess) {
+		return game.whoWins(game.getNumber(), guess);
 	}
 
 }

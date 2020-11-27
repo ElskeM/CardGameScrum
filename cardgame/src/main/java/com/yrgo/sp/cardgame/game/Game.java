@@ -1,7 +1,5 @@
 package com.yrgo.sp.cardgame.game;
 
-import java.util.UUID;
-
 public class Game {
 	
 	private String id;
@@ -32,6 +30,4 @@ public class Game {
 	public int getUserNumber() {
 		return userNumber;
 	}
-	
-
 }
