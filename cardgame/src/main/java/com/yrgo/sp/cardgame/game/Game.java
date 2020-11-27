@@ -1,14 +1,16 @@
 package com.yrgo.sp.cardgame.game;
 
+import java.util.Random;
+
 public class Game {
 	
-	private String id;
-	private int number = 10;
+	private long id;
+	private int number = new Random().nextInt(10);
 	private int userNumber;
 	
-	public Game(String id) {
+	public Game() {
 	//	this.id = UUID.randomUUID().toString();
-		this.id = id;
+	//	this.id = id;
 	}
 	
 	public String whoWins(int number, int userNumber) {
@@ -17,6 +19,14 @@ public class Game {
 		} else {
 			return "YOU WIN!";
 		}
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	public long getId() {
+		return this.id;
 	}
 	
 	public void setUserNumber(int userNumber) {
