@@ -22,7 +22,7 @@ public class GameController {
 	@Autowired
 	private GameService gameService;
 
-	@PostMapping
+	@GetMapping
 	public ResponseEntity<Game> startGame() {
 
 		// skapar ett id för spelet - används inte nu men kan vara bra att ha för
@@ -50,7 +50,27 @@ public class GameController {
 		}
 		return ResponseEntity.ok(g.get());
 	}
-
+	
+	
+	@GetMapping(value = "/{id}/{playerName}/{guess}")
+	public ResponseEntity<String> play(@PathVariable int id, @PathVariable String playerName, @PathVariable int guess) {
+		
+		Player player = new Player(playerName);
+		Optional<Game> g = this.games.stream().filter(a -> a.getId() == id).findFirst();
+		if (!g.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		Game game = g.get();
+		
+		game.setPlayer(player);
+		player.setGuess(guess);
+		String message = game.whoWins();
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	/*
 	@GetMapping(value = "/{id}/{guess}")
 	public ResponseEntity<String> play(@PathVariable int id, @PathVariable int guess) {
 		Optional<Game> g = this.games.stream().filter(a -> a.getId() == id).findFirst();
@@ -62,5 +82,5 @@ public class GameController {
 		this.games.remove(game);
 		return ResponseEntity.ok(message);
 	}
-
+*/
 }
