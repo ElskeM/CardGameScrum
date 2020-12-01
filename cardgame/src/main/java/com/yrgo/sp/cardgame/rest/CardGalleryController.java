@@ -1,14 +1,21 @@
 package com.yrgo.sp.cardgame.rest;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yrgo.sp.cardgame.data.CardRepository;
@@ -32,7 +39,19 @@ public class CardGalleryController {
 
 		return new CardList(allCards);
 	}
-
+	
+	@GetMapping(value = "/images/{name}", produces=MediaType.IMAGE_JPEG_VALUE)
+	@ResponseBody
+	public byte[] getImage(@PathVariable String name) throws IOException{
+		File f = new File("src/main/resources/images/klimatkoll/"+name);
+		InputStream is = new FileInputStream(f);
+		long fileSize = f.length();
+		byte[] allBytes = new byte[(int) fileSize];
+		is.read(allBytes);
+		is.close();
+		return allBytes;
+	}
+	
 	@PostMapping("/newCard")
 	public ResponseEntity<Card> createNewCard(@RequestBody Card card) {
 		cardData.save(card);
@@ -40,7 +59,7 @@ public class CardGalleryController {
 	}
 
 	@PostMapping("/import_json")
-	public String importJSONData(@RequestBody List<Card> cards) throws InterruptedException {
+	public String importJSONData(@RequestBody List<Card> cards) {
 		for (Card c : cards) {
 			Category cat = categoryData.findByCategory(c.getCategory().getCategory());
 			if (cat == null) {

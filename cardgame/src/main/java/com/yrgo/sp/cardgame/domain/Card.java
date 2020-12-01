@@ -1,18 +1,11 @@
 package com.yrgo.sp.cardgame.domain;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 /**
  * @author simon 
@@ -37,12 +30,12 @@ public class Card {
 	private String author = "Admin";
 	private Integer frequence;// Enum? Tänkt att kopplas till ikonerna i klimatkoll
 
-	@Lob
-	@Basic(fetch = FetchType.LAZY)
-	private byte[] frontImage;// https://vaadin.com/blog/saving-and-displaying-images-using-jpa
-	@Lob
-	@Basic(fetch = FetchType.LAZY)
-	private byte[] backImage;
+//	@Lob
+//	@Basic(fetch = FetchType.LAZY)
+	private String frontImage;// https://vaadin.com/blog/saving-and-displaying-images-using-jpa
+//	@Lob
+//	@Basic(fetch = FetchType.LAZY)
+	private String backImage;
 
 	public Card() {
 		// TODO Auto-generated constructor stub
@@ -102,11 +95,11 @@ public class Card {
 		return this;
 	}
 
-	public byte[] getPicture() {
+	public String getPicture() {
 		return frontImage;
 	}
 
-	public Card setPicture(byte[] picture) {
+	public Card setPicture(String picture) {
 		this.frontImage = picture;
 		return this;
 	}
@@ -145,11 +138,11 @@ public class Card {
 		this.extraInfo = extraInfo;
 	}
 
-	public byte[] getBackImage() {
+	public String getBackImage() {
 		return backImage;
 	}
 
-	public void setBackImage(byte[] backImage) {
+	public void setBackImage(String backImage) {
 		this.backImage = backImage;
 	}
 
