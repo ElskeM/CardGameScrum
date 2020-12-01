@@ -36,7 +36,10 @@ public class Card {
 
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
-	private byte[] picture;// https://vaadin.com/blog/saving-and-displaying-images-using-jpa
+	private byte[] frontImage;// https://vaadin.com/blog/saving-and-displaying-images-using-jpa
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	private byte[] backImage;
 
 	public Card() {
 		// TODO Auto-generated constructor stub
@@ -97,11 +100,11 @@ public class Card {
 	}
 
 	public byte[] getPicture() {
-		return picture;
+		return frontImage;
 	}
 
 	public Card setPicture(byte[] picture) {
-		this.picture = picture;
+		this.frontImage = picture;
 		return this;
 	}
 
@@ -137,6 +140,14 @@ public class Card {
 
 	public void setExtraInfo(String extraInfo) {
 		this.extraInfo = extraInfo;
+	}
+
+	public byte[] getBackImage() {
+		return backImage;
+	}
+
+	public void setBackImage(byte[] backImage) {
+		this.backImage = backImage;
 	}
 
 }
