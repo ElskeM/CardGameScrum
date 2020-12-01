@@ -67,6 +67,8 @@ public class CardGalleryController {
 				categoryData.save(cat);
 			}
 			c.setCategory(cat);
+			c.setFrontImage("http://localhost:8080"+c.getFrontImage());
+			c.setBackImage("http://localhost:8080"+c.getBackImage());
 			cardData.save(c);
 		}
 		return "Success!";
