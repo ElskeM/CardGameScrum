@@ -15,8 +15,8 @@
 # Created by https://www.gitignore.io/api/git,java,maven,eclipse,windows
 
 ### Eclipse ###
-
 .metadata
+klimatkoll/
 bin/
 tmp/
 *.tmp

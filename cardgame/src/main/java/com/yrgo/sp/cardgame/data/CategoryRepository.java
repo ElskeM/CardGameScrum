@@ -13,5 +13,6 @@ import com.yrgo.sp.cardgame.domain.Category;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
 	public Category findByCategory(String category);
+
 	public List<Category> findAll();
 }
