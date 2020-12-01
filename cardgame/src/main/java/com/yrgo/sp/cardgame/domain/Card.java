@@ -22,8 +22,10 @@ public class Card {
 	private Long id;
 
 	@Column(nullable=false)
-	private String title;
-	private String description;
+	private String title;		//Visas överst på kortet, med versaler.
+	private String subtitle;    //Visas under title, med gemener i mindre storlek än title.
+	private String description; //Vad är score ett mått på, inkl. frequence.
+	private String extraInfo;   //Extra information om källorna till score (t.ex. nötköttproduktion orsakar 45% av score)
 	@Column(nullable=false)
 	private Integer score;
 	
@@ -34,7 +36,10 @@ public class Card {
 
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
-	private byte[] picture;// https://vaadin.com/blog/saving-and-displaying-images-using-jpa
+	private byte[] frontImage;// https://vaadin.com/blog/saving-and-displaying-images-using-jpa
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	private byte[] backImage;
 
 	public Card() {
 		// TODO Auto-generated constructor stub
@@ -95,11 +100,11 @@ public class Card {
 	}
 
 	public byte[] getPicture() {
-		return picture;
+		return frontImage;
 	}
 
 	public Card setPicture(byte[] picture) {
-		this.picture = picture;
+		this.frontImage = picture;
 		return this;
 	}
 
@@ -119,6 +124,30 @@ public class Card {
 	public Card setAuthor(String author) {
 		this.author = author;
 		return this;
+	}
+
+	public String getSubtitle() {
+		return subtitle;
+	}
+
+	public void setSubtitle(String subtitle) {
+		this.subtitle = subtitle;
+	}
+
+	public String getExtraInfo() {
+		return extraInfo;
+	}
+
+	public void setExtraInfo(String extraInfo) {
+		this.extraInfo = extraInfo;
+	}
+
+	public byte[] getBackImage() {
+		return backImage;
+	}
+
+	public void setBackImage(byte[] backImage) {
+		this.backImage = backImage;
 	}
 
 }
