@@ -16,7 +16,7 @@
 
 ### Eclipse ###
 .metadata
-klimatkoll/
+klimatkoll/*.jpg
 bin/
 tmp/
 *.tmp
