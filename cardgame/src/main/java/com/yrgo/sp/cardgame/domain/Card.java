@@ -1,5 +1,7 @@
 package com.yrgo.sp.cardgame.domain;
 
+import java.util.Comparator;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +18,7 @@ import javax.persistence.OneToMany;
  * Entity that saves the picture of the card as a byte array in the database.
  */
 @Entity
-public class Card {
+public class Card implements Comparable<Card> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -120,5 +122,12 @@ public class Card {
 		this.author = author;
 		return this;
 	}
+
+
+	@Override
+	public int compareTo(Card o) {
+		return score.compareTo(o.getScore());
+	}
+
 
 }
