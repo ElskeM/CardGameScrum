@@ -25,10 +25,17 @@ public class Game {
 		
 	}
 	
+	public List<Player> getPlayers() {
+		return players;
+	}
+	
 	public void setDeck(Deck deck) {
 		this.deck = deck;
 	}
 	
+	public Deck getDeck() {
+		return deck;
+	}
 	
 	/*
 	public void setPlayer(Player player) {

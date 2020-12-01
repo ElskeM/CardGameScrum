@@ -1,9 +1,12 @@
 package com.yrgo.sp.cardgame.game;
 
+import com.yrgo.sp.cardgame.domain.Card;
+
 public class Player {
 
 	private String name;
 	int guess;
+	private Card card;
 	
 	
 	public Player(String name) {
@@ -24,5 +27,13 @@ public class Player {
 	
 	public int getGuess() {
 		return guess;
+	}
+	
+	public void setCard(Card card) {
+		this.card = card;
+	}
+	
+	public Card getCard() {
+		return card;
 	}
 }

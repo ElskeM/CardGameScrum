@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yrgo.sp.cardgame.domain.Card;
+
 @RestController
 @RequestMapping(value = "game")
 @CrossOrigin(origins = "http://localhost:8081")
@@ -69,6 +71,23 @@ public class GameController {
 		return ResponseEntity.ok(message);
 	}
 	
+	
+	@GetMapping(value = "/{id}/{playerName}/draw")
+	public ResponseEntity<Card> draw(@PathVariable int id, @PathVariable String playerName, @PathVariable int guess) {
+		
+		Optional<Game> g = this.games.stream().filter(a -> a.getId() == id).findFirst();
+		if (!g.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		Game game = g.get();
+		
+		Optional<Player> p = game.getPlayers().stream().filter(a -> a.getName() == playerName).findFirst();
+		Player player = p.get();
+		
+		player.setCard(game.getDeck().draw());
+		
+		return ResponseEntity.ok(player.getCard());
+	}
 	
 	/*
 	@GetMapping(value = "/{id}/{guess}")
