@@ -95,11 +95,11 @@ public class Card {
 		return this;
 	}
 
-	public String getPicture() {
+	public String getFrontImage() {
 		return frontImage;
 	}
 
-	public Card setPicture(String picture) {
+	public Card setFrontImage(String picture) {
 		this.frontImage = picture;
 		return this;
 	}
