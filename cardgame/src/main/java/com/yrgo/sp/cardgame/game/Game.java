@@ -4,8 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.yrgo.sp.cardgame.data.CardRepository;
+import com.yrgo.sp.cardgame.domain.Deck;
+
 public class Game {
 	
+	private Deck deck;
 	
 	private List<Player> players;
 	private long id;
@@ -17,6 +23,10 @@ public class Game {
 	public void setPlayer(Player player) {
 		players.add(player);
 		
+	}
+	
+	public void setDeck(Deck deck) {
+		this.deck = deck;
 	}
 	
 	
