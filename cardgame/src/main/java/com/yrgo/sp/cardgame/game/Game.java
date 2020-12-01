@@ -3,13 +3,9 @@ package com.yrgo.sp.cardgame.game;
 import java.io.Serializable;
 import java.util.UUID;
 
-<<<<<<< HEAD
-public class Game{
-	
-=======
+
 public class Game {
 
->>>>>>> 92df270b9cc8da1d9f39014b0ab26d91d555deac
 	private String id;
 	private int number = 10;
 	private int userNumber;
