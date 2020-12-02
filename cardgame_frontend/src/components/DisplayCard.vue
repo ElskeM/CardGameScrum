@@ -5,7 +5,7 @@
             <h4>{{this.card.subtitle}}</h4>
             <div>{{this.card.description}}</div>
             <div>{{this.card.score}} kg</div>
-            <div><a v-bind:href="'localhost:8080' + this.card.frontImage">Card Front</a></div>
+            <div><a v-bind:href="this.card.frontImage">Card Front</a></div>
 
         </div>
     </div>
