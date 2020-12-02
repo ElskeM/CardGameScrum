@@ -36,7 +36,6 @@ public class CardController {
 	@Autowired
 	private CategoryRepository categoryData;
 
-	@CrossOrigin(origins = "http://localhost:8081")
 	@GetMapping("/allCards")
 	public CardList allCards() {
 		List<Card> allCards = cardData.findAll();
