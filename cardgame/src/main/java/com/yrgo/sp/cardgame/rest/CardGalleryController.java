@@ -74,18 +74,4 @@ public class CardGalleryController {
 		return "Success!";
 	}
 
-	@GetMapping("/setUpData")
-	public String setUpData() {
-		Card card1 = new Card("Klippa gräs", 1000);
-		Card card2 = new Card("Äta korv", 1200);
-		Card card3 = new Card("Cykla", 100);
-		Card card4 = new Card("Flyga", 5000);
-
-		cardData.save(card1);
-		cardData.save(card2);
-		cardData.save(card3);
-		cardData.save(card4);
-
-		return "Success!";
-	}
 }

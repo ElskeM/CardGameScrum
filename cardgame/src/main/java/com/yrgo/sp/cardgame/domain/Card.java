@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 /**
- * @author simon 
- * Entity that saves the picture of the card as a byte array in the database.
+ * @author simon Entity that saves the picture of the card as a byte array in
+ *         the database.
  */
 @Entity
 public class Card {
@@ -17,14 +17,15 @@ public class Card {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(nullable=false)
-	private String title;		//Visas överst på kortet, med versaler.
-	private String subtitle;    //Visas under title, med gemener i mindre storlek än title.
-	private String description; //Vad är score ett mått på, inkl. frequence.
-	private String extraInfo;   //Extra information om källorna till score (t.ex. nötköttproduktion orsakar 45% av score)
-	@Column(nullable=false)
+	@Column(nullable = false)
+	private String title; // Visas överst på kortet, med versaler.
+	private String subtitle; // Visas under title, med gemener i mindre storlek än title.
+	private String description; // Vad är score ett mått på, inkl. frequence.
+	private String extraInfo; // Extra information om källorna till score (t.ex. nötköttproduktion orsakar 45%
+								// av score)
+	@Column(nullable = false)
 	private Integer score;
-	
+
 	@ManyToOne
 	private Category category;
 	private String author = "Admin";
