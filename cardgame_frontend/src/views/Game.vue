@@ -11,7 +11,7 @@
 -->
          <input type="text" v-model="gameId" placeholder="Har du redan ett id?">
         <button @click="startGame">Starta</button>
-        <div>Länk till spelet: {{this.linkToGame}}</div>
+        <div>Länk till spelet: {{this.gameId}}</div>
         <input type="text" v-model="playerNumber" placeholder="Gissa ett tal...">
         <input type="text" v-model="playerName" placeholder="Ditt namn">
         <button @click = "start">START</button>
@@ -28,31 +28,76 @@
 <script>
 
 import axios from 'axios'
+import SockJS from "sockjs-client";
+import Stomp from "webstomp-client";
 
 export default {
     data() {
         return {
+            connected: '',
+            twoPlayers: false,
+            started: false,
+            gameId: '',
+
+
       //      number: 10,
             playerNumber: '',
           //  playerNumberHolder: '',
             btnValue: "Fastställ Nummer",
             whoWon: '',
             linkToGame: '',
-            playerName: '',
-            gameId: ''
+            playerName: ''
+           
         }
     },
     methods : {
 
+        confirmSecondPlayer() {
+            if (this.stompClient && this.stompClient.connected) {
+                this.stompClient.send(`/app/connected/${this.gameId}`, {});
+             }
+        },
 
         startGame() {
+            this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
+            this.stompClient = Stomp.over(this.socket);
             if(this.gameId) {
-                axios.get(`http://localhost:8080/game/${this.gameId}`)
-                .then(response => this.linkToGame = `http://localhost:8080/game/${response.data.id}`)
+                    this.stompClient.connect(
+                    {},
+                    frame => {
+                        console.log(frame)
+                        this.connected = true;
+                        this.stompClient.subscribe(`/app/drawn/${this.gameId}`, tick => {
+                        this.received_messages.push(JSON.parse(tick.body).content);
+                 });
+                 },
+                    error => {
+                     console.log(error);
+                     this.connected = false;
+                })
+                
+                this.confirmSecondPlayer()
+                
             }else {
                  axios.get('http://localhost:8080/game/')
-                .then(response => this.linkToGame = `http://localhost:8080/game/${response.data.id}`)
+                .then(response => this.gameId = response.data.id)
+                .then(
+                    this.stompClient.connect(
+                    {},
+                    frame => {
+                        console.log(frame)
+                        this.connected = true;
+                        this.stompClient.subscribe(`/app/connected/${this.gameId}`, tick => {
+                        this.twoPlayers = this.JSON.parse(tick.body).content;
+                 });
+                 },
+                    error => {
+                     console.log(error);
+                     this.connected = false;
+                }
+             ) )
             }
+
         },
 
         start() {

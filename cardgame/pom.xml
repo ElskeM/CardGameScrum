@@ -32,6 +32,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+		
+		
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -64,6 +71,13 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 		</dependency>
+		
+	<dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-messaging</artifactId>
+    	<version>5.3.1</version>
+	</dependency>
+		
 	</dependencies>
 
 	<build>
