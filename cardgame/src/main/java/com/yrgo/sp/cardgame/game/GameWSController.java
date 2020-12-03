@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.web.socket.WebSocketSession;
 
 import com.yrgo.sp.cardgame.domain.Card;
 
@@ -16,8 +19,9 @@ public class GameWSController {
 	
 	@Autowired
 	private GameService game;
-
 	
+	@Autowired
+	private SimpMessagingTemplate template;
 	
 	//Webklienten prenumererar på dessa med id:t ifrån Gameinstansen
 	@MessageMapping("/connected/{id}")
@@ -31,11 +35,12 @@ public class GameWSController {
 	
 	/*Denna prenumererar båda spelarna på och får på så vis tillgång till spelets startkort
 	till spelets startkort så snart spelare 2 anslutit sig till spelet */
-	@SendTo("/cardgame/startCard/{id}")
-	public List<Card> placeInitialCard(long gameId) {
+	//@SendTo("/cardgame/startCard/{id}")
+	public void placeInitialCard(long gameId) {
+		System.out.println("DEALING FIRST CARD");
 		Game g = game.getGameById(gameId);
 		g.giveCardTo(null);
-		return g.getTable();
+		this.template.convertAndSend("/cardgame/startCard/"+g.getId(), g.getTable());
 	}
 	
 	
