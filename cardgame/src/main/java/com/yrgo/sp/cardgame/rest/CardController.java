@@ -1,9 +1,11 @@
 package com.yrgo.sp.cardgame.rest;
 
 import java.io.File;
+import java.util.Optional.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +27,7 @@ import com.yrgo.sp.cardgame.data.CardRepository;
 import com.yrgo.sp.cardgame.data.CategoryRepository;
 import com.yrgo.sp.cardgame.domain.Card;
 import com.yrgo.sp.cardgame.domain.Category;
+import com.yrgo.sp.exception.CardNotFoundException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")
@@ -37,10 +40,12 @@ public class CardController {
 	private CategoryRepository categoryData;
 
 	@GetMapping("/allCards")
-	public CardList allCards() {
+	public ResponseEntity<List<Card>> allCards() {
 		List<Card> allCards = cardData.findAll();
-
-		return new CardList(allCards);
+		if (allCards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(allCards, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/images/{name}", produces = MediaType.IMAGE_JPEG_VALUE)
@@ -56,14 +61,16 @@ public class CardController {
 	}
 
 	@GetMapping("/card/{id}")
-	public Card findCard(@PathVariable long id) {
-		return cardData.findById(id).get();
+	public ResponseEntity<Card> findCard(@PathVariable long id) {
+		Card foundCard = cardData.findById(id)
+				.orElseThrow(() -> new CardNotFoundException("Kunde inte hitta kort med id " + id));
+		return new ResponseEntity<>(foundCard, HttpStatus.OK);
 	}
 
 	@PostMapping("/newCard")
 	public ResponseEntity<Card> createNewCard(@RequestBody Card card) {
 		cardData.save(card);
-		return new ResponseEntity<Card>(card, HttpStatus.CREATED);
+		return new ResponseEntity<>(card, HttpStatus.CREATED);
 	}
 
 	@PostMapping("/import_json")
@@ -86,17 +93,19 @@ public class CardController {
 	public ResponseEntity<Object> updateCard(@RequestBody Card card, @PathVariable Long id) {
 		Optional<Card> c = cardData.findById(id);
 		if (!c.isPresent()) {
-			return ResponseEntity.notFound().build();
+			throw new CardNotFoundException("Kunde inte hitta kort med id " + id);
 		}
 
 		Card cardToUpdate = c.get();
 		card.setId(cardToUpdate.getId());
 		cardData.save(card);
-		return ResponseEntity.ok().build();
+		return new ResponseEntity<>(card, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/card/{id}")
-	public void deleteCard(@PathVariable Long id) {
+	public ResponseEntity<HttpStatus> deleteCard(@PathVariable Long id) {
 		cardData.deleteById(id);
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }
