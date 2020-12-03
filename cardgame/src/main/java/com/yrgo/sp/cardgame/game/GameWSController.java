@@ -16,7 +16,7 @@ public class GameWSController {
 	
 	
 	@MessageMapping("{id}/connected")
-	@SendTo("/app/connected/{id}")
+	@SendTo("/topic/connected/{id}")
 	public boolean secondPlayerConnected(@DestinationVariable String id, Card card){
 		return true;
 	}
@@ -26,7 +26,7 @@ public class GameWSController {
 	/*Kallas så fort spelaren drar sitt kort. Om true har kommit två gånger via prenumerationen
 	så har båda spelarna dragit ett kort och spelet kan starta */
 	@MessageMapping("{id}/drawCard")
-	@SendTo("/app/drawn/{id}")
+	@SendTo("/topic/drawn/{id}")
 	public boolean drawCard(@DestinationVariable String id) {
 		return true;
 	}
@@ -34,7 +34,7 @@ public class GameWSController {
 	
 	/*Kallas när spelaren lägger ut sitt kort */
 	@MessageMapping("{id}/putCard")
-	@SendTo("/app/put/{id}")
+	@SendTo("/topic/put/{id}")
 	public Card putCard(@DestinationVariable String id, Card card){
 		return card;
 	}
