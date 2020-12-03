@@ -3,30 +3,37 @@ package com.yrgo.sp.cardgame.game;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.yrgo.sp.cardgame.data.CardRepository;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yrgo.sp.cardgame.domain.Card;
-import com.yrgo.sp.cardgame.domain.Deck;
 
 public class Game {
-
+	@JsonIgnore
 	private Deck deck;
 
 	private List<Player> players;
 	private long id;
-	private ArrayList<Card> playedCards;
+	private List<Card> table;
 
-
-	public Game() {
+	
+	public Game(long id) {
 		this.players = new ArrayList<Player>();
-		this.playedCards = new ArrayList<Card>();
+		this.table = new ArrayList<Card>();
+		this.deck = new Deck();
+		this.id = id;
 	}
 	
-	public Card drawCard() {
-		return this.deck.draw();
+	public List<Card> getTable(){
+		return this.table;
+	}
+	
+	public void giveCardTo(Player p) {
+		if(p == null) {
+			this.table.add(this.deck.draw());
+		} else {
+			p.setCard(this.deck.draw());;
+		}
+		
 	}
 	
 	public void setPlayer(Player player) {
@@ -46,10 +53,10 @@ public class Game {
 		return deck;
 	}
 
-	public ArrayList<Card> playCard(Card playedCard) {
-		playedCards.add(playedCard);
-		Collections.sort(playedCards);
-		return playedCards;
+	public List<Card> playCard(Card playedCard) {
+		table.add(playedCard);
+		Collections.sort(table);
+		return table;
 	}
 	
 	

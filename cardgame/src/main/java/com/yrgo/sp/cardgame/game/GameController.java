@@ -33,38 +33,33 @@ public class GameController {
 //		Game theGame = new Game(id);
 //		session.setAttribute("game", theGame);
 		// return "redirect:/game/start";
-		Game game = gameService.createGame();
-		this.games.add(game);
-		game.setId((++lastId));
-
+		Game game = gameService.createGame(++lastId);
 		return ResponseEntity.ok(game);
 	}
 
 	// @Value(value = "game")
-	private List<Game> games = new ArrayList<Game>();
 	private long lastId = -1;
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Game> findGame(@PathVariable int id) {
-		Optional<Game> g = this.games.stream().filter(a -> a.getId() == id).findFirst();
-		if (!g.isPresent()) {
+	public ResponseEntity<Game> findGame(@PathVariable long id) {
+		Game g = gameService.getGameById(id);
+		if (g == null) {
 			return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.ok(g.get());
+		return ResponseEntity.ok(g);
 	}
 	
 	@GetMapping(value = "/{id}/{playerName}")
 	public ResponseEntity<String> startGame(@PathVariable int id, @PathVariable String playerName) {
 		
-		Optional<Game> g = this.games.stream().filter(a -> a.getId() == id).findFirst();
-		if (!g.isPresent()) {
+		Game g = gameService.getGameById(id);
+		if (g == null) {
 			return ResponseEntity.notFound().build();
 		}
-		Game game = g.get();
 		
 		Player player = new Player(playerName);
-		game.setPlayer(player);
-		String message = game.startGame();
+		g.setPlayer(player);
+		String message = g.startGame();
 		
 		return ResponseEntity.ok(message);
 	}
@@ -74,11 +69,10 @@ public class GameController {
 	@GetMapping(value = "/{id}/{playerName}/draw")
 	public ResponseEntity<Card> draw(@PathVariable int id, @PathVariable String playerName) {
 		
-		Optional<Game> g = this.games.stream().filter(a -> a.getId() == id).findFirst();
-		if (!g.isPresent()) {
+		Game game = gameService.getGameById(id);
+		if (game == null) {
 			return ResponseEntity.notFound().build();
 		}
-		Game game = g.get();
 		
 		Optional<Player> p = game.getPlayers().stream().filter(a -> a.getName() == playerName).findFirst();
 		Player player = p.get();

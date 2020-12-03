@@ -1,25 +1,39 @@
 package com.yrgo.sp.cardgame.game;
 
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yrgo.sp.cardgame.data.CardRepository;
-import com.yrgo.sp.cardgame.domain.Deck;
+import com.yrgo.sp.cardgame.domain.Card;
 
 @Service
 public class GameService implements CardGameApi {
 	
 	@Autowired
 	private CardRepository cardData;
+	
+	private Map<Long,Game> games = new HashMap<>();
 
 	@Override
-	public Game createGame() {
-		Game game = new Game();
-		Deck d = new Deck("Default","Admin",cardData.findAll().stream().collect(Collectors.toSet()));
-		game.setDeck(d);
+	public Game createGame(long id) {
+		Game game = new Game(id);
+		//Deck d = new Deck("Default","Admin",cardData.findAll().stream().collect(Collectors.toSet()));
+		//game.setDeck(d);
+		games.put(id, game);
 		return game;
 	}
 
+	@Override
+	public Game getGameById(long id) {
+		return games.get(id);
+	}
+
+	@Override
+	public void placeCard(long gameId) {
+		Game game = games.get(gameId);
+		game.giveCardTo(null);
+	}
 }
