@@ -1,6 +1,6 @@
 <template>
-    <div>
-<!--        <div class="number">oppenent number: {{this.number}}</div>
+  <div>
+    <!--        <div class="number">oppenent number: {{this.number}}</div>
         <div class="number">your number: {{this.playerNumber}}</div>
         <input type="text" v-model="playerNumberHolder">
         <button @click="createGame">{{this.btnValue}}</button>
@@ -22,46 +22,93 @@
 
         
     </div>
+
 </template>
 
-
 <script>
+import axios from "axios";
+import SockJS from "sockjs-client";
+import Stomp from "webstomp-client";
 
-import axios from 'axios'
 import GameBoard from '../components/GameBoard.vue'
 export default {
   components: { GameBoard },
-    data() {
-        return {
+  data() {
+    return {
+      connected: "",
+      twoPlayers: false,
+      started: false,
+      gameId: "",
+
       //      number: 10,
-            playerNumber: '',
-          //  playerNumberHolder: '',
-            btnValue: "Fastställ Nummer",
-            whoWon: '',
-            linkToGame: '',
-            playerName: '',
-            gameId: ''
-        }
+      playerNumber: "",
+      //  playerNumberHolder: '',
+      btnValue: "Fastställ Nummer",
+      whoWon: "",
+      linkToGame: "",
+      playerName: "",
+    };
+  },
+  methods: {
+    confirmSecondPlayer() {
+      if (this.stompClient && this.stompClient.connected) {
+        console.log("HALLELUJAH!");
+        this.stompClient.send(`/app/connected/${this.gameId}`, {});
+      }
     },
-    methods : {
 
+    startGame() {
+      this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
+      this.stompClient = Stomp.over(this.socket);
+      if (this.gameId) {
+        this.stompClient.connect(
+          {},
+          (frame) => {
+            console.log(frame);
+            this.connected = true;
+            this.stompClient.subscribe(`/cardgame/drawn/${this.gameId}`, (tick) => {
+              this.received_messages.push(JSON.parse(tick.body).content);
+            });
+            this.confirmSecondPlayer();
+          },
+          (error) => {
+            console.log(error);
+            this.connected = false;
+          }
+        );
 
-        startGame() {
-            if(this.gameId) {
-                axios.get(`http://localhost:8080/game/${this.gameId}`)
-                .then(response => this.linkToGame = `http://localhost:8080/game/${response.data.id}`)
-            }else {
-                 axios.get('http://localhost:8080/game/')
-                .then(response => this.linkToGame = `http://localhost:8080/game/${response.data.id}`)
-            }
-        },
+      } else {
+        axios
+          .get("http://localhost:8080/game/")
+          .then((response) => (this.gameId = response.data.id))
+          .then(
+            this.stompClient.connect(
+              {},
+              (frame) => {
+                console.log(frame);
+                this.connected = true;
+                this.stompClient.subscribe(
+                  `/cardgame/connected/${this.gameId}`,
+                  (tick) => {
+                    this.twoPlayers = JSON.parse(tick.body);
+                    console.log("twoPlayers = " + this.twoPlayers);
+                  }
+                );
+              },
+              (error) => {
+                console.log(error);
+                this.connected = false;
+              }
+            )
+          );
+      }
+    },
 
-        start() {
-            axios.get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`)
-            .then(response => this.whoWon = response.data)
-        }
-
-
+    start() {
+      axios
+        .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`)
+        .then((response) => (this.whoWon = response.data));
+    },
 
     /*    createGame() {
             axios.get('http://localhost:8080/game/')
@@ -76,11 +123,8 @@ export default {
         }
 
         */
-    }
-    
-}
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

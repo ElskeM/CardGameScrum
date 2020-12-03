@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,43 +52,75 @@ public class GameController {
 		}
 		return ResponseEntity.ok(g.get());
 	}
-
-
-	@GetMapping(value = "/{id}/{playerName}/{guess}")
-	public ResponseEntity<String> play(@PathVariable int id, @PathVariable String playerName, @PathVariable int guess) {
-
-		Player player = new Player(playerName);
+	
+	@GetMapping(value = "/{id}/{playerName}")
+	public ResponseEntity<String> startGame(@PathVariable int id, @PathVariable String playerName) {
+		
 		Optional<Game> g = this.games.stream().filter(a -> a.getId() == id).findFirst();
 		if (!g.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		Game game = g.get();
-
+		
+		Player player = new Player(playerName);
 		game.setPlayer(player);
-		player.setGuess(guess);
-		String message = game.whoWins();
-
+		String message = game.startGame();
+		
 		return ResponseEntity.ok(message);
 	}
+	
 
-
+	
 	@GetMapping(value = "/{id}/{playerName}/draw")
-	public ResponseEntity<Card> draw(@PathVariable int id, @PathVariable String playerName, @PathVariable int guess) {
-
+	public ResponseEntity<Card> draw(@PathVariable int id, @PathVariable String playerName) {
+		
 		Optional<Game> g = this.games.stream().filter(a -> a.getId() == id).findFirst();
 		if (!g.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		Game game = g.get();
-
+		
 		Optional<Player> p = game.getPlayers().stream().filter(a -> a.getName() == playerName).findFirst();
 		Player player = p.get();
-
+		
 		player.setCard(game.getDeck().draw());
-
+		
 		return ResponseEntity.ok(player.getCard());
 	}
+	
+	
+	
+/*	
+	@Autowired
+	private SimpMessagingTemplate template;
 
+
+	@RequestMapping(value = "/sendMessage")
+	public void sendMessage() throws Exception {
+	    this.template.convertAndSend("/topic/greetings", new HelloMessage(
+	            (int) Math.random(), "This is Send From Server"));
+	}
+	
+*/	
+	
+	
+	
+//	@GetMapping(value = "/{id}/{playerName}/{guess}")
+//	public ResponseEntity<String> play(@PathVariable int id, @PathVariable String playerName, @PathVariable int guess) {
+//		
+//		Player player = new Player(playerName);
+//		Optional<Game> g = this.games.stream().filter(a -> a.getId() == id).findFirst();
+//		if (!g.isPresent()) {
+//			return ResponseEntity.notFound().build();
+//		}
+//		Game game = g.get();
+//		
+//		game.setPlayer(player);
+//		player.setGuess(guess);
+//		String message = game.whoWins();
+//		
+//		return ResponseEntity.ok(message);
+//	}
 	/*
 	@GetMapping(value = "/{id}/{guess}")
 	public ResponseEntity<String> play(@PathVariable int id, @PathVariable int guess) {

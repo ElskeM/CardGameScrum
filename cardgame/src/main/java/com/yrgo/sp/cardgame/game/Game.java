@@ -24,7 +24,11 @@ public class Game {
 		this.players = new ArrayList<Player>();
 		this.playedCards = new ArrayList<Card>();
 	}
-
+	
+	public Card drawCard() {
+		return this.deck.draw();
+	}
+	
 	public void setPlayer(Player player) {
 		players.add(player);
 
@@ -47,6 +51,27 @@ public class Game {
 		Collections.sort(playedCards);
 		return playedCards;
 	}
+	
+	
+	
+	public String startGame() {
+
+		while (players.size() != 2) {
+			try {
+				Thread.sleep(500);
+				System.out.println("HEEEEEEEJ");
+			} catch (InterruptedException e) {
+
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+			return "ok";
+	}
+
+	
+	
+	
 	/*
 	 * public void setPlayer(Player player) { if players.size() == 2) {
 	 * players.add(player) whoWins() } else { players.add(player) }
@@ -54,7 +79,10 @@ public class Game {
 	 * }
 	 *
 	 */
-
+	
+	
+	
+/*	
 	public String whoWins() {
 
 		while (players.size() != 2) {
@@ -80,7 +108,7 @@ public class Game {
 		}
 
 	}
-
+*/
 	public void setId(long id) {
 		this.id = id;
 	}

@@ -29,8 +29,8 @@ public class Card implements Comparable<Card> {
 	@ManyToOne
 	private Category category;
 	private String author = "Admin";
-	private Integer frequence;// Enum? Tänkt att kopplas till ikonerna i klimatkoll
-
+	private Integer frequence;
+	
 //	@Lob
 //	@Basic(fetch = FetchType.LAZY)
 	private String frontImage;// https://vaadin.com/blog/saving-and-displaying-images-using-jpa
