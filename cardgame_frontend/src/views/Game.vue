@@ -82,7 +82,8 @@ export default {
                 this.stompClient.subscribe(
                   `/cardgame/connected/${this.gameId}`,
                   (tick) => {
-                    this.twoPlayers = this.JSON.parse(tick.body).content;
+                    this.twoPlayers = JSON.parse(tick.body);
+                    console.log("twoPlayers = " + this.twoPlayers);
                   }
                 );
               },
