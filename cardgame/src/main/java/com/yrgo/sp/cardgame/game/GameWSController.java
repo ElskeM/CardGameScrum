@@ -15,9 +15,10 @@ public class GameWSController {
 	//Webklienten prenumererar på dessa med id:t ifrån Gameinstansen
 	
 	
-	@MessageMapping("{id}/connected")
-	@SendTo("/topic/connected/{id}")
-	public boolean secondPlayerConnected(@DestinationVariable String id, Card card){
+	@MessageMapping("/connected/{id}")
+	@SendTo("/cardgame/connected/{id}")
+	public boolean secondPlayerConnected(@DestinationVariable String id){
+		System.out.println("secondPlayerConnected: " + true + ", gameID: " + id);
 		return true;
 	}
 	
