@@ -31,6 +31,7 @@ export default {
       twoPlayers: false,
       started: false,
       gameId: "",
+      received_cards: [],
 
       //      number: 10,
       playerNumber: "",
@@ -61,6 +62,11 @@ export default {
             this.stompClient.subscribe(`/cardgame/drawn/${this.gameId}`, (tick) => {
               this.received_messages.push(JSON.parse(tick.body).content);
             });
+             this.stompClient.subscribe(`/cardgame/startCard/${this.gameId}`, (tick) => {
+              this.received_cards = JSON.parse(tick.body).content;
+              
+            });
+
             this.confirmSecondPlayer();
           },
           (error) => {
@@ -86,6 +92,14 @@ export default {
                     console.log("twoPlayers = " + this.twoPlayers);
                   }
                 );
+
+                 this.stompClient.subscribe(`/cardgame/startCard/${this.gameId}`, (tick) => {
+                        this.received_cards = JSON.parse(tick.body).content;
+                        console.log(this.received_cards)
+                 });
+
+
+
               },
               (error) => {
                 console.log(error);
