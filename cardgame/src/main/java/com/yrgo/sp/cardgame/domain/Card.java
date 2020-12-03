@@ -146,5 +146,8 @@ public class Card implements Comparable<Card> {
 	public void setBackImage(String backImage) {
 		this.backImage = backImage;
 	}
-
+	@Override
+	public int compareTo(Card o) {
+		return score.compareTo(o.getScore());
+	}
 }

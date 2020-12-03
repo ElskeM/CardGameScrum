@@ -18,7 +18,7 @@
         <div>Vinnaren är: {{this.whoWon}}</div>
         
 
-
+<GameBoard/>
 
         
     </div>
@@ -28,8 +28,9 @@
 <script>
 
 import axios from 'axios'
-
+import GameBoard from '../components/GameBoard.vue'
 export default {
+  components: { GameBoard },
     data() {
         return {
       //      number: 10,
