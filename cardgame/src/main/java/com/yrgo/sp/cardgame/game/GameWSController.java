@@ -19,7 +19,16 @@ public class GameWSController {
 	@SendTo("/cardgame/connected/{id}")
 	public boolean secondPlayerConnected(@DestinationVariable String id){
 		System.out.println("secondPlayerConnected: " + true + ", gameID: " + id);
+	//	startGame(game.drawCard());
+		
 		return true;
+	}
+	
+	/*Denna prenumererar båda spelarna på och får på så vis tillgång till spelets startkort
+	till spelets startkort så snart spelare 2 anslutit sig till spelet */
+	@SendTo("/cardgame/startCard/{id}")
+	public Card startGame(Card card) {
+		return card;
 	}
 	
 	

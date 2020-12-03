@@ -24,7 +24,11 @@ public class Game {
 		this.players = new ArrayList<Player>();
 		this.playedCards = new ArrayList<Card>();
 	}
-
+	
+	public Card drawCard() {
+		return this.deck.draw();
+	}
+	
 	public void setPlayer(Player player) {
 		players.add(player);
 
