@@ -1,19 +1,24 @@
 package com.yrgo.sp.cardgame.rest;
 
 import java.io.File;
+import java.util.Optional.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,28 +27,31 @@ import com.yrgo.sp.cardgame.data.CardRepository;
 import com.yrgo.sp.cardgame.data.CategoryRepository;
 import com.yrgo.sp.cardgame.domain.Card;
 import com.yrgo.sp.cardgame.domain.Category;
+import com.yrgo.sp.exception.CardNotFoundException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")
-public class CardGalleryController {
+public class CardController {
 
 	@Autowired
 	private CardRepository cardData;
-	
+
 	@Autowired
 	private CategoryRepository categoryData;
 
 	@GetMapping("/allCards")
-	public CardList allCards() {
+	public ResponseEntity<List<Card>> allCards() {
 		List<Card> allCards = cardData.findAll();
-
-		return new CardList(allCards);
+		if (allCards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(allCards, HttpStatus.OK);
 	}
-	
-	@GetMapping(value = "/images/{name}", produces=MediaType.IMAGE_JPEG_VALUE)
+
+	@GetMapping(value = "/images/{name}", produces = MediaType.IMAGE_JPEG_VALUE)
 	@ResponseBody
-	public byte[] getImage(@PathVariable String name) throws IOException{
-		File f = new File("src/main/resources/images/klimatkoll/"+name);
+	public byte[] getImage(@PathVariable String name) throws IOException {
+		File f = new File("src/main/resources/images/klimatkoll/" + name);
 		InputStream is = new FileInputStream(f);
 		long fileSize = f.length();
 		byte[] allBytes = new byte[(int) fileSize];
@@ -51,11 +59,18 @@ public class CardGalleryController {
 		is.close();
 		return allBytes;
 	}
-	
+
+	@GetMapping("/card/{id}")
+	public ResponseEntity<Card> findCard(@PathVariable long id) {
+		Card foundCard = cardData.findById(id)
+				.orElseThrow(() -> new CardNotFoundException("Kunde inte hitta kort med id " + id));
+		return new ResponseEntity<>(foundCard, HttpStatus.OK);
+	}
+
 	@PostMapping("/newCard")
 	public ResponseEntity<Card> createNewCard(@RequestBody Card card) {
 		cardData.save(card);
-		return new ResponseEntity<Card>(card, HttpStatus.CREATED);
+		return new ResponseEntity<>(card, HttpStatus.CREATED);
 	}
 
 	@PostMapping("/import_json")
@@ -67,11 +82,30 @@ public class CardGalleryController {
 				categoryData.save(cat);
 			}
 			c.setCategory(cat);
-			c.setFrontImage("http://localhost:8080"+c.getFrontImage());
-			c.setBackImage("http://localhost:8080"+c.getBackImage());
+			c.setFrontImage("http://localhost:8080" + c.getFrontImage());
+			c.setBackImage("http://localhost:8080" + c.getBackImage());
 			cardData.save(c);
 		}
 		return "Success!";
 	}
 
+	@PutMapping("/card/{id}")
+	public ResponseEntity<Object> updateCard(@RequestBody Card card, @PathVariable Long id) {
+		Optional<Card> c = cardData.findById(id);
+		if (!c.isPresent()) {
+			throw new CardNotFoundException("Kunde inte hitta kort med id " + id);
+		}
+
+		Card cardToUpdate = c.get();
+		card.setId(cardToUpdate.getId());
+		cardData.save(card);
+		return new ResponseEntity<>(card, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/card/{id}")
+	public ResponseEntity<HttpStatus> deleteCard(@PathVariable Long id) {
+		cardData.deleteById(id);
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 }
