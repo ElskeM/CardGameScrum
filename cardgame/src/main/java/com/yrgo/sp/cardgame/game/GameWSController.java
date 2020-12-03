@@ -1,10 +1,12 @@
 package com.yrgo.sp.cardgame.game;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.util.HtmlUtils;
 
 import com.yrgo.sp.cardgame.domain.Card;
 
@@ -12,23 +14,28 @@ import com.yrgo.sp.cardgame.domain.Card;
 @Controller
 public class GameWSController {
 	
+	@Autowired
+	private GameService game;
+
+	
+	
 	//Webklienten prenumererar på dessa med id:t ifrån Gameinstansen
-	
-	
 	@MessageMapping("/connected/{id}")
 	@SendTo("/cardgame/connected/{id}")
-	public boolean secondPlayerConnected(@DestinationVariable String id){
+	public boolean secondPlayerConnected(@DestinationVariable long id){
 		System.out.println("secondPlayerConnected: " + true + ", gameID: " + id);
-	//	startGame(game.drawCard());
-		
+		game.createGame(id);
+		placeInitialCard(id);
 		return true;
 	}
 	
 	/*Denna prenumererar båda spelarna på och får på så vis tillgång till spelets startkort
 	till spelets startkort så snart spelare 2 anslutit sig till spelet */
 	@SendTo("/cardgame/startCard/{id}")
-	public Card startGame(Card card) {
-		return card;
+	public List<Card> placeInitialCard(long gameId) {
+		Game g = game.getGameById(gameId);
+		g.giveCardTo(null);
+		return g.getTable();
 	}
 	
 	
