@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
  *         the database.
  */
 @Entity
-public class Card {
+public class Card implements Comparable<Card> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
