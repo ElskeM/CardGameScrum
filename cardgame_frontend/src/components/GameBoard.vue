@@ -5,36 +5,47 @@
       <draggable
         class="played-cards"
         group="cards"
-        @start="drag=false"
+        :disabled="!dragging"
+        @start="drag=true"
         @end="onDrop"
+        :move="onMoveCallback"
       >
         <div
           v-for="card in playedCards"
           :value="card"
           :key="card.id"
           class="card"
+          :move="onMoveCallback"
         ><img
             class="card-image"
+            :draggable="false"
             :src="card.backImage"
           ></div>
       </draggable>
     </div>
     <draggable
       group="cards"
-      @start="drag=true"
-      @end="drag=false"
+      @start="dragging=true"
+      @end="dragging=false"
+      
+      v-bind="dragOptions"
     >
-      <div
-        v-for="card in playerHand"
-        :value="card"
-        :key="card.id"
-        class="card"
+      <transition-group
+        type="transition"
+        name="card-holder"
       >
-        <img
-          class="card-image"
-          :src="card.frontImage"
+        <div
+          v-for="card in playerHand"
+          :value="card"
+          :key="card.id"
+          class="card list-group-item"
         >
-      </div>
+          <img
+            class="card-image"
+            :src="card.frontImage"
+          >
+        </div>
+      </transition-group>
     </draggable>
 
   </div>
@@ -47,8 +58,12 @@ export default {
   components: {
     draggable
   },
+  props:{
+//playedCards:Array och playerHand:Array
+  },
   data() {
     return {
+      dragging: false,
       playedCards: [
         {
           id: 0,
@@ -112,8 +127,22 @@ export default {
       evt.dataTransfer.effectAllowed = "move";
       evt.dataTransfer.setData("cardId", card.id);
     },
+    onMoveCallback: function(evt) {
+      console.log("HEELLOO! " + evt);
+      return false;
+    },
     onDrop(evt) {
-     console.log(evt)
+      console.log(evt);
+    }
+  },
+  computed: {
+    dragOptions() {
+      return {
+        animation: 200,
+        group: "description",
+        disabled: false,
+        ghostClass: "ghost"
+      };
     }
   }
 };
@@ -124,6 +153,10 @@ export default {
   float: left;
   margin-bottom: 10px;
   padding: 10px;
+  transition: transform 0.5s;
+}
+.card-image{
+  transition: transform 0.5s;
 }
 .board {
   display: grid;
@@ -132,5 +165,22 @@ export default {
   background-color: #fff;
   margin-bottom: 10px;
   padding: 5px;
+}
+.played-cards {
+  width: 100%;
+  height: 10em;
+  background-color: grey;
+}
+.card-holder-move {
+  transition: transform 0.5s;
+}
+.card-holder-enter-active {
+  transition: all 200ms ease-out;
+}
+.card-holder-leave-active {
+  transition: 0.2s opacity ease-out;
+}
+.no-move {
+  transition: transform 0.5s;
 }
 </style>
