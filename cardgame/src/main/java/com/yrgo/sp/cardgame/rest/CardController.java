@@ -1,11 +1,10 @@
 package com.yrgo.sp.cardgame.rest;
 
 import java.io.File;
-import java.util.Optional.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.yrgo.sp.cardgame.data.CardRepository;
 import com.yrgo.sp.cardgame.data.CategoryRepository;
@@ -69,8 +69,10 @@ public class CardController {
 
 	@PostMapping("/newCard")
 	public ResponseEntity<Card> createNewCard(@RequestBody Card card) {
-		cardData.save(card);
-		return new ResponseEntity<>(card, HttpStatus.CREATED);
+		Card newCard = cardData.save(card);
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newCard.getId())
+				.toUri();
+		return ResponseEntity.created(location).build();
 	}
 
 	@PostMapping("/import_json")
@@ -105,7 +107,7 @@ public class CardController {
 	@DeleteMapping("/card/{id}")
 	public ResponseEntity<HttpStatus> deleteCard(@PathVariable Long id) {
 		cardData.deleteById(id);
-		
+
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }
