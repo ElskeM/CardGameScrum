@@ -40,12 +40,13 @@ public class CardController {
 	private CategoryRepository categoryData;
 
 	@GetMapping("/allCards")
-	public ResponseEntity<List<Card>> allCards() {
+	public ResponseEntity<CardList> allCards() {
 		List<Card> allCards = cardData.findAll();
 		if (allCards.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
-		return new ResponseEntity<>(allCards, HttpStatus.OK);
+		CardList cards = new CardList(allCards);
+		return new ResponseEntity<>(cards, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/images/{name}", produces = MediaType.IMAGE_JPEG_VALUE)
