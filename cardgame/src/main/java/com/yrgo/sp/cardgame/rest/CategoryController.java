@@ -66,19 +66,4 @@ public class CategoryController {
 		categoryData.deleteById(id);
 	}
 
-	@GetMapping("/setUpCategories")
-	public String setUpCategories() {
-		Category livsMedel = new Category("Livsmedel");
-		Category boende = new Category("Boende");
-		Category resorTrans = new Category("Resor & Transport");
-		Category ovrigt = new Category("Övrigt");
-		
-		categoryData.save(livsMedel);
-		categoryData.save(boende);
-		categoryData.save(resorTrans);
-		categoryData.save(ovrigt);
-		
-		return "Categories successfully created and added to database";
-		
-	}
 }

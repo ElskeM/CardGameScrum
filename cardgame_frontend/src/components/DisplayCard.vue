@@ -1,9 +1,11 @@
 <template>
     <div>
         <div class="container">
-            <h3>{{this.card.title}}</h3>  
+            <h3>{{this.card.title}}</h3> 
+            <h4>{{this.card.subtitle}}</h4>
             <div>{{this.card.description}}</div>
-            <div>{{this.card.score}}</div>
+            <div>{{this.card.score}} kg</div>
+            <div><a v-bind:href="this.card.frontImage">Card Front</a></div>
 
         </div>
     </div>

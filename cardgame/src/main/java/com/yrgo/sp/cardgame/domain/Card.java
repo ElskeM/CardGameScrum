@@ -1,21 +1,15 @@
 package com.yrgo.sp.cardgame.domain;
 
-import java.util.Comparator;
-
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 /**
- * @author simon 
- * Entity that saves the picture of the card as a byte array in the database.
+ * @author simon Entity that saves the picture of the card as a byte array in
+ *         the database.
  */
 @Entity
 public class Card implements Comparable<Card> {
@@ -23,20 +17,26 @@ public class Card implements Comparable<Card> {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(nullable=false)
-	private String title;
-	private String description;
-	@Column(nullable=false)
+	@Column(nullable = false)
+	private String title; // Visas överst på kortet, med versaler.
+	private String subtitle; // Visas under title, med gemener i mindre storlek än title.
+	private String description; // Vad är score ett mått på, inkl. frequence.
+	private String extraInfo; // Extra information om källorna till score (t.ex. nötköttproduktion orsakar 45%
+								// av score)
+	@Column(nullable = false)
 	private Integer score;
-	
+
 	@ManyToOne
 	private Category category;
 	private String author = "Admin";
-	private Integer frequence;// Enum? Tänkt att kopplas till ikonerna i klimatkoll
-
-	@Lob
-	@Basic(fetch = FetchType.LAZY)
-	private byte[] picture;// https://vaadin.com/blog/saving-and-displaying-images-using-jpa
+	private Integer frequence;
+	
+//	@Lob
+//	@Basic(fetch = FetchType.LAZY)
+	private String frontImage;// https://vaadin.com/blog/saving-and-displaying-images-using-jpa
+//	@Lob
+//	@Basic(fetch = FetchType.LAZY)
+	private String backImage;
 
 	public Card() {
 		// TODO Auto-generated constructor stub
@@ -96,12 +96,12 @@ public class Card implements Comparable<Card> {
 		return this;
 	}
 
-	public byte[] getPicture() {
-		return picture;
+	public String getFrontImage() {
+		return frontImage;
 	}
 
-	public Card setPicture(byte[] picture) {
-		this.picture = picture;
+	public Card setFrontImage(String picture) {
+		this.frontImage = picture;
 		return this;
 	}
 
@@ -123,11 +123,31 @@ public class Card implements Comparable<Card> {
 		return this;
 	}
 
+	public String getSubtitle() {
+		return subtitle;
+	}
 
+	public void setSubtitle(String subtitle) {
+		this.subtitle = subtitle;
+	}
+
+	public String getExtraInfo() {
+		return extraInfo;
+	}
+
+	public void setExtraInfo(String extraInfo) {
+		this.extraInfo = extraInfo;
+	}
+
+	public String getBackImage() {
+		return backImage;
+	}
+
+	public void setBackImage(String backImage) {
+		this.backImage = backImage;
+	}
 	@Override
 	public int compareTo(Card o) {
 		return score.compareTo(o.getScore());
 	}
-
-
 }
