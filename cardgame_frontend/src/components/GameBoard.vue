@@ -10,7 +10,7 @@
       >
         <div
           v-for="card in playedCards"
-          :value="card"
+          :value="card.id" 
           :key="card.id"
           class="card"
         ><img
@@ -33,7 +33,7 @@
       >
         <div
           v-for="card in playerHand"
-          :value="card"
+          :value="card.id"
           :key="card.id"
           class="card list-group-item"
         >
@@ -61,14 +61,18 @@ playerHand:Array
   },
   data() {
     return {
-      dragging: false,
+      dragging: false, // Boolean som aktiverar funktionen att dra och släppa kort i playedCards
       
     };
   },
   methods: {
     onDrop(evt) {
       //Metod som körs när spelaren släpper kort på spelplanen. evt innehåller vilket kort och vilket index det släpps på
-      console.log(evt);
+      console.log(evt.to.getAttribute("class"));
+      if(evt.to.getAttribute("class")=="played-cards"){
+      console.log(evt.newIndex)//Index i listan man lägger kortet
+      console.log(evt.item.getAttribute("value"))//Hämtar det som är sparat i :value för  de släppta objektet. I vårat fall card.id.
+      }
       this.dragging=false;
     }
   },
