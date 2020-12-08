@@ -1,16 +1,25 @@
 package com.yrgo.sp.cardgame.game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.yrgo.sp.cardgame.domain.Card;
 
 public class Player {
 
 	private String name;
 	int guess;
-	private Card card;
+	private List<Card> hand;
+
+	
+	public void addCardToHand(Card card) {
+		hand.add(card);
+	}
 	
 	
 	public Player(String name) {
 		this.name = name;
+		this.hand = new ArrayList<Card>();
 	}
 	
 	public String getName() {
@@ -29,11 +38,11 @@ public class Player {
 		return guess;
 	}
 	
-	public void setCard(Card card) {
-		this.card = card;
+	public void setHand(List<Card> cards) {
+		this.hand = new ArrayList<>(cards);
 	}
 	
-	public Card getCard() {
-		return card;
+	public List<Card> getHand() {
+		return hand;
 	}
 }

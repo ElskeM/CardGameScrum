@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yrgo.sp.cardgame.domain.Card;
 
 public class Game {
+	
+	
 	@JsonIgnore
 	private Deck deck;
 
@@ -18,7 +20,11 @@ public class Game {
 	
 	public Game(long id) {
 		this.players = new ArrayList<Player>();
+		//skapar två spelare 
+		players.add(new Player(null));
+		players.add(new Player(null));
 		this.table = new ArrayList<Card>();
+		//skapar en deck som fylls med kort i Decks konstruktor
 		this.deck = new Deck();
 		this.id = id;
 	}
@@ -27,14 +33,30 @@ public class Game {
 		return this.table;
 	}
 	
+	public void startNewGame() {
+		deck.fillDeck();
+		this.table.add(this.deck.draw());
+		List<Card> cards = new ArrayList<Card>();
+		for(Player p : players) {
+			for(int i = 0; i<3; i++) {
+				p.addCardToHand(deck.draw());
+			}
+
+		}
+	}
+	
+/*
 	public void giveCardTo(Player p) {
 		if(p == null) {
-			this.table.add(this.deck.draw());
+			this.table.add(this.deck.draw());				
+			}
 		} else {
 			p.setCard(this.deck.draw());;
 		}
 		
 	}
+	
+*/
 	
 	public void setPlayer(Player player) {
 		players.add(player);

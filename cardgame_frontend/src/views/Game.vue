@@ -10,7 +10,8 @@
         <router-view/>
 -->
          <input type="text" v-model="gameId" placeholder="Har du redan ett id?">
-        <button @click="startGame">Starta</button>
+        <button @click="startGame">Starta Spel</button>
+        <button @click="drawCard">Dra kort</button>
         <div>Länk till spelet: {{this.linkToGame}}</div>
         <input type="text" v-model="playerNumber" placeholder="Gissa ett tal...">
         <input type="text" v-model="playerName" placeholder="Ditt namn">
@@ -48,69 +49,21 @@ export default {
       whoWon: "",
       linkToGame: "",
       playerName: "",
-      playedCards: [
-        {
-          id: 0,
-          title: "Blandkost",
-          subtitle: "Svenskt genomsnitt",
-          description: "1 års mat för en genomsnittlig svensk",
-          frequence: 365,
-          score: 2000,
-          extraInfo: "Utsläpp från nöttkött: 45 %, mjölkprodukter: 25%",
-          category: "Livsmedel",
-          frontImage: "http://localhost:8080/images/Kort1_front.jpg",
-          backImage: "http://localhost:8080/images/Kort1_back.jpg"
-        },
-        {
-          id: 1,
-          title: "Blandkost",
-          subtitle: "Frigående kyckling",
-          description:
-            "1års mat för en genomsnittlig svensk, men allt kött är från frigående kyckling",
-          frequence: 365,
-          score: 1000,
-          extraInfo: "Utsläpp från kyckling: 20%",
-          category: "Livsmedel",
-          frontImage: "http://localhost:8080/images/Kort2_front.jpg",
-          backImage: "http://localhost:8080//images/Kort2_back.jpg"
-        }
-      ],
-      playerHand: [
-        {
-          id: 2,
-          title: "Vegetarisk kost",
-          subtitle: null,
-          description:
-            "1 års mat för en genomsnittlig svensk vegetarian, protein från växter, ägg och mjölkprodukter",
-          frequence: 365,
-          score: 900,
-          extraInfo: "Utsläpp från mjölkprodukter: 50%",
-          category: "Livsmedel",
-          frontImage: "http://localhost:8080/images/Kort3_front.jpg",
-          backImage: "http://localhost:8080/images/Kort3_back.jpg"
-        },
-        {
-          id: 3,
-          title: "Vegansk kost",
-          subtitle: null,
-          description:
-            "1 års mat för en genomsnittlig svensk vegan, med protein från växter",
-          frequence: 365,
-          score: 500,
-          extraInfo: null,
-          category: "Livsmedel",
-          frontImage: "http://localhost:8080/images/Kort4_front.jpg",
-          backImage: "http://localhost:8080/images/Kort4_back.jpg"
-        }
-      ]
+      playerHand: [],
+      playedCards: []
+      
     };
   },
   methods: {
     confirmSecondPlayer() {
       if (this.stompClient && this.stompClient.connected) {
         console.log("HALLELUJAH!");
-        this.stompClient.send(`/app/connected/${this.gameId}`, {});
+        this.stompClient.send(`/app/connected/${this.gameId}/${this.playerName}`, {});
       }
+    },
+
+    drawCard() {
+        
     },
 
     startGame() {
@@ -125,8 +78,10 @@ export default {
             this.stompClient.subscribe(`/cardgame/drawn/${this.gameId}`, (tick) => {
               this.received_messages.push(JSON.parse(tick.body).content);
             });
-             this.stompClient.subscribe(`/cardgame/startCard/${this.gameId}`, (tick) => {
-              this.received_cards = JSON.parse(tick.body).content;
+             this.stompClient.subscribe(`/cardgame/startCard/${this.gameId}/${this.playerName}`, (tick) => {
+              this.playedCards = JSON.parse(tick.body)[0];
+              this.playerHand = JSON.parse(tick.body)[1];
+              console.log("HEEEEEEEJ")
               
             });
 
@@ -140,7 +95,9 @@ export default {
 
       } else {
         axios
-          .get("http://localhost:8080/game/")
+          .get(`http://localhost:8080/game/${this.playerName}`)
+          //then(console.log("HEEEEEEEEJ"))
+        //  .then(response => console.log(response))
           .then((response) => (this.gameId = response.data.id))
           .then(
             this.stompClient.connect(
@@ -156,9 +113,14 @@ export default {
                   }
                 );
 
-                 this.stompClient.subscribe(`/cardgame/startCard/${this.gameId}`, (tick) => {
-                        this.received_cards = JSON.parse(tick.body).content;
-                        console.log(this.received_cards)
+                 this.stompClient.subscribe(`/cardgame/startCard/${this.gameId}/${this.playerName}`, (tick) => {
+                     
+                        console.log(JSON.parse(tick.body))
+                        console.log("HHHHEEEEEEEEEEJ")
+                        this.playedCards = JSON.parse(tick.body)[0];
+                        this.playerHand = JSON.parse(tick.body)[1];
+                       console.log("playedCards:")
+                        console.log(this.playedCards)
                  });
 
 

@@ -34,6 +34,6 @@ public class GameService implements CardGameApi {
 	@Override
 	public void placeCard(long gameId) {
 		Game game = games.get(gameId);
-		game.giveCardTo(null);
+//		game.giveCardTo(null);
 	}
 }
