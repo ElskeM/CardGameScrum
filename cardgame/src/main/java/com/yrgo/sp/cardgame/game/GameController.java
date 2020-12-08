@@ -24,22 +24,25 @@ public class GameController {
 	@Autowired
 	private GameService gameService;
 
-	@GetMapping
-	public ResponseEntity<Game> startGame() {
-
-		// skapar ett id för spelet - används inte nu men kan vara bra att ha för
-		// multiplayer
-//		String id = UUID.randomUUID().toString();
-//		Game theGame = new Game(id);
-//		session.setAttribute("game", theGame);
-		// return "redirect:/game/start";
+	@GetMapping(value = "/{firstPlayerName}")
+	public ResponseEntity<Game> startGame(@PathVariable String firstPlayerName) {
 		Game game = gameService.createGame(++lastId);
+		game.getPlayers().get(0).setName(firstPlayerName);
+		System.out.println(game.getPlayers().get(0).getName());
+		
 		return ResponseEntity.ok(game);
 	}
 
+	
+	
+	
+	
+	
+	
 	// @Value(value = "game")
 	private long lastId = -1;
 
+/*	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Game> findGame(@PathVariable long id) {
 		Game g = gameService.getGameById(id);
@@ -64,8 +67,9 @@ public class GameController {
 		return ResponseEntity.ok(message);
 	}
 	
+*/
 
-	
+	/*
 	@GetMapping(value = "/{id}/{playerName}/draw")
 	public ResponseEntity<Card> draw(@PathVariable int id, @PathVariable String playerName) {
 		
@@ -82,7 +86,7 @@ public class GameController {
 		return ResponseEntity.ok(player.getCard());
 	}
 	
-	
+*/	
 	
 /*	
 	@Autowired
