@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,47 +19,57 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.yrgo.sp.cardgame.data.PlayerRepository;
 import com.yrgo.sp.cardgame.domain.Player;
+import com.yrgo.sp.exception.PlayerNotFoundException;
 
 @RestController
 public class PlayerController {
 
 	@Autowired
 	private PlayerRepository playerData;
-	
+
 	@CrossOrigin(origins = "http://localhost:8081")
 	@GetMapping("/player/{userName}")
-	public Player findByUserName(@PathVariable String userName) {
-		Player playerByUN= playerData.findByUserName(userName);
-		return playerByUN;
+	public ResponseEntity<Player> findByUserName(@PathVariable String userName) {
+		Player playerByUN = playerData.findByUserName(userName);
+		if (!playerByUN.getUserName().equals(userName)) {
+			throw new PlayerNotFoundException("Kunde inte hitta spelare med användarnamn " + userName);
+		}
+		return new ResponseEntity<>(playerByUN, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/player")
-	public Player findByEmail(@RequestParam String email) {
+	public ResponseEntity<Player> findByEmail(@RequestParam String email) {
 		Player playerByEmail = playerData.findByEmail(email);
-		return playerByEmail;
+		if (!playerByEmail.getUserName().equals(email)) {
+			throw new PlayerNotFoundException("Kunde inte hitta spelare med email " + email);
+		}
+		return new ResponseEntity<>(playerByEmail, HttpStatus.OK);
+
 	}
-	
-	@PostMapping("/player")
+
+	@PostMapping("/newPlayer")
 	public ResponseEntity<Object> createPlayer(@RequestBody Player player) {
 		Player newPlayer = playerData.save(player);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newPlayer.getClass()).toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(newPlayer.getClass()).toUri();
 		return ResponseEntity.created(location).build();
 	}
-	
+
 	@PutMapping("/player/{id}")
 	public ResponseEntity<Object> updatePlayer(@RequestBody Player player, @PathVariable Long id) {
 		Optional<Player> p = playerData.findById(id);
 		if (!p.isPresent()) {
-			return ResponseEntity.notFound().build();
+			throw new PlayerNotFoundException("Kunde inte hitta spelare med id " + id);
 		}
 		Player playerToUpdate = p.get();
 		player.setId(playerToUpdate.getId());
 		playerData.save(player);
-		return ResponseEntity.ok().build();
+		return new ResponseEntity<>(player, HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/player/{id}")
-	public void deletePlayer(@PathVariable Long id) {
+	public ResponseEntity<HttpStatus> deletePlayer(@PathVariable Long id) {
 		playerData.deleteById(id);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

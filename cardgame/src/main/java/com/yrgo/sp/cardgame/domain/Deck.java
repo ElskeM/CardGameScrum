@@ -1,5 +1,6 @@
 package com.yrgo.sp.cardgame.domain;
 
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+
 
 /**
  * 
@@ -145,6 +147,7 @@ public class Deck {
 		return random;
 	}
 	
+	@Transient
 	public List<Card> getShuffled(){
 		List<Card> shuffled = new ArrayList<Card>(this.cards);
 		Collections.shuffle(shuffled);
