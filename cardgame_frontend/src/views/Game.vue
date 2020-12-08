@@ -15,7 +15,7 @@
         <div>Länk till spelet: {{this.linkToGame}}</div>
         <input type="text" v-model="playerNumber" placeholder="Gissa ett tal...">
         <input type="text" v-model="playerName" placeholder="Ditt namn">
-        <button @click = "start">START</button>
+        <button @click ="playerMove">TEST</button>
         <div>Vinnaren är: {{this.whoWon}}</div>
         
 
@@ -55,6 +55,32 @@ export default {
     };
   },
   methods: {
+
+      
+    test() {
+         if (this.stompClient && this.stompClient.connected) {
+        console.log("TESTING!");
+        this.stompClient.send(`/app/connected/cardPlayed/`, JSON.stringify({message: "hej"}, {}));
+        }
+    },
+
+     playerMove() {
+        if (this.stompClient && this.stompClient.connected) {
+        console.log("TESTING!");
+        this.stompClient.send(`/app/connected/playerMove/`, 
+        JSON.stringify(
+                {
+                playerName: this.playerName, 
+                cardPosition: 20,
+                cardId: 23           
+                }
+                
+           ) 
+           )
+
+        }
+    },
+
     confirmSecondPlayer() {
       if (this.stompClient && this.stompClient.connected) {
         console.log("HALLELUJAH!");
@@ -134,6 +160,7 @@ export default {
           );
       }
     },
+
 
     start() {
       axios

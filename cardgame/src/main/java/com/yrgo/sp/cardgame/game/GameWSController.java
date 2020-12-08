@@ -11,6 +11,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.yrgo.sp.cardgame.domain.Card;
@@ -64,8 +65,25 @@ public class GameWSController {
 		this.template.convertAndSend("/cardgame/startCard/"+g.getId(), g.getTable());
 	}
 	
+	@MessageMapping("/connected/playerMove/")
+	public void cardPlayed(PlayerMove move){
+		System.out.println("PLAYER MOVE");
+		System.out.println(move.getCardId());
+		System.out.println(move.getPlayerName());
+		System.out.println(move.getCardPosition());
+		
+	
+	}
 	
 	
+	
+	
+	
+	@MessageMapping("/connected/cardPlayed/")
+	public void cardPlayed(TestMessage message){
+		System.out.println("Inne i metoden");
+		System.out.println(message);
+	}
 	
 	/*Kallas så fort spelaren drar sitt kort. Om true har kommit två gånger via prenumerationen
 	så har båda spelarna dragit ett kort och spelet kan starta */
