@@ -63,8 +63,8 @@ public class Deck {
 		card1.setId(1l);
 		
 		Card card2 = new Card("Vegetarisk kost", 900);
-		card2.setBackImage("http://localhost:8080/images/Kort3_front.jpg");
-		card2.setFrontImage("http://localhost:8080/images/Kort1_front.jpg");
+		card2.setBackImage("http://localhost:8080/images/Kort3_back.jpg");
+		card2.setFrontImage("http://localhost:8080/images/Kort3_front.jpg");
 		card2.setSubtitle(null);
 		card2.setFrequence(365);
 		card2.setDescription( "1 års mat för en genomsnittlig svensk vegetarian, protein från växter, ägg och mjölkprodukter");

@@ -10,7 +10,7 @@
       >
         <div
           v-for="card in playedCards"
-          :value="card.id" 
+          :value="card.id"
           :key="card.id"
           class="card"
         ><img
@@ -24,7 +24,6 @@
       group="cards"
       @start="dragging=true"
       @end="onDrop"
-      
       v-bind="dragOptions"
     >
       <transition-group
@@ -55,25 +54,27 @@ export default {
   components: {
     draggable
   },
-  props:{
-playedCards:Array,
-playerHand:Array
+  props: {
+    playedCards: Array,
+    playerHand: Array
   },
   data() {
     return {
-      dragging: false, // Boolean som aktiverar funktionen att dra och släppa kort i playedCards
-      
+      dragging: false // Boolean som aktiverar funktionen att dra och släppa kort i playedCards
     };
   },
   methods: {
     onDrop(evt) {
       //Metod som körs när spelaren släpper kort på spelplanen. evt innehåller vilket kort och vilket index det släpps på
       console.log(evt.to.getAttribute("class"));
-      if(evt.to.getAttribute("class")=="played-cards"){
-      console.log(evt.newIndex)//Index i listan man lägger kortet
-      console.log(evt.item.getAttribute("value"))//Hämtar det som är sparat i :value för  de släppta objektet. I vårat fall card.id.
+      if (evt.to.getAttribute("class") == "played-cards") {
+        console.log(evt.newIndex); //Index i listan man lägger kortet
+        console.log(evt.item.getAttribute("value")); //Hämtar det som är sparat i :value för  de släppta objektet. I vårat fall card.id.
+        var move = {"card":evt.item.getAttribute("value"),"index":evt.newIndex}
+        console.log(move)
+        this.$emit('moved', move)
       }
-      this.dragging=false;
+      this.dragging = false;
     }
   },
   computed: {
@@ -96,7 +97,7 @@ playerHand:Array
   padding: 10px;
   transition: transform 0.5s;
 }
-.card-image{
+.card-image {
   transition: transform 0.5s;
 }
 .board {
