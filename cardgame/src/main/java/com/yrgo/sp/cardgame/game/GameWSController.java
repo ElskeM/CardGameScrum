@@ -79,13 +79,13 @@ public class GameWSController {
 		 * playerTwo.getName()), cardList2 );
 		 */
 		
-		this.template.convertAndSend("/cardgame/startCard/"+g.getId(), g.getTable());
+	//	this.template.convertAndSend("/cardgame/startCard/"+g.getId(), g.getTable());
 	}
 	
 	
 	@MessageMapping("/connected/playerMove/{id}/{playerName}")
 	@SendTo("/cardgame/updateGameBoard/{id}")
-	public List<Card> cardPlayed(PlayerMove move, @DestinationVariable long id, @DestinationVariable String playerName){
+	public Object[] cardPlayed(PlayerMove move, @DestinationVariable long id, @DestinationVariable String playerName){
 		System.out.println("PLAYER MOVE");
 		System.out.println(move.getCardId());
 		System.out.println(move.getPlayerName());
@@ -119,13 +119,20 @@ public class GameWSController {
 		
 			
 			List<Card> newTable = g.getTable();
-
-		
+			
+			Player nextPlayer;
+			if(g.getPlayers().size() > 1) {
+				Optional<Player> np = g.getPlayers().stream().filter(pl -> !pl.getName().equals(playerName)).findFirst();
+				nextPlayer = np.get();
+			}else {
+				nextPlayer = player;
+			}
+			
 			for(Card c: newTable) {
 			System.out.println(c);
 			}
 
-		return newTable;
+		return new Object[] {newTable, nextPlayer};
 		
 	
 	

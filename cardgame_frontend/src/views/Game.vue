@@ -80,8 +80,11 @@ export default {
             cardPosition: value.index,
             cardId: value.card
           })
-           )
+        )
       }
+    },
+    drawCard(){
+
     },
 
     confirmSecondPlayer() {
@@ -93,9 +96,10 @@ export default {
         );
       }
     },
+    
 
-    drawCard() {
-      this.$refs.gb.setPlayerTurn(true);
+    changeTurns(bool) {
+      this.$refs.gb.setPlayerTurn(bool);
       },
     subscriptions() {
             this.stompClient.subscribe(`/cardgame/startCard/${this.gameId}/${this.playerName}`, (tick) => {
@@ -106,7 +110,16 @@ export default {
             });
               this.stompClient.subscribe(`/cardgame/updateGameBoard/${this.gameId}`, (tick) => {
                 console.log(tick)
-                this.playedCards = JSON.parse(tick.body);
+                this.playedCards = JSON.parse(tick.body)[0];
+                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+                console.log(JSON.parse(tick.body)[1].name)
+                if(JSON.parse(tick.body)[1].name === this.playerName) {
+                    //this.changeTurns(true)
+                    this.$refs.gb.setPlayerTurn(true);
+                }else {
+                    //this.changeTurns(false)
+                    this.$refs.gb.setPlayerTurn(false);
+                }
                 console.log("UPPDATERAT GAMEBOARD!!!!")
             });
         
