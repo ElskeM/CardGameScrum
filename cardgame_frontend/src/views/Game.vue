@@ -9,20 +9,34 @@
         <h1>{{this.whoWon}}</h1>
         <router-view/>
 -->
-         <input type="text" v-model="gameId" placeholder="Har du redan ett id?">
-        <button @click="startGame">Starta Spel</button>
-        <button @click="drawCard">Dra kort</button>
-        <div>Länk till spelet: {{this.linkToGame}}</div>
-        <input type="text" v-model="playerNumber" placeholder="Gissa ett tal...">
-        <input type="text" v-model="playerName" placeholder="Ditt namn">
-        <button @click ="playerMove">TEST</button>
-        <div>Vinnaren är: {{this.whoWon}}</div>
-        
+    <input
+      type="text"
+      v-model="gameId"
+      placeholder="Har du redan ett id?"
+    >
+    <button @click="startGame">Starta Spel</button>
+    <button @click="drawCard">Dra kort</button>
+    <div>Länk till spelet: {{this.linkToGame}}</div>
+    <input
+      type="text"
+      v-model="playerNumber"
+      placeholder="Gissa ett tal..."
+    >
+    <input
+      type="text"
+      v-model="playerName"
+      placeholder="Ditt namn"
+    >
+    <button @click="playerMove">TEST</button>
+    <div>Vinnaren är: {{this.whoWon}}</div>
 
-<GameBoard :playedCards="playedCards" :playerHand="playerHand"/>
+    <GameBoard
+      @moved="playerMove"
+      :playedCards="playedCards"
+      :playerHand="playerHand"
+    />
 
-        
-    </div>
+  </div>
 
 </template>
 
@@ -31,7 +45,7 @@ import axios from "axios";
 import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
 
-import GameBoard from '../components/GameBoard.vue'
+import GameBoard from "../components/GameBoard.vue";
 export default {
   components: { GameBoard },
   data() {
@@ -51,46 +65,45 @@ export default {
       playerName: "",
       playerHand: [],
       playedCards: []
-      
     };
   },
   methods: {
-
-      
     test() {
-         if (this.stompClient && this.stompClient.connected) {
+      if (this.stompClient && this.stompClient.connected) {
         console.log("TESTING!");
-        this.stompClient.send(`/app/connected/cardPlayed/`, JSON.stringify({message: "hej"}, {}));
-        }
+        this.stompClient.send(
+          `/app/connected/cardPlayed/`,
+          JSON.stringify({ message: "hej" }, {})
+        );
+      }
     },
 
-     playerMove() {
-        if (this.stompClient && this.stompClient.connected) {
+    playerMove(value) {
+      console.log("Tester Coolio!" + this.stompClient);
+      if (this.stompClient && this.stompClient.connected) {
         console.log("TESTING!");
-        this.stompClient.send(`/app/connected/playerMove/`, 
-        JSON.stringify(
-                {
-                playerName: this.playerName, 
-                cardPosition: 20,
-                cardId: 23           
-                }
-                
-           ) 
-           )
-
-        }
+        this.stompClient.send(
+          `/app/connected/playerMove/`,
+          JSON.stringify({
+            playerName: this.playerName,
+            cardPosition: value.index,
+            cardId: value.card
+          })
+        );
+      }
     },
 
     confirmSecondPlayer() {
       if (this.stompClient && this.stompClient.connected) {
         console.log("HALLELUJAH!");
-        this.stompClient.send(`/app/connected/${this.gameId}/${this.playerName}`, {});
+        this.stompClient.send(
+          `/app/connected/${this.gameId}/${this.playerName}`,
+          {}
+        );
       }
     },
 
-    drawCard() {
-        
-    },
+    drawCard() {},
 
     startGame() {
       this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
@@ -98,61 +111,64 @@ export default {
       if (this.gameId) {
         this.stompClient.connect(
           {},
-          (frame) => {
+          frame => {
             console.log(frame);
             this.connected = true;
-            this.stompClient.subscribe(`/cardgame/drawn/${this.gameId}`, (tick) => {
-              this.received_messages.push(JSON.parse(tick.body).content);
-            });
-             this.stompClient.subscribe(`/cardgame/startCard/${this.gameId}/${this.playerName}`, (tick) => {
-              this.playedCards = JSON.parse(tick.body)[0];
-              this.playerHand = JSON.parse(tick.body)[1];
-              console.log("HEEEEEEEJ")
-              
-            });
+            this.stompClient.subscribe(
+              `/cardgame/drawn/${this.gameId}`,
+              tick => {
+                this.received_messages.push(JSON.parse(tick.body).content);
+              }
+            );
+            this.stompClient.subscribe(
+              `/cardgame/startCard/${this.gameId}/${this.playerName}`,
+              tick => {
+                this.playedCards = JSON.parse(tick.body)[0];
+                this.playerHand = JSON.parse(tick.body)[1];
+                console.log("HEEEEEEEJ");
+              }
+            );
 
             this.confirmSecondPlayer();
           },
-          (error) => {
+          error => {
             console.log(error);
             this.connected = false;
           }
         );
-
       } else {
         axios
           .get(`http://localhost:8080/game/${this.playerName}`)
           //then(console.log("HEEEEEEEEJ"))
-        //  .then(response => console.log(response))
-          .then((response) => (this.gameId = response.data.id))
+          //  .then(response => console.log(response))
+          .then(response => (this.gameId = response.data.id))
           .then(
             this.stompClient.connect(
               {},
-              (frame) => {
+              frame => {
                 console.log(frame);
                 this.connected = true;
                 this.stompClient.subscribe(
                   `/cardgame/connected/${this.gameId}`,
-                  (tick) => {
+                  tick => {
                     this.twoPlayers = JSON.parse(tick.body);
                     console.log("twoPlayers = " + this.twoPlayers);
                   }
                 );
 
-                 this.stompClient.subscribe(`/cardgame/startCard/${this.gameId}/${this.playerName}`, (tick) => {
-                     
-                        console.log(JSON.parse(tick.body))
-                        console.log("HHHHEEEEEEEEEEJ")
-                        this.playedCards = JSON.parse(tick.body)[0];
-                        this.playerHand = JSON.parse(tick.body)[1];
-                       console.log("playedCards:")
-                        console.log(this.playedCards)
-                 });
-
-
-
+                this.stompClient.subscribe(
+                  `/cardgame/startCard/${this.gameId}/${this.playerName}`,
+                  tick => {
+                    console.log(JSON.parse(tick.body));
+                    console.log("HHHHEEEEEEEEEEJ");
+                    this.playedCards = JSON.parse(tick.body)[0];
+                    this.playerHand = JSON.parse(tick.body)[1];
+                    console.log("playedCards:");
+                    console.log(this.playedCards);
+                  }
+                );
               },
-              (error) => {
+              error => {
                 console.log(error);
                 this.connected = false;
               }
@@ -161,12 +177,11 @@ export default {
       }
     },
 
-
     start() {
       axios
         .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`)
-        .then((response) => (this.whoWon = response.data));
-    },
+        .then(response => (this.whoWon = response.data));
+    }
 
     /*    createGame() {
             axios.get('http://localhost:8080/game/')
@@ -181,7 +196,7 @@ export default {
         }
 
         */
-  },
+  }
 };
 </script>
 
