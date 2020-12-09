@@ -5,8 +5,9 @@
       <draggable
         class="played-cards"
         group="cards"
-        :disabled="!dragging"
+        :disabled="allowPlay()"
         @end="onDrop"
+        id="played-cards"
       >
         <div
           v-for="card in playedCards"
@@ -38,7 +39,7 @@
           v-for="card in playerHand"
           :value="card.id"
           :key="card.id"
-          class="card list-group-item"
+          class="card list-group-item player-card"
         >
           <img
             class="card-image"
@@ -64,21 +65,33 @@ export default {
   },
   data() {
     return {
-      dragging: false // Boolean som aktiverar funktionen att dra och släppa kort i playedCards
+      dragging: false, // Boolean som aktiverar funktionen att dra och släppa kort i playedCards
+      playerTurn: false // Indikerar on det är denna spelarens tur
     };
   },
   methods: {
+    allowPlay(){
+        if(this.dragging&&this.playerTurn){
+          return false;
+        }
+        return true
+    },
     onDrop(evt) {
       //Metod som körs när spelaren släpper kort på spelplanen. evt innehåller vilket kort och vilket index det släpps på
-      console.log(evt.to.getAttribute("class"));
+      console.log(evt);
       if (evt.to.getAttribute("class") == "played-cards") {
         console.log(evt.newIndex); //Index i listan man lägger kortet
         console.log(evt.item.getAttribute("value")); //Hämtar det som är sparat i :value för  de släppta objektet. I vårat fall card.id.
         var move = {"card":evt.item.getAttribute("value"),"index":evt.newIndex}
+        this.playerHand.splice(evt.oldIndex,1)
         console.log(move)
         this.$emit('moved', move)
       }
       this.dragging = false;
+    },
+    setPlayerTurn(turn){
+      console.log(turn)
+      this.playerTurn=turn
     }
   },
   computed: {
