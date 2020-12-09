@@ -34,9 +34,8 @@ public class Game {
 	}
 	
 	public void startNewGame() {
-		deck.fillDeck();
+		
 		this.table.add(this.deck.draw());
-		List<Card> cards = new ArrayList<Card>();
 		for(Player p : players) {
 			for(int i = 0; i<3; i++) {
 				p.addCardToHand(deck.draw());

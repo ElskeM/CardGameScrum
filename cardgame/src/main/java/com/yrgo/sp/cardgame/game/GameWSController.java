@@ -2,6 +2,7 @@ package com.yrgo.sp.cardgame.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -44,7 +45,9 @@ public class GameWSController {
 	public void placeInitialCard(long gameId) {
 		System.out.println("DEALING FIRST CARD");
 		Game g = game.getGameById(gameId);
+		game.fillDeck(gameId);
 		g.startNewGame();
+		
 		
 		Player playerOne = g.getPlayers().get(0);
 		Player playerTwo = g.getPlayers().get(1);
@@ -65,13 +68,36 @@ public class GameWSController {
 		this.template.convertAndSend("/cardgame/startCard/"+g.getId(), g.getTable());
 	}
 	
-	@MessageMapping("/connected/playerMove/")
-	public void cardPlayed(PlayerMove move){
+	
+	@MessageMapping("/connected/playerMove/{id}/{playerName}")
+	@SendTo("/cardgame/updateGameBoard/{id}")
+	public boolean cardPlayed(PlayerMove move, @DestinationVariable long id, @DestinationVariable String playerName){
 		System.out.println("PLAYER MOVE");
 		System.out.println(move.getCardId());
 		System.out.println(move.getPlayerName());
 		System.out.println(move.getCardPosition());
 		
+		/*
+		Game g = game.getGameById(id);
+		
+		Optional<Player> p = g.getPlayers().stream().filter(a -> a.getName() == playerName).findFirst();
+		Player player = p.get();
+		
+		Optional<Card> pc = player.getHand().stream().filter(card -> card.getId() == move.getCardId()).findFirst();
+		Card playedCard = pc.get();
+		
+		player.getHand().remove(playedCard);
+		
+		g.getTable().add(move.getCardPosition(), playedCard);
+		List<Card> newTable = g.getTable();
+		
+	
+		return newTable;
+		
+		*/
+		
+		
+		return true;
 	
 	}
 	
@@ -79,16 +105,19 @@ public class GameWSController {
 	
 	
 	
-	@MessageMapping("/connected/cardPlayed/")
-	public void cardPlayed(TestMessage message){
-		System.out.println("Inne i metoden");
-		System.out.println(message);
-	}
+
 	
 	/*Kallas så fort spelaren drar sitt kort. Om true har kommit två gånger via prenumerationen
 	så har båda spelarna dragit ett kort och spelet kan starta */
 
+
 	
+	
+	
+	
+	
+	
+	/*
 	
 	@MessageMapping("{id}/{playerName}/drawCard")
 	@SendTo("/cardgame/drawn/{id}")
@@ -99,13 +128,15 @@ public class GameWSController {
 		return true;
 	}
 	
+	*/
 	
-	/*Kallas när spelaren lägger ut sitt kort */
+	
+	/*Kallas när spelaren lägger ut sitt kort 
 	@MessageMapping("{id}/putCard")
 	@SendTo("/topic/put/{id}")
 	public Card putCard(@DestinationVariable String id, Card card){
 		return card;
 	}
 	
-
+*/
 }
