@@ -71,16 +71,16 @@ public class GameWSController {
 	
 	@MessageMapping("/connected/playerMove/{id}/{playerName}")
 	@SendTo("/cardgame/updateGameBoard/{id}")
-	public boolean cardPlayed(PlayerMove move, @DestinationVariable long id, @DestinationVariable String playerName){
+	public List<Card> cardPlayed(PlayerMove move, @DestinationVariable long id, @DestinationVariable String playerName){
 		System.out.println("PLAYER MOVE");
 		System.out.println(move.getCardId());
 		System.out.println(move.getPlayerName());
 		System.out.println(move.getCardPosition());
 		
-		/*
+		
 		Game g = game.getGameById(id);
 		
-		Optional<Player> p = g.getPlayers().stream().filter(a -> a.getName() == playerName).findFirst();
+		Optional<Player> p = g.getPlayers().stream().filter(pl -> pl.getName().equals(playerName)).findFirst();
 		Player player = p.get();
 		
 		Optional<Card> pc = player.getHand().stream().filter(card -> card.getId() == move.getCardId()).findFirst();
@@ -90,14 +90,15 @@ public class GameWSController {
 		
 		g.getTable().add(move.getCardPosition(), playedCard);
 		List<Card> newTable = g.getTable();
+
 		
+		for(Card c: newTable) {
+			System.out.println(c);
+		}
 	
 		return newTable;
 		
-		*/
-		
-		
-		return true;
+	
 	
 	}
 	

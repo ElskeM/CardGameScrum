@@ -23,9 +23,11 @@ public class Deck {
 		return random;
 	}
 
+
 	public void fillDeck(Set<Card> set) {
 
 		this.cards = set;
+
 
 	}
 }
