@@ -5,7 +5,7 @@
       <draggable
         class="played-cards"
         group="cards"
-        :disabled="!dragging"
+        :disabled="allowPlay()"
         @end="onDrop"
       >
         <div
@@ -60,10 +60,17 @@ export default {
   },
   data() {
     return {
-      dragging: false // Boolean som aktiverar funktionen att dra och släppa kort i playedCards
+      dragging: false, // Boolean som aktiverar funktionen att dra och släppa kort i playedCards
+      playerTurn: false // Indikerar on det är denna spelarens tur
     };
   },
   methods: {
+    allowPlay(){
+        if(this.dragging&&this.playerTurn){
+          return false;
+        }
+        return true
+    },
     onDrop(evt) {
       //Metod som körs när spelaren släpper kort på spelplanen. evt innehåller vilket kort och vilket index det släpps på
       console.log(evt.to.getAttribute("class"));
@@ -75,6 +82,10 @@ export default {
         this.$emit('moved', move)
       }
       this.dragging = false;
+    },
+    setPlayerTurn(turn){
+      console.log(turn)
+      this.playerTurn=turn
     }
   },
   computed: {

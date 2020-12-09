@@ -34,6 +34,7 @@
       @moved="playerMove"
       :playedCards="playedCards"
       :playerHand="playerHand"
+      ref="gb"
     />
 
   </div>
@@ -79,7 +80,7 @@ export default {
     },
 
     playerMove(value) {
-      console.log("Tester Coolio!" + this.stompClient);
+      console.log("Tester Coolio!");
       if (this.stompClient && this.stompClient.connected) {
         console.log("TESTING!");
         this.stompClient.send(
@@ -103,7 +104,9 @@ export default {
       }
     },
 
-    drawCard() {},
+    drawCard() {
+      this.$refs.gb.setPlayerTurn(true);
+    },
 
     startGame() {
       this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
