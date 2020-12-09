@@ -83,6 +83,7 @@ export default {
         );
       }
     },
+    drawCard() {},
 
     confirmSecondPlayer() {
       if (this.stompClient && this.stompClient.connected) {
@@ -94,8 +95,8 @@ export default {
       }
     },
 
-    drawCard() {
-      this.$refs.gb.setPlayerTurn(true);
+    changeTurns(bool) {
+      this.$refs.gb.setPlayerTurn(bool);
     },
     subscriptions() {
       this.stompClient.subscribe(
@@ -112,6 +113,15 @@ export default {
         tick => {
           console.log(tick);
           this.playedCards = JSON.parse(tick.body);
+          console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+          console.log(JSON.parse(tick.body));
+          /*if (JSON.parse(tick.body)[1].name === this.playerName) {
+            //this.changeTurns(true)
+            this.$refs.gb.setPlayerTurn(true);
+          } else {
+            //this.changeTurns(false)
+            this.$refs.gb.setPlayerTurn(false);
+          }*/
           console.log("UPPDATERAT GAMEBOARD!!!!");
         }
       );
@@ -144,13 +154,13 @@ export default {
               frame => {
                 console.log(frame);
                 this.connected = true;
-                this.stompClient.subscribe(
+                /*this.stompClient.subscribe(
                   `/cardgame/connected/${this.gameId}`,
                   tick => {
                     this.twoPlayers = JSON.parse(tick.body);
                     console.log("twoPlayers = " + this.twoPlayers);
                   }
-                );
+                );*/
 
                 this.subscriptions();
               },
@@ -162,7 +172,6 @@ export default {
           );
       }
     },
-    
 
     start() {
       axios
