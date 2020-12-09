@@ -1,10 +1,9 @@
 package com.yrgo.sp.cardgame.game;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -12,10 +11,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.socket.WebSocketSession;
 
 import com.yrgo.sp.cardgame.domain.Card;
 
@@ -60,29 +55,7 @@ public class GameWSController {
 			map.replace("player", player);
 			this.template.convertAndSend(("/cardgame/startCard/"+g.getId() + "/" + player.getName()),map );
 		}
-		/*
-		 * for (int i = 0; i < g.getPlayers().size(); i++) {
-		 * 
-		 * } Player playerOne = g.getPlayers().get(0); Player playerTwo =
-		 * g.getPlayers().get(1);
-		 * 
-		 * List<ArrayList<Card>> cardList = new ArrayList<ArrayList<Card>>();
-		 * cardList.add((ArrayList<Card>) g.getTable()); cardList.add((ArrayList<Card>)
-		 * playerOne.getHand());
-		 * 
-		 * List<ArrayList<Card>> cardList2 = new ArrayList<ArrayList<Card>>();
-		 * cardList2.add((ArrayList<Card>) g.getTable());
-		 * cardList2.add((ArrayList<Card>) playerTwo.getHand());
-		 * 
-		 * System.out.println(playerOne.getName());
-		 * System.out.println(playerTwo.getName());
-		 * this.template.convertAndSend(("/cardgame/startCard/"+g.getId() + "/" +
-		 * playerOne.getName()), cardList );
-		 * this.template.convertAndSend(("/cardgame/startCard/"+g.getId() + "/" +
-		 * playerTwo.getName()), cardList2 );
-		 */
-		
-		//this.template.convertAndSend("/cardgame/startCard/"+g.getId(), g.getTable());
+	
 	}
 	
 	
