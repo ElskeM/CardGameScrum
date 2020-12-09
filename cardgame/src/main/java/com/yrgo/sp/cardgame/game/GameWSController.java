@@ -1,6 +1,7 @@
 package com.yrgo.sp.cardgame.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.Optional;
@@ -52,10 +53,12 @@ public class GameWSController {
 		
 		
 		g.getPlayers().get(ThreadLocalRandom.current().nextInt(0, g.getPlayers().size())).setTurn(true);
-		
+		HashMap <String,Object> map = new HashMap<String, Object>();
+		map.put("table", g.getTable());
+		map.put("player", null);
 		for (Player player : g.getPlayers()) {
-			
-			this.template.convertAndSend(("/cardgame/startCard/"+g.getId() + "/" + player.getName()),new Object[] { player,g.getTable()} );
+			map.replace("player", player);
+			this.template.convertAndSend(("/cardgame/startCard/"+g.getId() + "/" + player.getName()),map );
 		}
 		/*
 		 * for (int i = 0; i < g.getPlayers().size(); i++) {
@@ -79,7 +82,7 @@ public class GameWSController {
 		 * playerTwo.getName()), cardList2 );
 		 */
 		
-		this.template.convertAndSend("/cardgame/startCard/"+g.getId(), g.getTable());
+		//this.template.convertAndSend("/cardgame/startCard/"+g.getId(), g.getTable());
 	}
 	
 	
