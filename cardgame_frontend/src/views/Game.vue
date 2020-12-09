@@ -108,7 +108,7 @@ export default {
       this.$refs.gb.setPlayerTurn(true);
     },
 
-    startGame() {
+startGame() {
       this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
       this.stompClient = Stomp.over(this.socket);
       if (this.gameId) {
@@ -125,11 +125,7 @@ export default {
             );
             this.stompClient.subscribe(
               `/cardgame/startCard/${this.gameId}/${this.playerName}`,
-              tick => {
-                this.playedCards = JSON.parse(tick.body)[0];
-                this.playerHand = JSON.parse(tick.body)[1];
-                console.log("HEEEEEEEJ");
-              }
+              tick => this.setBoard(tick)
             );
 
             this.confirmSecondPlayer();
@@ -161,14 +157,7 @@ export default {
 
                 this.stompClient.subscribe(
                   `/cardgame/startCard/${this.gameId}/${this.playerName}`,
-                  tick => {
-                    console.log(JSON.parse(tick.body));
-                    console.log("HHHHEEEEEEEEEEJ");
-                    this.playedCards = JSON.parse(tick.body)[0];
-                    this.playerHand = JSON.parse(tick.body)[1];
-                    console.log("playedCards:");
-                    console.log(this.playedCards);
-                  }
+                  tick => this.setBoard(tick)
                 );
               },
               error => {
@@ -179,6 +168,63 @@ export default {
           );
       }
     },
+    setBoard(tick){
+      console.log(JSON.parse(tick.body));
+              console.log("HHHHEEEEEEEEEEJ");
+              this.playedCards = JSON.parse(tick.body)[1];
+              this.playerHand = JSON.parse(tick.body)[0].hand;
+              this.$refs.gb.setPlayerTurn(JSON.parse(tick.body)[0].turn);
+              console.log("playedCards:");
+              console.log(this.playedCards);
+    },
+    /*startGame() {
+      this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
+      this.stompClient = Stomp.over(this.socket);
+      var newGame = !this.gameId;
+      console.log("Detta är newGame: " + newGame);
+      if (newGame) {
+        axios
+          .get(`http://localhost:8080/game/${this.playerName}`)
+          //then(console.log("HEEEEEEEEJ"))
+          //  .then(response => console.log(response))
+          .then(response => (this.gameId = response.data.id));
+      }
+
+      this.stompClient.connect(
+        {},
+        frame => {
+          console.log(frame);
+          this.connected = true;
+          /*this.stompClient.subscribe(
+              `/cardgame/drawn/${this.gameId}`,
+              tick => {
+                this.received_messages.push(JSON.parse(tick.body).content);
+              }
+            );
+          this.stompClient.subscribe(
+            `/cardgame/startCard/${this.gameId}/${this.playerName}`,
+            tick => {
+              console.log(JSON.parse(tick.body));
+              console.log("HHHHEEEEEEEEEEJ");
+              this.playedCards = JSON.parse(tick.body)[1];
+              this.playerHand = JSON.parse(tick.body)[0].hand;
+              this.$refs.gb.setPlayerTurn(JSON.parse(tick.body)[0].turn);
+              console.log("playedCards:");
+              console.log(this.playedCards);
+            }
+          );
+
+          //this.confirmSecondPlayer();
+        },
+        error => {
+          console.log(error);
+          this.connected = false;
+        }
+      );
+      if (!newGame) {
+        this.confirmSecondPlayer();
+      }
+    },*/
 
     start() {
       axios

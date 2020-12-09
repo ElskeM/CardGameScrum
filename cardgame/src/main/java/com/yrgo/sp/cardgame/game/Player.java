@@ -8,7 +8,7 @@ import com.yrgo.sp.cardgame.domain.Card;
 public class Player {
 
 	private String name;
-	int guess;
+	private boolean turn = false;
 	private List<Card> hand;
 
 	
@@ -30,14 +30,17 @@ public class Player {
 		this.name = name;
 	}
 	
-	public void setGuess(int guess) {
-		this.guess = guess;
-	}
 	
-	public int getGuess() {
-		return guess;
+	public boolean isTurn() {
+		return turn;
 	}
-	
+
+
+	public void setTurn(boolean turn) {
+		this.turn = turn;
+	}
+
+
 	public void setHand(List<Card> cards) {
 		this.hand = new ArrayList<>(cards);
 	}

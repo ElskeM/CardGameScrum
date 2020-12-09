@@ -2,6 +2,7 @@ package com.yrgo.sp.cardgame.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -33,6 +34,7 @@ public class GameWSController {
 		System.out.println("secondPlayerConnected: " + true + ", gameID: " + id);
 		Game g = game.getGameById(id);
 		g.getPlayers().get(1).setName(playerName);
+		
 		System.out.println(g.getPlayers().get(1).getName());
 		placeInitialCard(id);
 		return true;
@@ -46,21 +48,34 @@ public class GameWSController {
 		Game g = game.getGameById(gameId);
 		g.startNewGame();
 		
-		Player playerOne = g.getPlayers().get(0);
-		Player playerTwo = g.getPlayers().get(1);
 		
-		List<ArrayList<Card>> cardList = new ArrayList<ArrayList<Card>>();
-		cardList.add((ArrayList<Card>) g.getTable());
-		cardList.add((ArrayList<Card>) playerOne.getHand());
+		g.getPlayers().get(ThreadLocalRandom.current().nextInt(0, g.getPlayers().size())).setTurn(true);
 		
-		List<ArrayList<Card>> cardList2 = new ArrayList<ArrayList<Card>>();
-		cardList2.add((ArrayList<Card>) g.getTable());
-		cardList2.add((ArrayList<Card>) playerTwo.getHand());
-		
-		System.out.println(playerOne.getName());
-		System.out.println(playerTwo.getName());
-		this.template.convertAndSend(("/cardgame/startCard/"+g.getId() + "/" + playerOne.getName()), cardList );
-		this.template.convertAndSend(("/cardgame/startCard/"+g.getId() + "/" + playerTwo.getName()), cardList2 );
+		for (Player player : g.getPlayers()) {
+			
+			this.template.convertAndSend(("/cardgame/startCard/"+g.getId() + "/" + player.getName()),new Object[] { player,g.getTable()} );
+		}
+		/*
+		 * for (int i = 0; i < g.getPlayers().size(); i++) {
+		 * 
+		 * } Player playerOne = g.getPlayers().get(0); Player playerTwo =
+		 * g.getPlayers().get(1);
+		 * 
+		 * List<ArrayList<Card>> cardList = new ArrayList<ArrayList<Card>>();
+		 * cardList.add((ArrayList<Card>) g.getTable()); cardList.add((ArrayList<Card>)
+		 * playerOne.getHand());
+		 * 
+		 * List<ArrayList<Card>> cardList2 = new ArrayList<ArrayList<Card>>();
+		 * cardList2.add((ArrayList<Card>) g.getTable());
+		 * cardList2.add((ArrayList<Card>) playerTwo.getHand());
+		 * 
+		 * System.out.println(playerOne.getName());
+		 * System.out.println(playerTwo.getName());
+		 * this.template.convertAndSend(("/cardgame/startCard/"+g.getId() + "/" +
+		 * playerOne.getName()), cardList );
+		 * this.template.convertAndSend(("/cardgame/startCard/"+g.getId() + "/" +
+		 * playerTwo.getName()), cardList2 );
+		 */
 		
 		this.template.convertAndSend("/cardgame/startCard/"+g.getId(), g.getTable());
 	}
