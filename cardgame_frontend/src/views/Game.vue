@@ -68,15 +68,6 @@ export default {
     };
   },
   methods: {
-    test() {
-      if (this.stompClient && this.stompClient.connected) {
-        console.log("TESTING!");
-        this.stompClient.send(
-          `/app/connected/cardPlayed/`,
-          JSON.stringify({ message: "hej" }, {})
-        );
-      }
-    },
 
     playerMove(value) {
       console.log("Tester Coolio!" + this.stompClient);
@@ -130,8 +121,6 @@ export default {
             console.log(frame);
             this.connected = true;
             this.subscriptions()
-
-
             this.confirmSecondPlayer();
           },
           error => {
@@ -142,8 +131,6 @@ export default {
       } else {
         axios
           .get(`http://localhost:8080/game/${this.playerName}`)
-          //then(console.log("HEEEEEEEEJ"))
-           // .then(response => console.log(response.data.id))
           .then(response => (this.gameId = response.data.id))
           .then(
             this.stompClient.connect(

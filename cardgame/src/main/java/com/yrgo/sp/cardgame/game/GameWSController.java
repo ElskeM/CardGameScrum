@@ -80,6 +80,8 @@ public class GameWSController {
 		
 		Game g = game.getGameById(id);
 		
+		List<Card> table = g.getTable();
+		
 		Optional<Player> p = g.getPlayers().stream().filter(pl -> pl.getName().equals(playerName)).findFirst();
 		Player player = p.get();
 		
@@ -88,19 +90,33 @@ public class GameWSController {
 		
 		player.getHand().remove(playedCard);
 		
-		g.getTable().add(move.getCardPosition(), playedCard);
-		List<Card> newTable = g.getTable();
+		
+		if(move.getCardPosition() != 0 && move.getCardPosition() != table.size()) {
+			
+			if(  playedCard.getScore() <  table.get(move.getCardPosition()).getScore()  
+					&& playedCard.getScore() > table.get(move.getCardPosition() -1 ).getScore() ) {
+				table.add(move.getCardPosition(), playedCard);
+				}
+			} else if (move.getCardPosition() == 0 && table.get(move.getCardPosition()).getScore() > playedCard.getScore()) {
+				table.add(move.getCardPosition(), playedCard);
+			} else if(move.getCardPosition() == table.size() && playedCard.getScore() > table.get(move.getCardPosition() -1 ).getScore()) {
+				table.add(move.getCardPosition(), playedCard);
+			}
+		
+			
+			List<Card> newTable = g.getTable();
 
 		
-		for(Card c: newTable) {
+			for(Card c: newTable) {
 			System.out.println(c);
-		}
-	
+			}
+
 		return newTable;
 		
 	
 	
 	}
+	
 	
 	
 	
