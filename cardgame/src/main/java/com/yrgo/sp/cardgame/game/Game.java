@@ -3,6 +3,7 @@ package com.yrgo.sp.cardgame.game;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yrgo.sp.cardgame.domain.Card;
@@ -33,10 +34,14 @@ public class Game {
 		return this.table;
 	}
 	
+	public Card findCardInTableById(long id) {
+		Optional<Card> c = table.stream().filter(ca -> ca.getId() == id).findFirst();
+		return c.get();
+	}
+	
 	public void startNewGame() {
-		deck.fillDeck();
+		
 		this.table.add(this.deck.draw());
-		List<Card> cards = new ArrayList<Card>();
 		for(Player p : players) {
 			for(int i = 0; i<3; i++) {
 				p.addCardToHand(deck.draw());

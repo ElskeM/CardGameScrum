@@ -39,6 +39,7 @@ public class GameController {
 	
 	
 	
+	
 	// @Value(value = "game")
 	private long lastId = -1;
 

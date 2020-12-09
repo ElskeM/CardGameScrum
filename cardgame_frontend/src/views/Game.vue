@@ -69,28 +69,18 @@ export default {
     };
   },
   methods: {
-    test() {
-      if (this.stompClient && this.stompClient.connected) {
-        console.log("TESTING!");
-        this.stompClient.send(
-          `/app/connected/cardPlayed/`,
-          JSON.stringify({ message: "hej" }, {})
-        );
-      }
-    },
 
     playerMove(value) {
       console.log("Tester Coolio!");
       if (this.stompClient && this.stompClient.connected) {
         console.log("TESTING!");
-        this.stompClient.send(
-          `/app/connected/playerMove/`,
+           this.stompClient.send(`/app/connected/playerMove/${this.gameId}/${this.playerName}`,
           JSON.stringify({
             playerName: this.playerName,
             cardPosition: value.index,
             cardId: value.card
           })
-        );
+           )
       }
     },
 
@@ -106,6 +96,21 @@ export default {
 
     drawCard() {
       this.$refs.gb.setPlayerTurn(true);
+      },
+    subscriptions() {
+            this.stompClient.subscribe(`/cardgame/startCard/${this.gameId}/${this.playerName}`, (tick) => {
+              this.playedCards = JSON.parse(tick.body)[1];
+              this.playerHand = JSON.parse(tick.body)[0].hand;
+              this.$refs.gb.setPlayerTurn(JSON.parse(tick.body)[0].turn);
+              console.log("HEEEEEEEJ")
+            });
+              this.stompClient.subscribe(`/cardgame/updateGameBoard/${this.gameId}`, (tick) => {
+                console.log(tick)
+                this.playedCards = JSON.parse(tick.body);
+                console.log("UPPDATERAT GAMEBOARD!!!!")
+            });
+        
+
     },
 
 startGame() {
@@ -117,17 +122,7 @@ startGame() {
           frame => {
             console.log(frame);
             this.connected = true;
-            this.stompClient.subscribe(
-              `/cardgame/drawn/${this.gameId}`,
-              tick => {
-                this.received_messages.push(JSON.parse(tick.body).content);
-              }
-            );
-            this.stompClient.subscribe(
-              `/cardgame/startCard/${this.gameId}/${this.playerName}`,
-              tick => this.setBoard(tick)
-            );
-
+            this.subscriptions()
             this.confirmSecondPlayer();
           },
           error => {
@@ -138,8 +133,6 @@ startGame() {
       } else {
         axios
           .get(`http://localhost:8080/game/${this.playerName}`)
-          //then(console.log("HEEEEEEEEJ"))
-          //  .then(response => console.log(response))
           .then(response => (this.gameId = response.data.id))
           .then(
             this.stompClient.connect(
@@ -155,10 +148,10 @@ startGame() {
                   }
                 );
 
-                this.stompClient.subscribe(
-                  `/cardgame/startCard/${this.gameId}/${this.playerName}`,
-                  tick => this.setBoard(tick)
-                );
+                this.subscriptions()
+
+
+
               },
               error => {
                 console.log(error);

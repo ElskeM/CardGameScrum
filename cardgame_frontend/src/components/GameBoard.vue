@@ -14,11 +14,14 @@
           :value="card.id"
           :key="card.id"
           class="card"
-        ><img
+        >
+        <div>
+        <img
             class="card-image"
-            :draggable="false"
             :src="card.backImage"
-          ></div>
+          >
+          </div>
+          </div>
       </draggable>
     </div>
     <draggable
@@ -26,6 +29,7 @@
       @start="dragging=true"
       @end="onDrop"
       v-bind="dragOptions"
+      id="draggable"
     >
       <transition-group
         type="transition"
@@ -96,7 +100,7 @@ export default {
         animation: 200,
         group: "description",
         disabled: false,
-        ghostClass: "ghost"
+        ghostClass: "ghost",
       };
     }
   }
