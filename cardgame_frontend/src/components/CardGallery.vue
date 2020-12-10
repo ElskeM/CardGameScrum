@@ -3,13 +3,13 @@
 
        
         <div class="gallery">
-       <div  @click="showBigCard" class="card" v-for="card in wholeCollection" :key="card.id">
-                <DisplayCard v-bind:card="card"/>
+       <div @click="showBigCard" class="card" v-for="card in wholeCollection" :key="card.id">
+                <DisplayCard v-bind:card="card" v-on:displaycard-clicked="setBigCard"/>
            
       </div>
         </div>
          <div class="big-card" v-bind:class="{ visible: isVisible }">
-             HELLO WORLD
+             <BigCardInfo :bigCard="bigCard"/>
          </div>
     </div>
     
@@ -19,6 +19,7 @@
 
 import {mapGetters, mapActions} from 'vuex'
 import DisplayCard from './DisplayCard.vue'
+import BigCardInfo from './BigCardInfo.vue'
 
 
 export default {
@@ -28,23 +29,34 @@ export default {
         this.fetchFullDeck()
     },
     components : {
-        DisplayCard
+        DisplayCard,
+        BigCardInfo
     },
 
     data() {
         return {
-            isVisible: false
+            isVisible: false,
+            bigCard: ''
         }
 
     },
     methods : {
         ...mapActions(['fetchFullDeck']),
 
+        setBigCard(card) {
+            this.bigCard = card
+            console.log(this.bigCard.score)
+
+    },
+
         showBigCard() {
             console.log("trycker showBigCard")
             this.isVisible = !this.isVisible
             console.log(this.isVisible)
-    }
+    },
+
+    
+
     
     }
 

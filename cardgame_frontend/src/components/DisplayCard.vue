@@ -8,6 +8,7 @@
             class="card"
             :src="card.frontImage"
             v-bind:href="this.card.frontImage"
+            @click="$emit('displaycard-clicked', card)"
           >
    <!--     </router-link> -->
         
