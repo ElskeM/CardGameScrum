@@ -1,11 +1,16 @@
 <template>
     <div>
+
+       
         <div class="gallery">
-       <!-- <div class="card" v-for="card in wholeCollection" :key="card.id">-->
-                <DisplayCard v-for="card in wholeCollection" :key="card.id" v-bind:card="card"/>
+       <div  @click="showBigCard" class="card" v-for="card in wholeCollection" :key="card.id">
+                <DisplayCard v-bind:card="card"/>
            
-    <!--    </div> -->
+      </div>
         </div>
+         <div class="big-card" v-bind:class="{ visible: isVisible }">
+             HELLO WORLD
+         </div>
     </div>
     
 </template>
@@ -25,8 +30,22 @@ export default {
     components : {
         DisplayCard
     },
+
+    data() {
+        return {
+            isVisible: false
+        }
+
+    },
     methods : {
-        ...mapActions(['fetchFullDeck'])
+        ...mapActions(['fetchFullDeck']),
+
+        showBigCard() {
+            console.log("trycker showBigCard")
+            this.isVisible = !this.isVisible
+            console.log(this.isVisible)
+    }
+    
     }
 
     
@@ -44,9 +63,29 @@ export default {
     flex-wrap: wrap;
     border: solid black 5px;
     justify-content: center;
+    position: absolute
 }
 
 .card {
     margin: 10px;
+}
+
+.big-card {
+    height: 100px;
+    width: 100px;
+    background: red;
+        
+        position: fixed;
+        top: 3rem;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%; 
+        transform: translate(-50%, -50%); 
+        visibility: hidden;
+       
+}
+
+.visible {
+    visibility:visible
 }
 </style>

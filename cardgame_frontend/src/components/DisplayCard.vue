@@ -3,13 +3,13 @@
         <div class="container">
        
 
-        <router-link :to="{ path: `/singlecard/${this.card.id}`}" class="card">
+  <!--      <router-link :to="{ path: `/singlecard/${this.card.id}`}" class="card"> -->
             <img
             class="card"
             :src="card.frontImage"
             v-bind:href="this.card.frontImage"
           >
-        </router-link>
+   <!--     </router-link> -->
         
     <!--        <h3>{{this.card.title}}</h3> 
             <h4>{{this.card.subtitle}}</h4>
