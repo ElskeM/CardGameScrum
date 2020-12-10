@@ -8,14 +8,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 public class CardControllerTest {
 	
 	
@@ -36,8 +40,10 @@ public class CardControllerTest {
 	public void testCreateCard() throws Exception {
 		this.mockMvc.perform(post("/newCard").contentType(MediaType.APPLICATION_JSON).content("{\"title\": \"TestCard\", \"score\":100}").with(csrf())
 		)
-		.andExpect(status().isCreated());
-		
+		.andExpect(status().isCreated())
+		.andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());	
 	}
+	
+	
 
 }
