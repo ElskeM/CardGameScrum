@@ -40,7 +40,7 @@ public class PlayerController {
 	@GetMapping("/player")
 	public ResponseEntity<Player> findByEmail(@RequestParam String email) {
 		Player playerByEmail = playerData.findByEmail(email);
-		if (!playerByEmail.getUserName().equals(email)) {
+		if (!playerByEmail.getEmail().equals(email)) {
 			throw new PlayerNotFoundException("Kunde inte hitta spelare med email " + email);
 		}
 		return new ResponseEntity<>(playerByEmail, HttpStatus.OK);
