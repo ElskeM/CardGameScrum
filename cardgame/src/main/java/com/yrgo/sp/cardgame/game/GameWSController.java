@@ -1,7 +1,5 @@
 package com.yrgo.sp.cardgame.game;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +29,7 @@ public class GameWSController {
 	public boolean secondPlayerConnected(@DestinationVariable long id, @DestinationVariable String playerName) {
 		System.out.println("secondPlayerConnected: " + true + ", gameID: " + id);
 		Game g = game.getGameById(id);
-		g.getPlayers().get(1).setName(playerName);
+		g.addPlayer(playerName);//.getPlayers().get(1).setName(playerName);
 
 		System.out.println(g.getPlayers().get(1).getName());
 		placeInitialCard(id);
@@ -70,7 +68,7 @@ public class GameWSController {
 		boolean correctMove=true;//Tanke att returnera om draget var rätt eller ej
 		Game g = game.getGameById(id);
 
-		List<Card> table = g.getTable();
+		//List<Card> table = g.getTable();
 
 		Optional<Player> p = g.getPlayers().stream().filter(pl -> pl.getName().equals(playerName)).findFirst();
 		Player currentPlayer = p.get();
@@ -79,54 +77,18 @@ public class GameWSController {
 			//return null;
 		}
 
-		Optional<Card> pc = currentPlayer.getHand().stream().filter(card -> card.getId() == move.getCardId()).findFirst();
-		Card playedCard = pc.get();
-
-		currentPlayer.getHand().remove(playedCard);
-		currentPlayer.setTurn(false);
-
-		table.add(move.getCardPosition(), playedCard);
-		List<Card> temp = new ArrayList<Card>(table);
-		Collections.sort(table);
-		if (!(table.equals(temp))) {
-			table.remove(playedCard);
-			currentPlayer.getHand().add(g.getDeck().draw());
-			correctMove=false;
-		}
-
-//		if (move.getCardPosition() != 0 && move.getCardPosition() != table.size()) {
-//
-//			if (playedCard.getScore() < table.get(move.getCardPosition()).getScore()
-//					&& playedCard.getScore() > table.get(move.getCardPosition() - 1).getScore()) {
-//				table.add(move.getCardPosition(), playedCard);
-//			}
-//		} else if (move.getCardPosition() == 0
-//				&& table.get(move.getCardPosition()).getScore() > playedCard.getScore()) {
-//			table.add(move.getCardPosition(), playedCard);
-//		} else if (move.getCardPosition() == table.size()
-//				&& playedCard.getScore() > table.get(move.getCardPosition() - 1).getScore()) {
-//			table.add(move.getCardPosition(), playedCard);
-//		}
-
-		//Player nextPlayer;
-//		if (g.getPlayers().size() > 1) {
-//			Optional<Player> np = g.getPlayers().stream().filter(pl -> !pl.getName().equals(playerName)).findFirst();
-//			nextPlayer = np.get();
-//		} else {
-//			nextPlayer = player;
-//		}
 		
-		if (g.getPlayers().size() > (g.getPlayers().indexOf(currentPlayer) + 1)) {
-			g.getPlayers().get(g.getPlayers().indexOf(currentPlayer) + 1).setTurn(true);
-			
-		} else {
-			g.getPlayers().get(0).setTurn(true);
-			
-		}
 
-		for (Card c : table) {
-			System.out.println(c);
-		}
+		g.makeMove(currentPlayer, move.getCardId(), move.getCardPosition());
+	
+		g.changeTurnForPlayers(currentPlayer);
+//		if (g.getPlayers().size() > (g.getPlayers().indexOf(currentPlayer) + 1)) {
+//			g.getPlayers().get(g.getPlayers().indexOf(currentPlayer) + 1).setTurn(true);
+//			
+//		} else {
+//			g.getPlayers().get(0).setTurn(true);
+//			
+//		}
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("table", g.getTable());

@@ -19,15 +19,23 @@ public class Game {
 	private List<Card> table;
 
 	
-	public Game(long id) {
-		this.players = new ArrayList<Player>();
-		//skapar två spelare 
-		players.add(new Player(null));
-		players.add(new Player(null));
+	public Game(long id, int numberOfPlayers) {
+		this.players = new ArrayList<Player>();// Skapa arraylist med storleken satt till antal spelare FUNKAR EJ!
+		for(int i = 0; i<numberOfPlayers;i++) {
+			players.add(null);
+		}
 		this.table = new ArrayList<Card>();
 		//skapar en deck som fylls med kort i Decks konstruktor
 		this.deck = new Deck();
 		this.id = id;
+	}
+	
+	public void addPlayer(String name) {
+		try{
+			players.set(players.indexOf(null), new Player(name));
+		}catch(IndexOutOfBoundsException e) {
+			//Players är full
+		}
 	}
 	
 	public List<Card> getTable(){
@@ -42,6 +50,7 @@ public class Game {
 	public void startNewGame() {
 		
 		this.table.add(this.deck.draw());
+		this.table.add(this.deck.draw());
 		for(Player p : players) {
 			for(int i = 0; i<3; i++) {
 				p.addCardToHand(deck.draw());
@@ -50,18 +59,30 @@ public class Game {
 		}
 	}
 	
-/*
-	public void giveCardTo(Player p) {
-		if(p == null) {
-			this.table.add(this.deck.draw());				
-			}
-		} else {
-			p.setCard(this.deck.draw());;
+	public boolean makeMove(Player player, long cardId, int index) {
+		Optional<Card> pc = player.getHand().stream().filter(card -> card.getId() == cardId).findFirst();
+		Card playedCard = pc.get();
+		player.getHand().remove(playedCard);
+		table.add(index, playedCard);
+		List<Card> temp = new ArrayList<Card>(table);
+		Collections.sort(table);
+		if (!(table.equals(temp))) {
+			table.remove(playedCard);
+			player.getHand().add(deck.draw());
 		}
-		
+		return true;
 	}
 	
-*/
+	public void changeTurnForPlayers(Player currentPlayer) {
+		currentPlayer.setTurn(false);
+		if (players.size() > (players.indexOf(currentPlayer) + 1)) {
+			players.get(players.indexOf(currentPlayer) + 1).setTurn(true);
+			
+		} else {
+			players.get(0).setTurn(true);
+			
+		}
+	}
 	
 	public void setPlayer(Player player) {
 		players.add(player);
@@ -103,7 +124,13 @@ public class Game {
 			return "ok";
 	}
 
-	
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public long getId() {
+		return this.id;
+	}
 	
 	
 	/*
@@ -143,13 +170,7 @@ public class Game {
 
 	}
 */
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public long getId() {
-		return this.id;
-	}
+	
 
 	/*
 	 * loopa listan jämför players(0).guess med players(1).guess kolla vem som van

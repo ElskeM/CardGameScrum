@@ -20,7 +20,7 @@ public class GameService implements CardGameApi {
 
 	@Override
 	public Game createGame(long id) {
-		Game game = new Game(id);
+		Game game = new Game(id,2);
 		//Deck d = new Deck("Default","Admin",cardData.findAll().stream().collect(Collectors.toSet()));
 		//game.setDeck(d);
 		games.put(id, game);
