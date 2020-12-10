@@ -75,7 +75,6 @@ export default {
     height: 100%;
     display:flex;
     flex-wrap: wrap;
-    border: solid black 5px;
     justify-content: center;
     /*position: absolute*/
     
@@ -92,19 +91,16 @@ export default {
 }
 
 .big-card {
-    height: 100px;
-    width: 100px;
-    background: red;
-        
-        position: fixed;
-        top: 3rem;
-        top: 50%;
-        left: 50%;
-        margin-right: -50%; 
-        transform: translate(-50%, -50%); 
-        visibility: hidden;
-       
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%; 
+    transform: translate(-50%, -50%); 
+    visibility: hidden;
 }
+
+
 
 .visible {
     visibility:visible

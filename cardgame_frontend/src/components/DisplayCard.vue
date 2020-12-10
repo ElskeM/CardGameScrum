@@ -25,6 +25,8 @@
 </template>
 
 <script>
+
+
 export default {
     name: 'DisplayCard',
     props: ['card']
