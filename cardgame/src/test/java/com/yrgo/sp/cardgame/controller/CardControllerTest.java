@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -67,17 +68,7 @@ public class CardControllerTest {
 		Card c = new Card("testCard", 1250);
 		c.setId(2L);
 		Optional<Card> oC = Optional.of(c);
-		
 		when(cardData.findById(2L)).thenReturn(oC);
-		when(cardData.save(ArgumentMatchers.any(Card.class))).thenAnswer(new Answer() {
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				Card c = (Card) invocation.getArgument(0);
-				c.setId((long)new Random().nextInt(100));
-				return c;
-			}
-		});
-
 		this.mockMvc.perform(get("/card/2")).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.title").value("testCard"));
 		
 	}
@@ -104,11 +95,18 @@ public class CardControllerTest {
 		c.setId(1L);
 		Optional<Card> opC = Optional.of(c);
 		when(cardData.findById(1L)).thenReturn(opC);
-
-        this.mockMvc.perform(put("/card/1").contentType(MediaType.APPLICATION_JSON).characterEncoding("utf-8")
-                .content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", Matchers.equalTo(2)))
-                .andExpect(jsonPath("$.name", Matchers.equalTo("John")));
+		when(cardData.save(ArgumentMatchers.any(Card.class))).thenAnswer(new Answer() {
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				Card c = (Card) invocation.getArgument(0);
+				return c;
+			}
+		});
+		
+        this.mockMvc.perform(put("/card/1").contentType(MediaType.APPLICATION_JSON).content("{\"title\": \"UpdatedCard\", \"score\":7500}").with(csrf())
+        		)
+        		.andDo(print())
+        		.andExpect(status().isOk());
 	}
 	
 	
