@@ -2,13 +2,13 @@
     <div>
 
        
-        <div class="gallery">
+        <div class="gallery"  v-bind:class="{ blurred: isBlurred}" >
        <div @click="showBigCard" class="card" v-for="card in wholeCollection" :key="card.id">
                 <DisplayCard v-bind:card="card" v-on:displaycard-clicked="setBigCard"/>
            
       </div>
         </div>
-         <div class="big-card" v-bind:class="{ visible: isVisible }">
+         <div class="big-card" v-bind:class="{ visible: isVisible}">
              <BigCardInfo :bigCard="bigCard"/>
          </div>
     </div>
@@ -36,6 +36,7 @@ export default {
     data() {
         return {
             isVisible: false,
+            isBlurred: false,
             bigCard: ''
         }
 
@@ -52,6 +53,7 @@ export default {
         showBigCard() {
             console.log("trycker showBigCard")
             this.isVisible = !this.isVisible
+            this.isBlurred = !this.isBlurred
             console.log(this.isVisible)
     },
 
@@ -75,7 +77,14 @@ export default {
     flex-wrap: wrap;
     border: solid black 5px;
     justify-content: center;
-    position: absolute
+    /*position: absolute*/
+    
+}
+
+.blurred{
+    -webkit-transition: 0.5s -webkit-filter linear;
+    -webkit-filter: blur(5px);
+
 }
 
 .card {
