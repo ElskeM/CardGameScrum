@@ -1,7 +1,5 @@
 package com.yrgo.sp.cardgame.controller;
 
-import static org.hamcrest.CoreMatchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -18,30 +16,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import com.yrgo.sp.cardgame.data.CardRepository;
 import com.yrgo.sp.cardgame.data.CategoryRepository;
 import com.yrgo.sp.cardgame.domain.Card;
 import com.yrgo.sp.cardgame.rest.CardController;
-import com.yrgo.sp.cardgame.rest.CardList;
 
 
 @WebMvcTest(CardController.class)

@@ -38,7 +38,7 @@ public class CategoryController {
 		return new ResponseEntity<>(categories, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/categories/{category}")
+	@GetMapping(value = "/categories/{category}")
 	public ResponseEntity<Category> findCategory(@PathVariable String category) {
 		Category foundCat = categoryData.findByCategory(category);
 		
