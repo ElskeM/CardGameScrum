@@ -4,11 +4,6 @@ import java.util.Date;
 
 public class ErrorDetails {
 
-	private int statusCode;
-	private Date timeStamp;
-	private String errorMessage;
-	private String descr;
-
 	private Date timestamp;
 	private String message;
 	private String details;
