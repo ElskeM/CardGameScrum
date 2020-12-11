@@ -16,7 +16,7 @@
       </div>
 
       <div id="scoreboard">
-        <div v-if="this.connected">
+        <div v-if="false"><!-- this.connected -->
           <h3>GAME {{this.gameId}} - SCORE</h3>
           <span id="matches">Matches: {{ this.gameInfo.matches }}</span><br />
           <b>Wins</b>

@@ -51,6 +51,7 @@ public class Game {
 		
 		this.table.add(this.deck.draw());
 		this.table.add(this.deck.draw());
+		Collections.sort(table);
 		for(Player p : players) {
 			for(int i = 0; i<3; i++) {
 				p.addCardToHand(deck.draw());

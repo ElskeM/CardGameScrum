@@ -130,8 +130,6 @@ export default {
   text-align: center;
   width: 100%;
   height: auto;
-  overflow: auto;
-  white-space: nowrap;
 }
 #played-cards{
 background-color: grey;
