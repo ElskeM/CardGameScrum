@@ -16,22 +16,25 @@
       </div>
 
       <div id="scoreboard">
-        <div v-if="false"><!-- this.connected -->
-          <h3>GAME {{this.gameId}} - SCORE</h3>
-          <span id="matches">Matches: {{ this.gameInfo.matches }}</span><br />
-          <b>Wins</b>
-          <div>
-            <span v-for="player in this.gameInfo.players" :key="player.name">
-              {{ player.name }}: {{ player.wins }}
-              <span class="spacer"></span>
-            </span>
+        <div v-if="this.connected">
+          <h3>Connected to game: {{ this.gameId }}</h3>
+          <div v-if="this.gameInfo">
+            <span id="matches">Matches: {{ this.gameInfo.matches }}</span
+            ><br />
+            <b>Wins</b>
+            <div>
+              <span v-for="player in this.gameInfo.players" :key="player.name">
+                {{ player.name }}: {{ player.wins }}
+                <span class="spacer"></span>
+              </span>
+            </div>
           </div>
+          <div v-else>Waiting for game info...</div>
         </div>
         <div v-else>
           <h1>DISCONNECTED</h1>
         </div>
       </div>
-
     </div>
     <div v-if="this.connected">
       <span v-if="this.$refs.gb.playerTurn">Your turn</span>
@@ -100,12 +103,9 @@ export default {
       this.$refs.gb.setPlayerTurn(bool);
     },
     subscriptions() {
-      this.stompClient.subscribe(
-        `/cardgame/gameInfo/${this.gameId}`,
-        (msg) => {
-          this.gameInfo = JSON.parse(msg.body);
-        }
-      );
+      this.stompClient.subscribe(`/cardgame/gameInfo/${this.gameId}`, (msg) => {
+        this.gameInfo = JSON.parse(msg.body);
+      });
       this.stompClient.subscribe(
         `/cardgame/startCard/${this.gameId}/${this.playerName}`,
         (tick) => {
