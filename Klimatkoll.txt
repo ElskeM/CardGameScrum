@@ -1,0 +1,80 @@
+KRAV:
+1. Det måste finnas minst 8 spelkort i cardrepository
+2. Det måste finns minst ett deck i deckrepository, som innehåller minst 8 kort
+
+
+INITIERING på serversidan:   
+=>	Skapa en representation av spelet (Game objekt)
+=>      Läs in ett fördefinierat Deck d (från deckrepository)
+=>	Skapa ett kortlek för spelet. För varje kort i d, skapa ett nytt spelkort (med ett id som är unikt för spelet)
+	och lägg det i kortleken.
+
+FÖRE SPELETS START:
+=> 	För varje spelare drar servern tre kort från kortleken och tilldelar dem till spelarobjekten.
+=>	Servern skickar framsidorna av de tre korten till respektive spelare (JSON-array med objekt som innehåller spelunikt-id, title, description och frequence) 
+
+=> 	Servern drar två kort från kortleken och lägger dem på spelbordet
+=> 	Servern skickar de två nya korten till varje klient, så att de kan uppdatera sina vyer. (sorterad (på kortens value) JSON-array med objekt som innehåller spelunikt-id, title, description, VALUE, frequence)
+	Klienterna lägger korten på bordet från vänster till höger, litet till stort.
+
+=>	Servern slumpar fram vem som ska bli spelare 1
+
+SPELET BÖRJAR:
+=>	Servern börjar räkna spelrundor
+=> 	Servern bestämmer att det är SPELARE 1's tur
+=>	Servern skickar ett meddelande till alla klienter om att det är SPELARE 1's tur.
+
+LOOP:
+
+	SPELAREN GÖR SITT DRAG:
+
+	=> 	Väljer ett av sina kort och bestämmer var det borde ligga mellan korten på bordet.
+	=> 	Klienten skickar ett meddelande till servern om att spelaren har gjort sitt drag (kortet har fått en position på bordet).
+	(=>	Servern bekräftar att meddelandet kommer från rätt klient) - Security feature?
+	=>	Servern uppdaterar sin modell av bordet.
+	=>	Servern skickar information om det uppdaterade bordet till alla klienter
+	=>	Klienterna presenterar det nya bordet för spelarna
+	
+	SERVERN KONTROLLERAR SPELARENS DRAG:
+	=>	Om spelaren valde rätt plats för kortet:
+		=> kontrollera om spelaren har vunnit (finns det kort kvar i handen?).
+		=> om spelaren har vunnit (inget kort kvar):
+			=> notera att spelaren har vunnit (flera spelare kan vara vinnare i detta stadiet).
+	=> 	Om spelaren valde fel plats:
+		=> servern slänger kortet (kortet tas ur spel)
+		=> servern drar ett nytt kort åt spelaren
+		=> servern skickar det nya kortet till spelarens klient.
+	
+	SLUT SPELARENS TUR
+
+	SERVERN KONTROLLERAR RUNDANS SLUT:
+	=>	Servern kontrollerar om rundan är slut (alla spelare har gjort ett drag).
+	=>	Om rundan är slut:
+		=> Servern kontrollerar om någon har vunnit.
+		=> Om någon har vunnit:
+			=> kontrollera om någon mer har vunnit.
+			=> om någon mer har vunnit:
+				=> om det finns tillräckligt många kort kvar i kortleken:
+					=> alla som vunnit får ett kort till i handen.
+				=> om det inte finns kort kvar:
+					=> finns det kort kvar i slasken?
+						=> om ja:
+							=> Servern återanvänder korten från slasken
+							=> alla som vunnit får ett kort till i handen.
+						=> om nej:
+							=> servern noterar att det är OAVGJORT
+			=> om ingen mer har vunnit eller det är oavgjort:
+				=> meddelare alla klienter om vilka/vilken spelare som vann.
+				=> Servern ger varje vinnare 1 poäng.
+				=> Servern skickar poängtavlan till klienterna.
+	=> 	Om det inte är oavgjort:
+		=>	Nästa spelares tur.
+		=>	Servern skickar ett meddelande till alla klienter om att det är nästa spelares tur.
+SLUT LOOP
+=> Om båda spelare vill fortsätta spelet:
+	=> servern nollställer allt förutom poängtavlan
+	=> Alla spelare får 3 kort vardera igen.
+	=> GÅ TILL "SPELET BÖRJAR"
+=> avsluta spelet.
+=> avsluta kommunikationen med klienterna.
+	
