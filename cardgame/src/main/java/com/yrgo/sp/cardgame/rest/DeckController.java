@@ -25,6 +25,7 @@ import com.yrgo.sp.cardgame.domain.Deck;
 import com.yrgo.sp.exception.DeckNotFoundException;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8081")
 public class DeckController {
 
 	@Autowired
@@ -33,7 +34,6 @@ public class DeckController {
 	@Autowired
 	private CardRepository cardData;
 
-	@CrossOrigin(origins = "http://localhost:8081")
 	@GetMapping("/decks")
 	public ResponseEntity<List<Deck>> decks(@RequestParam(required = false) String name) {
 		List<Deck> allDecks = deckData.findAll();
@@ -46,10 +46,10 @@ public class DeckController {
 	@GetMapping("/decks/{id}")
 	public ResponseEntity<Object> findDeck(@PathVariable long id) {
 		Optional<Deck> foundDeck = deckData.findById(id);
-		if (!foundDeck.isPresent()) {
-			throw new DeckNotFoundException("Kunde inte hitta deck med id: " + id);
+		if (foundDeck.isEmpty()) {
+			throw new DeckNotFoundException();
 		}
-		return new ResponseEntity<>(foundDeck, HttpStatus.OK);
+		return new ResponseEntity<>(foundDeck.get(), HttpStatus.OK);
 	}
 
 	@PostMapping("/newDeck")
@@ -63,8 +63,8 @@ public class DeckController {
 	@PutMapping("/decks/{id}")
 	public ResponseEntity<Object> updateDeck(@RequestBody Deck deck, @PathVariable Long id) {
 		Optional<Deck> d = deckData.findById(id);
-		if (!d.isPresent()) {
-			throw new DeckNotFoundException("Kunde inte hitta deck med id " + id);
+		if (d.isEmpty()) {
+			throw new DeckNotFoundException();
 		}
 
 		Deck oldDeck = d.get();

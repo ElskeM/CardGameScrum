@@ -23,12 +23,12 @@ import com.yrgo.sp.cardgame.domain.Category;
 import com.yrgo.sp.exception.CategoryNotFoundException;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8081")
 public class CategoryController {
 
 	@Autowired
 	private CategoryRepository categoryData;
 
-	@CrossOrigin(origins = "http://localhost:8081")
 	@GetMapping("/categories")
 	public ResponseEntity<List<Category>> categories() {
 		List<Category> categories = categoryData.findAll();
@@ -43,7 +43,7 @@ public class CategoryController {
 		Category foundCat = categoryData.findByCategory(category);
 		
 	if(!foundCat.getCategory().equals(category)) {
-		throw new CategoryNotFoundException("Kunde inte hitta Category med namn " + category);
+		throw new CategoryNotFoundException();
 	}
 		return new ResponseEntity<>(foundCat, HttpStatus.OK);
 	}
@@ -59,8 +59,8 @@ public class CategoryController {
 	@PutMapping("/categories/{id}")
 	public ResponseEntity<Object> updateCategory(@RequestBody Category category, @PathVariable Long id) {
 		Optional<Category> c = categoryData.findById(id);
-		if (!c.isPresent()) {
-			throw new CategoryNotFoundException("Kunde inte hitta Category med namn " + category);
+		if (c.isEmpty()) {
+			throw new CategoryNotFoundException();
 		}
 
 		Category catToUpdate = c.get();

@@ -22,17 +22,17 @@ import com.yrgo.sp.cardgame.domain.Player;
 import com.yrgo.sp.exception.PlayerNotFoundException;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8081")
 public class PlayerController {
 
 	@Autowired
 	private PlayerRepository playerData;
 
-	@CrossOrigin(origins = "http://localhost:8081")
 	@GetMapping("/player/{userName}")
 	public ResponseEntity<Player> findByUserName(@PathVariable String userName) {
 		Player playerByUN = playerData.findByUserName(userName);
 		if (!playerByUN.getUserName().equals(userName)) {
-			throw new PlayerNotFoundException("Kunde inte hitta spelare med användarnamn " + userName);
+			throw new PlayerNotFoundException();
 		}
 		return new ResponseEntity<>(playerByUN, HttpStatus.OK);
 	}
@@ -41,11 +41,12 @@ public class PlayerController {
 	public ResponseEntity<Player> findByEmail(@RequestParam String email) {
 		Player playerByEmail = playerData.findByEmail(email);
 		if (!playerByEmail.getEmail().equals(email)) {
-			throw new PlayerNotFoundException("Kunde inte hitta spelare med email " + email);
+			throw new PlayerNotFoundException();
 		}
 		return new ResponseEntity<>(playerByEmail, HttpStatus.OK);
 
 	}
+	
 
 	@PostMapping("/newPlayer")
 	public ResponseEntity<Object> createPlayer(@RequestBody Player player) {
@@ -58,8 +59,8 @@ public class PlayerController {
 	@PutMapping("/player/{id}")
 	public ResponseEntity<Object> updatePlayer(@RequestBody Player player, @PathVariable Long id) {
 		Optional<Player> p = playerData.findById(id);
-		if (!p.isPresent()) {
-			throw new PlayerNotFoundException("Kunde inte hitta spelare med id " + id);
+		if (p.isEmpty()) {
+			throw new PlayerNotFoundException();
 		}
 		Player playerToUpdate = p.get();
 		player.setId(playerToUpdate.getId());

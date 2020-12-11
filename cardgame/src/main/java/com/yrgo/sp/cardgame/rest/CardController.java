@@ -8,6 +8,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -63,9 +65,11 @@ public class CardController {
 
 	@GetMapping("/card/{id}")
 	public ResponseEntity<Card> findCard(@PathVariable long id) {
-		Card foundCard = cardData.findById(id)
-				.orElseThrow(() -> new CardNotFoundException("Kunde inte hitta kort med id " + id));
-		return new ResponseEntity<>(foundCard, HttpStatus.OK);
+		Optional<Card> foundCard = cardData.findById(id);
+		if (foundCard.isEmpty()) {
+			throw new CardNotFoundException();
+		}
+		return new ResponseEntity<>(foundCard.get(), HttpStatus.OK);
 	}
 
 	@PostMapping("/newCard")
@@ -95,10 +99,9 @@ public class CardController {
 	@PutMapping("/card/{id}")
 	public ResponseEntity<Object> updateCard(@RequestBody Card card, @PathVariable Long id) {
 		Optional<Card> c = cardData.findById(id);
-		if (!c.isPresent()) {
-			throw new CardNotFoundException("Kunde inte hitta kort med id " + id);
+		if (c.isEmpty()) {
+			throw new CardNotFoundException();
 		}
-
 		Card cardToUpdate = c.get();
 		card.setId(cardToUpdate.getId());
 		cardData.save(card);
@@ -108,7 +111,6 @@ public class CardController {
 	@DeleteMapping("/card/{id}")
 	public ResponseEntity<HttpStatus> deleteCard(@PathVariable Long id) {
 		cardData.deleteById(id);
-
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }
