@@ -1,34 +1,37 @@
 <template>
   <div>
-    <!--        <div class="number">oppenent number: {{this.number}}</div>
-        <div class="number">your number: {{this.playerNumber}}</div>
-        <input type="text" v-model="playerNumberHolder">
-        <button @click="createGame">{{this.btnValue}}</button>
-        <button @click="setNumber">Hur gick det?</button>
-        <button @click="whoWins">Vem vann?</button>
-        <h1>{{this.whoWon}}</h1>
-        <router-view/>
--->
-    <input
-      type="text"
-      v-model="gameId"
-      placeholder="Har du redan ett id?"
-    >
-    <button @click="startGame">Starta Spel</button>
-    <button @click="drawCard">Dra kort</button>
-    <div>Länk till spelet: {{this.linkToGame}}</div>
-    <input
-      type="text"
-      v-model="playerNumber"
-      placeholder="Gissa ett tal..."
-    >
-    <input
-      type="text"
-      v-model="playerName"
-      placeholder="Ditt namn"
-    >
-    <button @click="playerMove">TEST</button>
-    <div>Vinnaren är: {{this.whoWon}}</div>
+    <div class="flex">
+      <div id="gamecontroller">
+        <input
+          type="text"
+          v-model="gameId"
+          placeholder="Har du redan ett id?"
+        />
+        <button @click="startGame">Starta Spel</button>
+        <button @click="drawCard">Dra kort</button>
+        <div>Länk till spelet: {{ this.linkToGame }}</div>
+
+        <input type="text" v-model="playerName" placeholder="Ditt namn" />
+        <button @click="playerMove">TEST</button>
+      </div>
+
+      <div id="scoreboard">
+        <div v-if="this.connected">
+          <h3>GAME {{this.gameId}} - SCORE</h3>
+          <span id="matches">Matches: {{ this.gameInfo.matches }}</span><br />
+          <b>Wins</b>
+          <div>
+            <span v-for="player in this.gameInfo.players" :key="player.name">
+              {{ player.name }}: {{ player.wins }}
+              <span class="spacer"></span>
+            </span>
+          </div>
+        </div>
+        <div v-else>
+          <h1>DISCONNECTED</h1>
+        </div>
+      </div>
+    </div>
 
     <GameBoard
       @moved="playerMove"
@@ -36,9 +39,7 @@
       :playerHand="playerHand"
       ref="gb"
     />
-
   </div>
-
 </template>
 
 <script>
@@ -55,17 +56,13 @@ export default {
       twoPlayers: false,
       started: false,
       gameId: "",
-      received_cards: [],
 
-      //      number: 10,
-      playerNumber: "",
-      //  playerNumberHolder: '',
-      btnValue: "Fastställ Nummer",
       whoWon: "",
       linkToGame: "",
       playerName: "",
+      gameInfo: null,
       playerHand: [],
-      playedCards: []
+      playedCards: [],
     };
   },
   methods: {
@@ -78,7 +75,7 @@ export default {
           JSON.stringify({
             playerName: this.playerName,
             cardPosition: value.index,
-            cardId: value.card
+            cardId: value.card,
           })
         );
       }
@@ -100,8 +97,14 @@ export default {
     },
     subscriptions() {
       this.stompClient.subscribe(
+        `/cardgame/gameInfo/${this.gameId}`,
+        (msg) => {
+          this.gameInfo = JSON.parse(msg.body);
+        }
+      );
+      this.stompClient.subscribe(
         `/cardgame/startCard/${this.gameId}/${this.playerName}`,
-        tick => {
+        (tick) => {
           this.playedCards = JSON.parse(tick.body).table;
           this.playerHand = JSON.parse(tick.body).player.hand;
           this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
@@ -110,7 +113,7 @@ export default {
       );
       this.stompClient.subscribe(
         `/cardgame/updateGameBoard/${this.gameId}`,
-        tick => {
+        (tick) => {
           console.log(tick);
           this.playedCards = JSON.parse(tick.body);
           console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
@@ -133,13 +136,13 @@ export default {
       if (this.gameId) {
         this.stompClient.connect(
           {},
-          frame => {
+          (frame) => {
             console.log(frame);
             this.connected = true;
             this.subscriptions();
             this.confirmSecondPlayer();
           },
-          error => {
+          (error) => {
             console.log(error);
             this.connected = false;
           }
@@ -147,11 +150,11 @@ export default {
       } else {
         axios
           .get(`http://localhost:8080/game/${this.playerName}`)
-          .then(response => (this.gameId = response.data.id))
+          .then((response) => (this.gameId = response.data.id))
           .then(
             this.stompClient.connect(
               {},
-              frame => {
+              (frame) => {
                 console.log(frame);
                 this.connected = true;
                 /*this.stompClient.subscribe(
@@ -164,7 +167,7 @@ export default {
 
                 this.subscriptions();
               },
-              error => {
+              (error) => {
                 console.log(error);
                 this.connected = false;
               }
@@ -176,8 +179,8 @@ export default {
     start() {
       axios
         .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`)
-        .then(response => (this.whoWon = response.data));
-    }
+        .then((response) => (this.whoWon = response.data));
+    },
 
     /*    createGame() {
             axios.get('http://localhost:8080/game/')
@@ -192,8 +195,32 @@ export default {
         }
 
         */
-  }
+  },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#gamecontroller,
+#scoreboard {
+  border: 1px solid black;
+  margin: 10px;
+  padding: 10px;
+  width: fit-content;
+}
+#scoreboard {
+  min-width: 320px;
+}
+
+.flex {
+  display: flex;
+}
+
+.spacer {
+  display: inline-block;
+  width: 5rem;
+}
+
+h3 {
+  margin: 5px;
+}
+</style>
