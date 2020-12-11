@@ -27,7 +27,8 @@ public class GameController {
 	@GetMapping(value = "/{firstPlayerName}")
 	public ResponseEntity<Game> startGame(@PathVariable String firstPlayerName) {
 		Game game = gameService.createGame(++lastId);
-		game.getPlayers().get(0).setName(firstPlayerName);
+		game.addPlayer(firstPlayerName);//.getPlayers().get(0).setName(firstPlayerName);
+		System.out.println("Storlek på listan spelare: "+game.getPlayers().size());
 		System.out.println(game.getPlayers().get(0).getName());
 		
 		return ResponseEntity.ok(game);

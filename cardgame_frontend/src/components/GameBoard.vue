@@ -3,7 +3,7 @@
   <div class="board">
     <div>
       <draggable
-        class="played-cards"
+        class="played-cards card-holder"
         group="cards"
         :disabled="allowPlay()"
         @end="onDrop"
@@ -26,10 +26,11 @@
     </div>
     <draggable
       group="cards"
+      class="card-holder"
       @start="dragging=true"
       @end="onDrop"
       v-bind="dragOptions"
-      id="draggable"
+      id="player-hand"
     >
       <transition-group
         type="transition"
@@ -79,7 +80,7 @@ export default {
     onDrop(evt) {
       //Metod som körs när spelaren släpper kort på spelplanen. evt innehåller vilket kort och vilket index det släpps på
       console.log(evt);
-      if (evt.to.getAttribute("class") == "played-cards") {
+      if (evt.to.getAttribute("id") == "played-cards") {
         console.log(evt.newIndex); //Index i listan man lägger kortet
         console.log(evt.item.getAttribute("value")); //Hämtar det som är sparat i :value för  de släppta objektet. I vårat fall card.id.
         var move = {"card":evt.item.getAttribute("value"),"index":evt.newIndex}
@@ -109,7 +110,7 @@ export default {
 
 <style scoped>
 .card {
-  float: left;
+  display: inline-block;
   margin-bottom: 10px;
   padding: 10px;
   transition: transform 0.5s;
@@ -125,10 +126,13 @@ export default {
   margin-bottom: 10px;
   padding: 5px;
 }
-.played-cards {
+.card-holder {
+  text-align: center;
   width: 100%;
-  height: 10em;
-  background-color: grey;
+  height: auto;
+}
+#played-cards{
+background-color: grey;
 }
 .card-holder-move {
   transition: transform 0.5s;
