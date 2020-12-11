@@ -9,7 +9,7 @@
       </div>
         </div>
          <div class="big-card" v-bind:class="{ visible: isVisible}">
-             <BigCardInfo :bigCard="bigCard"/>
+             <BigCardInfo :bigCard="bigCard" v-on:left="hideBigCard"/>
          </div>
     </div>
     
@@ -57,6 +57,12 @@ export default {
             console.log(this.isVisible)
     },
 
+    hideBigCard() {
+            this.isVisible = !this.isVisible
+            this.isBlurred = !this.isBlurred
+
+    }
+
     
 
     
@@ -76,7 +82,6 @@ export default {
     display:flex;
     flex-wrap: wrap;
     justify-content: center;
-    /*position: absolute*/
     
 }
 

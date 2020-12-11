@@ -3,23 +3,13 @@
         <div class="container">
        
 
-  <!--      <router-link :to="{ path: `/singlecard/${this.card.id}`}" class="card"> -->
+  <!--      <router-link :to="{ path: `/singlecard/${this.card.id}`}" class="card"> </router-link>-->
             <img
             class="card"
             :src="card.frontImage"
             v-bind:href="this.card.frontImage"
             @click="$emit('displaycard-clicked', card)"
           >
-   <!--     </router-link> -->
-        
-    <!--        <h3>{{this.card.title}}</h3> 
-            <h4>{{this.card.subtitle}}</h4>
-            <div>{{this.card.description}}</div>
-            <div>{{this.card.score}} kg</div>
-            <div>
-                <a v-bind:href="this.card.frontImage">Card Front</a>
-            </div> -->
-
         </div>
     </div>
 </template>
@@ -38,11 +28,8 @@ export default {
 .container {
     
     width: 150px;
-    height: 250px;
-    
-
+    height: 250px;  
 }
-
 
 img {
     width: 150px;
