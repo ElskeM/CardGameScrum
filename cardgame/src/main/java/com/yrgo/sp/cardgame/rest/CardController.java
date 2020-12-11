@@ -30,7 +30,7 @@ import com.yrgo.sp.cardgame.domain.Category;
 import com.yrgo.sp.exception.CardNotFoundException;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:")
+@CrossOrigin(origins = "http://localhost:8081")
 public class CardController {
 
 	@Autowired
