@@ -17,7 +17,7 @@ public class GameService implements CardGameApi {
 	private CardRepository cardData;
 	
 	private Map<Long,Game> games = new HashMap<>();
-
+	
 	@Override
 	public Game createGame(long id) {
 		Game game = new Game(id,2);
@@ -26,12 +26,12 @@ public class GameService implements CardGameApi {
 		games.put(id, game);
 		return game;
 	}
-
+	
 	@Override
 	public Game getGameById(long id) {
 		return games.get(id);
 	}
-
+	
 	@Override
 	public void placeCard(long gameId) {
 		Game game = games.get(gameId);

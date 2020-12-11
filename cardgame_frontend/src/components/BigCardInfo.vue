@@ -1,8 +1,9 @@
 <template>
-    <div class="container">
+    <div class="outer-container" @click="leave" >
+        <div class="container">
        
-        <div class="flip-container">
-            <vue-flip active-click class="flip">
+        <div class="flip-container" @click.stop="handleClick">
+            <vue-flip  v-model="model" height="400px" width="75%">
                 <template v-slot:front class="front">
                      <div class="img">
                          <img class="card" :src="bigCard.frontImage">
@@ -20,6 +21,7 @@
         </div>
 
     </div>
+    </div>
 </template>
 
 
@@ -27,16 +29,47 @@
 import VueFlip from 'vue-flip';
 
 export default {
+    data() {
+        return {
+            model: true,
+           
+        }
+    },
+
     components: {
-    'vue-flip': VueFlip
+        'vue-flip': VueFlip
   },
-     props: ['bigCard']
+    props: ['bigCard'],
+
+    methods: {
+        leave() {
+            this.$emit("left")
+            this.model = false;
+          
+        },
+        handleClick() {
+            this.model = !this.model;
+            console.log(this.model)
+        }
+    } 
     
 }
 </script>
 
 
 <style scoped>
+
+.outer-container {
+
+    width: 1500px;
+    height: 1000px;
+    border: solid black 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: -1
+}
+
 .container {
     height: 500px;
     width: 300px;
@@ -65,14 +98,13 @@ export default {
  
 }
 
-
-
 img {
     border-radius: 1rem;
-   /* scale: 120%; */
+    /*scale: 120%; */
     width: 100%;
     height: 100%;
     border: 1px solid black;
 }
+
 
 </style>
