@@ -8,7 +8,7 @@
            
       </div>
         </div>
-         <div class="big-card" v-bind:class="{ visible: isVisible}">
+         <div class="big-card" v-bind:class="{ visible: isVisible, invisible:isInvisible} ">
              <BigCardInfo :bigCard="bigCard" v-on:left="hideBigCard"/>
          </div>
     </div>
@@ -37,6 +37,7 @@ export default {
         return {
             isVisible: false,
             isBlurred: false,
+            isInvisible: true,
             bigCard: ''
         }
 
@@ -53,14 +54,15 @@ export default {
         showBigCard() {
             console.log("trycker showBigCard")
             this.isVisible = !this.isVisible
-            this.isBlurred = !this.isBlurred
+            this.isBlurred = !this.isBlurred        
+            this.isInvisible = !this.isInvisible
             console.log(this.isVisible)
     },
 
     hideBigCard() {
             this.isVisible = !this.isVisible
             this.isBlurred = !this.isBlurred
-
+            this.isInvisible = !this.isInvisible
     }
 
     
@@ -105,7 +107,9 @@ export default {
     visibility: hidden;
 }
 
-
+.invisible {
+    opacity: 0
+}
 
 .visible {
     visibility:visible

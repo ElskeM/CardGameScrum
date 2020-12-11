@@ -3,7 +3,7 @@
         <div class="container">
        
         <div class="flip-container" @click.stop="handleClick">
-            <vue-flip  v-model="model" height="400px" width="75%" >
+            <vue-flip  v-model="model" height="400px" width="75%">
                 <template v-slot:front class="front">
                      <div class="img">
                          <img class="card" :src="bigCard.frontImage">
@@ -31,12 +31,13 @@ import VueFlip from 'vue-flip';
 export default {
     data() {
         return {
-            model: true
+            model: true,
+           
         }
     },
 
     components: {
-    'vue-flip': VueFlip
+        'vue-flip': VueFlip
   },
     props: ['bigCard'],
 
@@ -44,7 +45,6 @@ export default {
         leave() {
             this.$emit("left")
             this.model = false;
-            console.log("KÖR")
           
         },
         handleClick() {
@@ -105,5 +105,6 @@ img {
     height: 100%;
     border: 1px solid black;
 }
+
 
 </style>
