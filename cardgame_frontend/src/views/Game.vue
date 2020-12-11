@@ -31,8 +31,12 @@
           <h1>DISCONNECTED</h1>
         </div>
       </div>
-    </div>
 
+    </div>
+    <div v-if="this.connected">
+      <span v-if="this.$refs.gb.playerTurn">Your turn</span>
+      <span v-else>Other player's turn</span>
+    </div>
     <GameBoard
       @moved="playerMove"
       :playedCards="playedCards"
