@@ -4,12 +4,17 @@
       <div id="gamecontroller">
         <input
           type="text"
-          v-model="gameId"
+          v-model="this.$route.params.id"
           placeholder="Har du redan ett id?"
         />
         <button @click="startGame">Starta Spel</button>
         <button @click="drawCard">Dra kort</button>
-        <div>Länk till spelet: {{ this.linkToGame }}</div>
+        <div>
+          Länk till spelet:
+          <span v-if="this.linkToGame">
+            <a :href="this.linkToGame"> {{ this.linkToGame }}</a></span
+          >
+        </div>
 
         <input type="text" v-model="playerName" placeholder="Ditt namn" />
         <button @click="playerMove">TEST</button>
@@ -113,6 +118,8 @@ export default {
           this.playerHand = JSON.parse(tick.body).player.hand;
           this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
           console.log("HEEEEEEEJ");
+          this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
+
         }
       );
       this.stompClient.subscribe(
@@ -135,9 +142,11 @@ export default {
     },
 
     startGame() {
+      this.gameId = this.$route.params.id;
       this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
       this.stompClient = Stomp.over(this.socket);
       if (this.gameId) {
+        console.log("GAME ID IS TRUE");
         this.stompClient.connect(
           {},
           (frame) => {
@@ -161,6 +170,8 @@ export default {
               (frame) => {
                 console.log(frame);
                 this.connected = true;
+                this.$router.push(`/game/${this.gameId}`);
+                this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
                 /*this.stompClient.subscribe(
                   `/cardgame/connected/${this.gameId}`,
                   tick => {

@@ -1,7 +1,7 @@
 <template>
   <!-- https://learnvue.co/2020/01/how-to-add-drag-and-drop-to-your-vuejs-project/-->
   <div class="board">
-    <div>
+    <div class="scrollbar">
       <draggable
         class="played-cards card-holder"
         group="cards"
@@ -115,36 +115,30 @@ export default {
   padding: 10px;
   transition: transform 0.5s;
 }
-.card-image {
+/*.card-image {
   transition: transform 0.5s;
-}
-.board {
-  display: grid;
 }
 .drag-el {
   background-color: #fff;
   margin-bottom: 10px;
   padding: 5px;
+}*/
+.board {
+  display: grid;
 }
 .card-holder {
   text-align: center;
-  width: 100%;
+  /*width: 100%;
   height: auto;
+  overflow: auto;*/
+  white-space: nowrap;
 }
 #played-cards{
 background-color: grey;
 }
-.card-holder-move {
-  transition: transform 0.5s;
+.scrollbar {
+  overflow-x: auto;
 }
-.card-holder-enter-active {
-  transition: all 200ms ease-out;
-}
-.card-holder-leave-active {
-  transition: 0.2s opacity ease-out;
-}
-.no-move {
-  transition: transform 0.5s;
-}
+
 
 </style>
