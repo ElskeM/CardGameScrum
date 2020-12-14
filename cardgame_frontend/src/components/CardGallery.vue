@@ -3,15 +3,14 @@
 
        
         <div class="gallery"  v-bind:class="{ blurred: isBlurred}" >
-       <div @click="showBigCard" class="card" v-for="card in wholeCollection" :key="card.id">
-                <DisplayCard v-bind:card="card" v-on:displaycard-clicked="setBigCard"/>
-           
-      </div>
-        </div>
-         <div class="big-card" v-bind:class="{ visible: isVisible, invisible:isInvisible} ">
+            <div @click="showBigCard" class="card" v-for="card in wholeCollection" :key="card.id">
+                <DisplayCard v-bind:card="card" v-on:displaycard-clicked="setBigCard"/>          
+            </div>
+            </div>
+            <div class="big-card" v-bind:class="{ visible: isVisible, invisible:isInvisible} ">
              <BigCardInfo :bigCard="bigCard" v-on:left="hideBigCard"/>
-         </div>
-    </div>
+             </div>
+      </div>
     
 </template>
 
@@ -105,6 +104,8 @@ export default {
     margin-right: -50%; 
     transform: translate(-50%, -50%); 
     visibility: hidden;
+    width: 100%;
+    height: 100%
 }
 
 .invisible {
