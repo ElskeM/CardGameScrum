@@ -1,7 +1,7 @@
 <template>
   <!-- https://learnvue.co/2020/01/how-to-add-drag-and-drop-to-your-vuejs-project/-->
   <div class="board">
-    <div>
+    <div class="scrollbar">
       <draggable
         class="played-cards card-holder"
         group="cards"
@@ -135,6 +135,9 @@ export default {
 }
 #played-cards{
 background-color: grey;
+}
+.scrollbar {
+  overflow-x: auto;
 }
 
 
