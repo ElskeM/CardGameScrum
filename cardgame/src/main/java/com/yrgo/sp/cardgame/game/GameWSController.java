@@ -55,11 +55,12 @@ public class GameWSController {
 			map.replace("player", player);
 			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
 		}
+		
 	}
 
 	@MessageMapping("/connected/playerMove/{id}/{playerName}")
 	@SendTo("/cardgame/updateGameBoard/{id}")
-	public List<Card> cardPlayed(PlayerMove move, @DestinationVariable long id,
+	public List<MappedCard> cardPlayed(PlayerMove move, @DestinationVariable long id,
 			@DestinationVariable String playerName) {
 		System.out.println("PLAYER MOVE");
 		System.out.println(move.getCardId());

@@ -16,7 +16,7 @@ public class Game {
 
 	private List<Player> players;
 	private long id;
-	private List<Card> table;
+	private List<MappedCard> table;
 
 	
 	public Game(long id, int numberOfPlayers) {
@@ -24,7 +24,7 @@ public class Game {
 		for(int i = 0; i<numberOfPlayers;i++) {
 			players.add(null);
 		}
-		this.table = new ArrayList<Card>();
+		this.table = new ArrayList<MappedCard>();
 		//skapar en deck som fylls med kort i Decks konstruktor
 		this.deck = new Deck();
 		this.id = id;
@@ -38,12 +38,12 @@ public class Game {
 		}
 	}
 	
-	public List<Card> getTable(){
+	public List<MappedCard> getTable(){
 		return this.table;
 	}
 	
-	public Card findCardInTableById(long id) {
-		Optional<Card> c = table.stream().filter(ca -> ca.getId() == id).findFirst();
+	public MappedCard findCardInTableById(long id) {
+		Optional<MappedCard> c = table.stream().filter(ca -> ca.getId() == id).findFirst();
 		return c.get();
 	}
 	
@@ -61,11 +61,11 @@ public class Game {
 	}
 	
 	public boolean makeMove(Player player, long cardId, int index) {
-		Optional<Card> pc = player.getHand().stream().filter(card -> card.getId() == cardId).findFirst();
-		Card playedCard = pc.get();
+		Optional<MappedCard> pc = player.getHand().stream().filter(card -> card.getId() == cardId).findFirst();
+		MappedCard playedCard = pc.get();
 		player.getHand().remove(playedCard);
 		table.add(index, playedCard);
-		List<Card> temp = new ArrayList<Card>(table);
+		List<MappedCard> temp = new ArrayList<MappedCard>(table);
 		Collections.sort(table);
 		if (!(table.equals(temp))) {
 			table.remove(playedCard);
@@ -102,7 +102,7 @@ public class Game {
 		return deck;
 	}
 
-	public List<Card> playCard(Card playedCard) {
+	public List<MappedCard> playCard(MappedCard playedCard) {
 		table.add(playedCard);
 		Collections.sort(table);
 		return table;

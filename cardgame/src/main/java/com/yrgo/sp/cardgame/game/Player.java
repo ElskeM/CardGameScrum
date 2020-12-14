@@ -9,17 +9,17 @@ public class Player {
 
 	private String name;
 	private boolean turn = false;
-	private List<Card> hand;
+	private List<MappedCard> hand;
 
 	
-	public void addCardToHand(Card card) {
+	public void addCardToHand(MappedCard card) {
 		hand.add(card);
 	}
 	
 	
 	public Player(String name) {
 		this.name = name;
-		this.hand = new ArrayList<Card>();
+		this.hand = new ArrayList<MappedCard>();
 	}
 	
 	public String getName() {
@@ -41,11 +41,11 @@ public class Player {
 	}
 
 
-	public void setHand(List<Card> cards) {
+	public void setHand(List<MappedCard> cards) {
 		this.hand = new ArrayList<>(cards);
 	}
 	
-	public List<Card> getHand() {
+	public List<MappedCard> getHand() {
 		return hand;
 	}
 }
