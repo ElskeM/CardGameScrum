@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ import com.yrgo.sp.exception.DeckNotFoundException;
 @CrossOrigin(origins = "http://localhost:8081")
 public class DeckController {
 
-	private static final Logger LOG = LogManager.getLogger(DeckController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DeckController.class);
 	
 	@Autowired
 	private DeckRepository deckData;

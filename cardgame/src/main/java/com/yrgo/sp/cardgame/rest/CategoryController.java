@@ -4,8 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ import com.yrgo.sp.exception.CategoryNotFoundException;
 @CrossOrigin(origins = "http://localhost:8081")
 public class CategoryController {
 
-	private static final Logger LOG = LogManager.getLogger(CategoryController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CategoryController.class);
 
 	@Autowired
 	private CategoryRepository categoryData;

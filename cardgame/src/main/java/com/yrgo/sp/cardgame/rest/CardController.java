@@ -8,8 +8,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,7 +35,7 @@ import com.yrgo.sp.exception.CardNotFoundException;
 @CrossOrigin(origins = "http://localhost:8081")
 public class CardController {
 
-	private static final Logger LOG = LogManager.getLogger(CardController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CardController.class);
 	
 	@Autowired
 	private CardRepository cardData;
