@@ -69,7 +69,6 @@ public class GameWSController {
 		boolean correctMove=true;//Tanke att returnera om draget var rätt eller ej
 		Game g = game.getGameById(id);
 
-		//List<Card> table = g.getTable();
 
 		Optional<Player> p = g.getPlayers().stream().filter(pl -> pl.getName().equals(playerName)).findFirst();
 		Player currentPlayer = p.get();
@@ -83,17 +82,11 @@ public class GameWSController {
 		g.makeMove(currentPlayer, move.getCardId(), move.getCardPosition());
 	
 		g.changeTurnForPlayers(currentPlayer);
-//		if (g.getPlayers().size() > (g.getPlayers().indexOf(currentPlayer) + 1)) {
-//			g.getPlayers().get(g.getPlayers().indexOf(currentPlayer) + 1).setTurn(true);
-//			
-//		} else {
-//			g.getPlayers().get(0).setTurn(true);
-//			
-//		}
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("table", g.getTable());
 		map.put("player", null);
+		map.put("winner", g.checkWin());
 		for (Player player : g.getPlayers()) {
 			map.replace("player", player);
 			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);

@@ -30,6 +30,9 @@ public class Deck {
 			cards.add(new MappedCard(c, ++id));
 		}
 	}
+	public int getSize() {
+		return cards.size();
+	}
 }
 
 /*
