@@ -26,8 +26,9 @@ public class Deck {
 		List<Card> list = new ArrayList<Card>(set);
 		Collections.shuffle(list);
 		long id = 0;
-		for (Card c : list) {
-			cards.add(new MappedCard(c, ++id));
+		for(int i = 0;i<9;i++) {
+		//for (Card c : list) {
+			cards.add(new MappedCard(list.get(i), ++id));
 		}
 	}
 	public int getSize() {

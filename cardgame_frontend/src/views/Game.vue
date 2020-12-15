@@ -125,7 +125,7 @@ export default {
           this.playerHand = JSON.parse(tick.body).player.hand;
           if (JSON.parse(tick.body).winner != null) {
             this.gameEnd = true;
-            this.winner = JSON.parse(tick.body).winner.name;
+            this.winner = JSON.parse(tick.body).winner;
             console.log("Vinnare är :" + this.winner);
             this.$refs.gb.setPlayerTurn(false);
           } else {

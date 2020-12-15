@@ -15,7 +15,7 @@ import org.springframework.stereotype.Controller;
 import com.yrgo.sp.cardgame.domain.Card;
 
 @Controller
-public class GameWSController {
+public class GameWSController implements GameIsDrawListener {
 
 	@Autowired
 	private GameService game;
@@ -29,7 +29,7 @@ public class GameWSController {
 	public boolean secondPlayerConnected(@DestinationVariable long id, @DestinationVariable String playerName) {
 		System.out.println("secondPlayerConnected: " + true + ", gameID: " + id);
 		Game g = game.getGameById(id);
-		g.addPlayer(playerName);//.getPlayers().get(1).setName(playerName);
+		g.addPlayer(playerName);// .getPlayers().get(1).setName(playerName);
 
 		System.out.println(g.getPlayers().get(1).getName());
 		placeInitialCard(id);
@@ -46,7 +46,7 @@ public class GameWSController {
 		Game g = game.getGameById(gameId);
 		game.fillDeck(gameId);
 		g.startNewGame();
-
+		g.addGameIsDrawListener(this);
 		g.getPlayers().get(ThreadLocalRandom.current().nextInt(0, g.getPlayers().size())).setTurn(true);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("table", g.getTable());
@@ -55,7 +55,7 @@ public class GameWSController {
 			map.replace("player", player);
 			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
 		}
-		
+
 	}
 
 	@MessageMapping("/connected/playerMove/{id}/{playerName}")
@@ -66,21 +66,14 @@ public class GameWSController {
 		System.out.println(move.getCardId());
 		System.out.println(move.getPlayerName());
 		System.out.println(move.getCardPosition());
-		boolean correctMove=true;//Tanke att returnera om draget var rätt eller ej
+		boolean correctMove = true;// Tanke att returnera om draget var rätt eller ej
 		Game g = game.getGameById(id);
-
 
 		Optional<Player> p = g.getPlayers().stream().filter(pl -> pl.getName().equals(playerName)).findFirst();
 		Player currentPlayer = p.get();
 
-		if (!currentPlayer.isTurn()) {// Exception av slag här va? Det var inte den här spelarens tur!
-			//return null;
-		}
-
-		
-
 		g.makeMove(currentPlayer, move.getCardId(), move.getCardPosition());
-	
+
 		g.changeTurnForPlayers(currentPlayer);
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -91,8 +84,21 @@ public class GameWSController {
 			map.replace("player", player);
 			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
 		}
-		return g.getTable();//Kanske inte behövs då alla spelare redan fått uppdaterat bord
+		return g.getTable();// Kanske inte behövs då alla spelare redan fått uppdaterat bord
 
+	}
+
+	@Override
+	public void gameIsDraw(long id) {
+		Game g = game.getGameById(id);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("table", g.getTable());
+		map.put("player", null);
+		map.put("winner", "Oavgjort!");
+		for (Player player : g.getPlayers()) {
+			map.replace("player", player);
+			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
+		}
 	}
 
 	/*

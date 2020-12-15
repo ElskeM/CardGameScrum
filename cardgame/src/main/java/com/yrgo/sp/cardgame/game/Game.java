@@ -16,6 +16,7 @@ public class Game {
 	private List<Player> players;
 	private long id;
 	private List<MappedCard> table;
+	private List<GameIsDrawListener> drawListeners = new ArrayList<GameIsDrawListener>();
 
 	public Game(long id, int numberOfPlayers) {
 		this.players = new ArrayList<Player>();// Skapa arraylist med storleken satt till antal spelare FUNKAR EJ!
@@ -59,6 +60,9 @@ public class Game {
 	}
 
 	public boolean makeMove(Player player, long cardId, int index) {
+		if (!player.isTurn()) {// Exception av slag här va? Det var inte den här spelarens tur!
+			//return null;
+		}
 		Optional<MappedCard> pc = player.getHand().stream().filter(card -> card.getId() == cardId).findFirst();
 		MappedCard playedCard = pc.get();
 		player.getHand().remove(playedCard);
@@ -68,17 +72,23 @@ public class Game {
 		if (!(table.equals(temp))) {
 			table.remove(playedCard);
 			try {
+				
 				player.addCardToHand(deck.draw());
-
+				System.out.println("Inne i try i dra kort");
 			} catch (IllegalArgumentException e) {
+				
+				System.out.println("Inne i catch i dra kort");
 				// Deck is empty
 				// DRAW
+				for (GameIsDrawListener listener : drawListeners) {
+					listener.gameIsDraw(id);
+				}
 			}
 		}
 		return true;
 	}
 
-	public Player checkWin() {
+	public String checkWin() {
 		turns++;
 System.out.println("Modulus turn"+(turns % players.size()));
 		if (turns % players.size() == 0) {
@@ -91,12 +101,19 @@ System.out.println("Modulus turn"+(turns % players.size()));
 			}
 			if (winners.size() > 1) {
 				for (Player player : winners) {
+					try {
 					player.addCardToHand(deck.draw());
+					}catch (IllegalArgumentException e) {
+						System.out.println("Inne i catch i dra kort");
+						for (GameIsDrawListener listener : drawListeners) {
+							listener.gameIsDraw(id);
+						}
+					}
 				}
 				return null;// Måste kollas om deck är tom!
 			} else if (!winners.isEmpty()) {
 
-				return winners.get(0);
+				return winners.get(0).getName();
 			}
 		}
 		return null;
@@ -172,6 +189,10 @@ System.out.println("Modulus turn"+(turns % players.size()));
 
 	public long getId() {
 		return this.id;
+	}
+	
+	public void addGameIsDrawListener(GameIsDrawListener listener) {
+		drawListeners.add(listener);
 	}
 
 	/*
