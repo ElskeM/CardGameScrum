@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
  *         the database.
  */
 @Entity
-public class Card {
+public class Card implements Comparable<Card> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -29,8 +29,8 @@ public class Card {
 	@ManyToOne
 	private Category category;
 	private String author = "Admin";
-	private Integer frequence;// Enum? Tänkt att kopplas till ikonerna i klimatkoll
-
+	private Integer frequence;
+	
 //	@Lob
 //	@Basic(fetch = FetchType.LAZY)
 	private String frontImage;// https://vaadin.com/blog/saving-and-displaying-images-using-jpa
@@ -146,5 +146,8 @@ public class Card {
 	public void setBackImage(String backImage) {
 		this.backImage = backImage;
 	}
-
+	@Override
+	public int compareTo(Card o) {
+		return score.compareTo(o.getScore());
+	}
 }
