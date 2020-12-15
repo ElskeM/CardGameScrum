@@ -1,5 +1,6 @@
 package com.yrgo.sp.cardgame.controller;
 
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -26,102 +27,93 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import com.yrgo.sp.cardgame.data.CardRepository;
+
 import com.yrgo.sp.cardgame.data.CategoryRepository;
 import com.yrgo.sp.cardgame.domain.Card;
-import com.yrgo.sp.cardgame.rest.CardController;
+import com.yrgo.sp.cardgame.domain.Category;
+import com.yrgo.sp.cardgame.rest.CategoryController;
 
-
-@WebMvcTest(CardController.class)
+@WebMvcTest(CategoryController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class CardControllerTest {
-	
-	
+public class CategoryControllerTest {
+
 	@Autowired
 	private MockMvc mockMvc;
 	
 	@MockBean
-	private CardRepository cardData;
-	
-	@MockBean
 	private CategoryRepository categoryData;
 	
-	
 	@Test
-	public void testGetAllCards() throws Exception {
-		List<Card> allCards = new ArrayList<>();
-		Card c = new Card("testcard",1000);
-		allCards.add(c);
-		when(cardData.findAll()).thenReturn(allCards);
-		this.mockMvc.perform(get("/allCards")).andDo(print()).andExpect(status().isOk());
+	public void testGetAllCategories() throws Exception {
+		List<Category> allCategories = new ArrayList<>();
+		Category c = new Category("TestCategory");
+		allCategories.add(c);
+		when(categoryData.findAll()).thenReturn(allCategories);
+		this.mockMvc.perform(get("/categories")).andDo(print()).andExpect(status().isOk());
 	}
 	
-
 	@Test
-	public void testGetCardById() throws Exception {
-		Card c = new Card("testCard", 1250);
-		c.setId(2L);
-		Optional<Card> opC = Optional.of(c);
-		when(cardData.findById(2L)).thenReturn(opC);
-		this.mockMvc.perform(get("/card/2")).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.title").value("testCard"));
-		
+	public void testFindCategory() throws Exception {
+		Category c = new Category("CatToBeFound");
+		when(categoryData.findByCategory("CatToBeFound")).thenReturn(c);
+		this.mockMvc.perform(get("/categories/CatToBeFound"))
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.category").value("CatToBeFound"));
 	}
-    
+	
 	@Test
-	public void testCreateCard() throws Exception {
-		when(cardData.save(ArgumentMatchers.any(Card.class))).thenAnswer(new Answer() {
+	public void testCreateCategory() throws Exception {
+		when(categoryData.save(ArgumentMatchers.any(Category.class))).thenAnswer(new Answer() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
-				Card c = (Card) invocation.getArgument(0);
+				Category c = (Category) invocation.getArgument(0);
 				c.setId((long)new Random().nextInt(100));
 				return c;
 			}
 		});
-		this.mockMvc.perform(post("/newCard").contentType(MediaType.APPLICATION_JSON).content("{\"title\": \"TestCard\", \"score\":100}").with(csrf())
+		this.mockMvc.perform(post("/newCategory").contentType(MediaType.APPLICATION_JSON).content("{\"category\": \"TestCategory\"}").with(csrf())
 		)
 		.andDo(print())
 		.andExpect(status().isCreated());
 	}
 	
 	@Test
-	public void testUpdateCard() throws Exception {
-		Card c = new Card("CardToUpdate", 75000);
+	public void testUpdateCategory() throws Exception {
+		Category c = new Category("CatToUpdate");
 		c.setId(1L);
-		Optional<Card> opC = Optional.of(c);
-		when(cardData.findById(1L)).thenReturn(opC);
-		when(cardData.save(ArgumentMatchers.any(Card.class))).thenAnswer(new Answer() {
+		Optional<Category> opC = Optional.of(c);
+		when(categoryData.findById(1L)).thenReturn(opC);
+		when(categoryData.save(ArgumentMatchers.any(Category.class))).thenAnswer(new Answer() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
-				Card c = (Card) invocation.getArgument(0);
+				Category c = (Category) invocation.getArgument(0);
 				return c;
 			}
 		});
-		
-        this.mockMvc.perform(put("/card/1").contentType(MediaType.APPLICATION_JSON).content("{\"title\": \"UpdatedCard\", \"score\":7500}").with(csrf())
+
+        this.mockMvc.perform(put("/categories/1").contentType(MediaType.APPLICATION_JSON).content("{\"category\": \"UpdatedCategory\"}").with(csrf())
         		)
         		.andDo(print())
         		.andExpect(status().isOk());
 	}
 	
 	@Test
-	public void testDeleteCard() throws Exception {
-		Card c = new Card("CardToDelete", 275);
+	public void testDeleteCategory() throws Exception {
+		Category c = new Category("CatToDelete");
 		c.setId(1L);
-		when(cardData.save(ArgumentMatchers.any(Card.class))).thenAnswer(new Answer() {
+		when(categoryData.save(ArgumentMatchers.any(Category.class))).thenAnswer(new Answer() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
-				Card c = (Card) invocation.getArgument(0);
+				Category c = (Category) invocation.getArgument(0);
 				return c;
 			}
 		});
-		this.mockMvc.perform(delete("/card/1")
+		this.mockMvc.perform(delete("/categories/1")
 	        		)
 	        		.andDo(print())
 	        		.andExpect(status().isNoContent());
-		verify(cardData).deleteById(1L);
+		verify(categoryData).deleteById(1L);
 		
 	}
-	
-	
-
 }
