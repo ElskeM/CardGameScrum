@@ -14,14 +14,25 @@
 		<Console name="STDOUT" target="SYSTEM_OUT">
 			<PatternLayout pattern="%m%n" />
 		</Console>
+		<RollingFile name="FileAppender"
+			fileName="logs/cardgame.log"
+			filePattern="logs/cardgame-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingFile>
 	</Appenders>
 	<Loggers>
-		<Root level="trace">
+		<Root level="debug">
 			<AppenderRef ref="FILE" level="DEBUG" />
 			<AppenderRef ref="STDOUT" level="INFO" />
 		</Root>
 		<Root level="info">
-			<AppenderRef ref="FILE"></AppenderRef>
+			<AppenderRef ref="FileAppender"></AppenderRef>
 		</Root>
 	</Loggers>
 </Configuration>
