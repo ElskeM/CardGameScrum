@@ -56,7 +56,10 @@
       :playerHand="playerHand"
       ref="gb"
     />
-    <div v-if="this.gameEnd" class="win-prompt">Vinnare är: {{this.winner}}</div>
+    <div
+      v-if="this.gameEnd"
+      class="win-prompt"
+    >Vinnare är: {{this.winner}}</div>
   </div>
 </template>
 
@@ -239,15 +242,11 @@ export default {
   min-width: 320px;
 }
 .win-prompt {
-    text-align: center;
-    position: fixed;
-    left: 50%;
-    margin-right: -50%; 
-    transform: translate(-50%, -50%); 
-    font-size: 8em;
-    width: 100%;
-    height: 100%
-
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 8em;
 }
 
 .flex {
