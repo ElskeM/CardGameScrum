@@ -98,7 +98,7 @@ public class DeckControllerTest {
 		});
 		this.mockMvc.perform(post("/newDeck").contentType(MediaType.APPLICATION_JSON).content(
 				"{\"name\":\"TestDeck\",\"creator\":\"TestAdmin\",\"cards\":[{\"id\":2,\"title\":\"testcard2\",\"subtitle\":null,\"description\":null,\"extraInfo\":null,\"score\":500,\"category\":null,\"author\":\"Admin\",\"frequence\":null,\"frontImage\":null,\"backImage\":null},{\"id\":1,\"title\":\"testcard\",\"subtitle\":null,\"description\":null,\"extraInfo\":null,\"score\":1000,\"category\":null,\"author\":\"Admin\",\"frequence\":null,\"frontImage\":null,\"backImage\":null}]}")
-				.with(csrf())).andDo(print()).andExpect(status().isCreated());
+				.characterEncoding("UTF-8").with(csrf())).andDo(print()).andExpect(status().isCreated());
 	}
 
 	@Test
@@ -126,7 +126,7 @@ public class DeckControllerTest {
 
 		this.mockMvc.perform(put("/decks/2").contentType(MediaType.APPLICATION_JSON).content(
 				"{\"name\":\"UpdatedDeck\",\"creator\":\"TestAdmin\",\"cards\":[{\"id\":5,\"title\":\"testcard5\",\"subtitle\":null,\"description\":null,\"extraInfo\":null,\"score\":1500,\"category\":null,\"author\":\"Admin\",\"frequence\":null,\"frontImage\":null,\"backImage\":null},{\"id\":7,\"title\":\"testedCard\",\"subtitle\":null,\"description\":null,\"extraInfo\":null,\"score\":245,\"category\":null,\"author\":\"Admin\",\"frequence\":null,\"frontImage\":null,\"backImage\":null}]}")
-				.with(csrf())).andDo(print()).andExpect(status().isOk());
+				.characterEncoding("UTF-8").with(csrf())).andDo(print()).andExpect(status().isOk());
 	}
 
 	@Test
