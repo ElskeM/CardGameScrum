@@ -14,4 +14,10 @@ public class ErrorDetails {
 		this.message = message;
 		this.details = details;
 	}
+
+	@Override
+	public String toString() {
+		return "ErrorDetails [timestamp=" + timestamp + ", message=" + message + ", details=" + details + "]";
+	}
+	
 }

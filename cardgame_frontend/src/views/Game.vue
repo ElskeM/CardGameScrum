@@ -59,12 +59,7 @@ import axios from "axios";
 import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
 
-<<<<<<< HEAD
-//import axios from 'axios'
-
-=======
 import GameBoard from "../components/GameBoard.vue";
->>>>>>> fc24dd5e259124ccf7dd4911c6193c366e3bc9fc
 export default {
   components: { GameBoard },
   data() {
@@ -201,15 +196,9 @@ export default {
         .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`)
         .then((response) => (this.whoWon = response.data));
     },
-<<<<<<< HEAD
-    methods : {
-        createGame() {
-            fetch('http://localhost:8080/game/start')
-=======
 
     /*    createGame() {
             axios.get('http://localhost:8080/game/')
->>>>>>> fc24dd5e259124ccf7dd4911c6193c366e3bc9fc
             .then(this.playerNumber = this.playerNumberHolder)
             .catch(error => console.log(error))
         },
@@ -223,6 +212,7 @@ export default {
         */
   },
 };
+
 </script>
 
 <style scoped>
