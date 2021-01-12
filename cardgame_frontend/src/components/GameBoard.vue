@@ -15,67 +15,56 @@
           :key="card.id"
           class="card"
         >
-        <div>
-        <img
-            class="card-image"
-            :src="card.backImage"
-          >
+          <div>
+            <img class="card-image" :src="card.backImage" />
           </div>
-          </div>
+        </div>
       </draggable>
     </div>
     <draggable
       group="cards"
       class="card-holder"
-      @start="dragging=true"
+      @start="dragging = true"
       @end="onDrop"
       v-bind="dragOptions"
       id="player-hand"
     >
-      <transition-group
-        type="transition"
-        name="card-holder"
-      >
+      <transition-group type="transition" name="card-holder">
         <div
           v-for="card in playerHand"
           :value="card.id"
           :key="card.id"
           class="card list-group-item player-card"
         >
-          <img
-            class="card-image"
-            :src="card.frontImage"
-          >
+          <img class="card-image" :src="card.frontImage" />
         </div>
       </transition-group>
     </draggable>
-
   </div>
-
 </template>
 
 <script>
 import draggable from "vuedraggable";
 export default {
   components: {
-    draggable
+    draggable,
   },
   props: {
     playedCards: Array,
-    playerHand: Array
+    playerHand: Array,
   },
   data() {
     return {
       dragging: false, // Boolean som aktiverar funktionen att dra och släppa kort i playedCards
-      playerTurn: false // Indikerar on det är denna spelarens tur
+      playerTurn: false, // Indikerar on det är denna spelarens tur
     };
   },
   methods: {
-    allowPlay(){
-        if(this.dragging&&this.playerTurn){
-          return false;
-        }
-        return true
+    allowPlay() {
+      if (this.dragging && this.playerTurn) {
+        return false;
+      }
+      return true;
     },
     onDrop(evt) {
       //Metod som körs när spelaren släpper kort på spelplanen. evt innehåller vilket kort och vilket index det släpps på
@@ -83,17 +72,20 @@ export default {
       if (evt.to.getAttribute("id") == "played-cards") {
         console.log(evt.newIndex); //Index i listan man lägger kortet
         console.log(evt.item.getAttribute("value")); //Hämtar det som är sparat i :value för  de släppta objektet. I vårat fall card.id.
-        var move = {"card":evt.item.getAttribute("value"),"index":evt.newIndex}
-        this.playerHand.splice(evt.oldIndex,1)
-        console.log(move)
-        this.$emit('moved', move)
+        var move = {
+          card: evt.item.getAttribute("value"),
+          index: evt.newIndex,
+        };
+        this.playerHand.splice(evt.oldIndex, 1);
+        console.log(move);
+        this.$emit("moved", move);
       }
       this.dragging = false;
     },
-    setPlayerTurn(turn){
-      console.log(turn)
-      this.playerTurn=turn
-    }
+    setPlayerTurn(turn) {
+      console.log(turn);
+      this.playerTurn = turn;
+    },
   },
   computed: {
     dragOptions() {
@@ -103,8 +95,8 @@ export default {
         disabled: false,
         ghostClass: "ghost",
       };
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -133,12 +125,10 @@ export default {
   overflow: auto;*/
   white-space: nowrap;
 }
-#played-cards{
-background-color: grey;
+#played-cards {
+  background-color: grey;
 }
 .scrollbar {
   overflow-x: auto;
 }
-
-
 </style>
