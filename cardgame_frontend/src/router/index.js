@@ -51,17 +51,17 @@ const routes = [
   {
     path: '/register',
     name: 'Register',
-    component: () => import('../components/Register.vue')
+    component: () => import('../views/Register.vue')
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../components/Login.vue')
+    component: () => import('../views/Login.vue')
   },
   {
     path: '/forgot-password',
     name: 'forgot-password',
-    component: () => import('../components/ForgotPassword.vue')
+    component: () => import('../views/ForgotPassword.vue')
   }
 ]
 
