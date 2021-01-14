@@ -130,6 +130,7 @@ export default {
             this.gameEnd = true;
             this.winner = JSON.parse(tick.body).winner;
             console.log("Vinnare är :" + this.winner);
+            this.$alert("Vill du spela en gång till?");
             this.$refs.gb.setPlayerTurn(false);
           } else {
             this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
