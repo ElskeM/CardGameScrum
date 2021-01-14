@@ -6,7 +6,8 @@
     <router-link to="/game">Game</router-link> |
     <router-link to="/newcard">New Card</router-link> |
     <router-link to="/register">Register</router-link> |
-    <router-link to="/login">{{loginLinkText}}</router-link>
+    <router-link v-if="!isLoggedIn()" to="/login">Login</router-link>
+    <router-link v-else to="/login">Logout</router-link>
   </div>
   <router-view />
 </div>
@@ -16,16 +17,11 @@
 import AuthService from '../services/auth.service';
 
 export default {
-  computed: {
-      loginLinkText: function () {
-          if(AuthService.isLoggedIn()){
-              return "Logout";
-          }
-          return "Login";
-      }
-  },
   methods: {
-    update (){
+    isLoggedIn (){
+      return AuthService.isLoggedIn();
+    },
+    update(){
       this.$forceUpdate();
     }
   }

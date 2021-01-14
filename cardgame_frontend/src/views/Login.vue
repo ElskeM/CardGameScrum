@@ -10,7 +10,6 @@
 <script>
 import AuthService from '../services/auth.service';
 import User from '../models/User';
-import NavBar from '../components/NavBar';
 
 export default {
     name: 'Login',
@@ -21,9 +20,7 @@ export default {
     },
     methods: {
         login() {
-            AuthService.login(this.user);
-            this.$router.push("/");
-            NavBar.update();
+            AuthService.login(this.user).then(() => this.$router.push("/"));
         }
     }
     
