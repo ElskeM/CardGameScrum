@@ -45,7 +45,6 @@ public class JwtAuthenticationController {
 
 	private void authenticate(String username, String password) throws Exception {
 		try {
-			System.out.println(username + ":" + password);
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		} catch (DisabledException e) {
 			throw new Exception("USER_DISABLED", e);
