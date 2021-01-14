@@ -84,6 +84,7 @@ export default {
       gameInfo: null,
       playerHand: [],
       playedCards: [],
+      muck:[],
       chatMessages: [],
     };
   },
@@ -138,6 +139,7 @@ export default {
         (tick) => {
           this.playedCards = JSON.parse(tick.body).table;
           this.playerHand = JSON.parse(tick.body).player.hand;
+          this.muck = JSON.parse(tick.body).muck;
           this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
           console.log("HEEEEEEEJ");
           this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
