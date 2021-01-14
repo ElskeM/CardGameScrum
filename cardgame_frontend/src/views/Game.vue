@@ -12,7 +12,7 @@
         <div>
           <span v-if="this.linkToGame">
           Länk till spelet:
-            <a :href="this.linkToGame"> {{ this.linkToGame }}</a></span>
+            <a :href="this.linkToGame" target="_blank"> {{ this.linkToGame }}</a></span>
         </div>
 
         <!--<button @click="playerMove">TEST</button>-->
@@ -142,7 +142,7 @@ export default {
             this.gameEnd = true;
             this.winner = JSON.parse(tick.body).winner;
             console.log("Vinnare är :" + this.winner);
-            this.$alert("Vill du spela en gång till?");
+            this.$alert("Vill du spela en gång till?", "Vinnare är: " + this.winner + "!");
             this.$refs.gb.setPlayerTurn(false);
           } else {
             this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
