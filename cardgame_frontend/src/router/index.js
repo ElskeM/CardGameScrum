@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import NewCard from '../views/NewCard.vue'
+import AuthService from '../services/auth.service'
+import NavBar from '../components/NavBar';
 
 Vue.use(VueRouter)
 
@@ -56,7 +58,14 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../views/Login.vue')
+    component: () => import('../views/Login.vue'),
+    beforeEnter:(to, from, next) => {
+      if(AuthService.isLoggedIn()){
+        AuthService.logout();
+      }
+      NavBar.update();
+      next();
+    }
   },
   {
     path: '/forgot-password',
