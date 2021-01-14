@@ -1,17 +1,15 @@
 <template>
     <div>
-        <div>
+        <div class="chat-window">
             <div v-for="message in chatMessages" :key="message.id">
-                <ChatMessage v-bind:message="message"/>
+                <ChatMessage v-bind:message="message" class="chat-message"/>
             </div>
-            <div>
-                <input type="text" v-model="message"/>
-                <input type="button" value="Send" @click="sendMessage">
-            </div>
-            <div>
-                {{playerName}}
-            </div>
-        </div>        
+        </div>     
+        <div>
+            <input type="text" v-model="message"/>
+            <input type="button" value="Send" @click="sendMessage">
+        </div>
+           
 
 
     </div>
@@ -52,6 +50,21 @@ export default {
 </script>
 
 <style scoped>
+    .chat-window {
+        width: 20%;
+        height: 300px;
+        display: flex;
+       /* flex-direction: column;*/
+        flex-direction: column-reverse;
+        border: solid black 2px;
+        overflow: scroll
+    }
 
+    .chat-message {
+        width: 80%;
+        border-radius: 5px;
+        margin: 3px;
+
+    }
 
 </style>

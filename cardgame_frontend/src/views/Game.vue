@@ -171,7 +171,7 @@ export default {
          // console.log(tick);
           console.log("Detta fick jag tillbaka")
           console.log(JSON.parse(tick.body));
-          this.chatMessages.push(JSON.parse(tick.body))
+          this.chatMessages.unshift(JSON.parse(tick.body))
         }
         )
     },
