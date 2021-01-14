@@ -43,7 +43,7 @@ public class PlayerControllerTest {
 	@Test
 	public void testGetPlayerByUsername() throws Exception {
 		Player p = new Player("tp", "tp@tp.se", "password");
-		when(playerData.findByUserName("tp")).thenReturn(p);
+		when(playerData.findByUserName("tp").get()).thenReturn(p);
 		this.mockMvc.perform(get("/player/tp")).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.userName").value("tp"));
 		
 	}
