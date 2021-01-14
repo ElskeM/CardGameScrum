@@ -31,7 +31,7 @@ import VueFlip from 'vue-flip';
 export default {
     data() {
         return {
-            model: true,
+            model: false,
            
         }
     },
