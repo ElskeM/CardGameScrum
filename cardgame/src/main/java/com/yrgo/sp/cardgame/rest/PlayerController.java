@@ -35,7 +35,7 @@ public class PlayerController {
 	@GetMapping("/player/{userName}")
 	public ResponseEntity<Player> findByUserName(@PathVariable String userName) {
 		LOG.info("Method FindByUserName called with following parameter: " + userName);
-		Player playerByUN = playerData.findByUserName(userName);
+		Player playerByUN = playerData.findByUserName(userName).get();
 		
 		if (!playerByUN.getUserName().equals(userName)) {
 			LOG.info("Invalid parameter, casting PlayerNotFoundException");
