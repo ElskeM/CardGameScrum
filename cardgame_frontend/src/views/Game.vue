@@ -7,11 +7,19 @@
           v-model="playerName"
           placeholder="Ditt namn"
         />
-        <button id="btn-start" @click="startGame" v-if="!this.gameId">Starta Spel</button>
-        <button id="btn-start" @click="startGame" v-else-if="!this.connected">Gå med</button>
+        <button
+          id="btn-start"
+          @click="startGame"
+          v-if="!this.gameId"
+        >Starta Spel</button>
+        <button
+          id="btn-start"
+          @click="startGame"
+          v-else-if="!this.connected"
+        >Gå med</button>
         <div>
           <span v-if="this.linkToGame">
-          Länk till spelet:
+            Länk till spelet:
             <a :href="this.linkToGame"> {{ this.linkToGame }}</a></span>
         </div>
 
@@ -22,11 +30,13 @@
         <div v-if="this.connected">
           <h3>Connected to game: {{ this.gameId }}</h3>
           <div v-if="this.gameInfo">
-            <span id="matches">Matches: {{ this.gameInfo.matches }}</span
-            ><br />
+            <span id="matches">Matches: {{ this.gameInfo.matches }}</span><br />
             <b>Wins</b>
             <div>
-              <span v-for="player in this.gameInfo.players" :key="player.name">
+              <span
+                v-for="player in this.gameInfo.players"
+                :key="player.name"
+              >
                 {{ player.name }}: {{ player.wins }}
                 <span class="spacer"></span>
               </span>
@@ -38,7 +48,7 @@
           <h1>DISCONNECTED</h1>
         </div>
       </div>
-   </div>
+    </div>
     <div v-if="this.connected">
       <span v-if="this.$refs.gb.playerTurn">Your turn</span>
       <span v-else>Other player's turn</span>
@@ -47,14 +57,14 @@
       @moved="playerMove"
       :playedCards="playedCards"
       :playerHand="playerHand"
+      :muck="muck"
       ref="gb"
     />
-    <Chat 
-      v-on:messageSent="sendChatMessage" 
-      :playerName="playerName" 
+    <Chat
+      v-on:messageSent="sendChatMessage"
+      :playerName="playerName"
       :chatMessages="chatMessages"
-      
-      />
+    />
   </div>
 </template>
 
@@ -67,10 +77,10 @@ import GameBoard from "../components/GameBoard.vue";
 import Chat from "../components/Chat.vue";
 
 export default {
-  components: { 
-      GameBoard,
-      Chat 
-    },
+  components: {
+    GameBoard,
+    Chat
+  },
   data() {
     return {
       connected: "",
@@ -84,7 +94,8 @@ export default {
       gameInfo: null,
       playerHand: [],
       playedCards: [],
-      chatMessages: [],
+      muck: [],
+      chatMessages: []
     };
   },
   methods: {
@@ -97,7 +108,7 @@ export default {
           JSON.stringify({
             playerName: this.playerName,
             cardPosition: value.index,
-            cardId: value.card,
+            cardId: value.card
           })
         );
       }
@@ -105,16 +116,14 @@ export default {
     drawCard() {},
 
     sendChatMessage(message) {
-      console.log("NU FÖRSÖKER JAG SKICKA MEDDELANDE")
-      console.log(JSON.stringify(message))
-      console.log(this.playerName)
+      console.log("NU FÖRSÖKER JAG SKICKA MEDDELANDE");
+      console.log(JSON.stringify(message));
+      console.log(this.playerName);
       this.stompClient.send(
         `/app/chatmessage/${this.gameId}`,
         JSON.stringify(message)
-      )
-
+      );
     },
-
 
     confirmSecondPlayer() {
       if (this.stompClient && this.stompClient.connected) {
@@ -130,14 +139,15 @@ export default {
       this.$refs.gb.setPlayerTurn(bool);
     },
     subscriptions() {
-      this.stompClient.subscribe(`/cardgame/gameInfo/${this.gameId}`, (msg) => {
+      this.stompClient.subscribe(`/cardgame/gameInfo/${this.gameId}`, msg => {
         this.gameInfo = JSON.parse(msg.body);
       });
       this.stompClient.subscribe(
         `/cardgame/startCard/${this.gameId}/${this.playerName}`,
-        (tick) => {
+        tick => {
           this.playedCards = JSON.parse(tick.body).table;
           this.playerHand = JSON.parse(tick.body).player.hand;
+          this.muck = JSON.parse(tick.body).muck;
           if (JSON.parse(tick.body).winner != null) {
             this.gameEnd = true;
             this.winner = JSON.parse(tick.body).winner;
@@ -148,14 +158,12 @@ export default {
             this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
           }
           this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
-          console.log("HEEEEEEEJ");
           this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
-
         }
       );
       this.stompClient.subscribe(
         `/cardgame/updateGameBoard/${this.gameId}`,
-        (tick) => {
+        tick => {
           console.log(tick);
           this.playedCards = JSON.parse(tick.body);
           console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
@@ -170,13 +178,10 @@ export default {
           console.log("UPPDATERAT GAMEBOARD!!!!");
         }
       );
-      this.stompClient.subscribe(
-        `cardgame/chat/${this.gameId}`,
-        (tick) => {
-         // console.log(tick);
-          console.log(JSON.parse(tick.body));
-        }
-        )
+      this.stompClient.subscribe(`cardgame/chat/${this.gameId}`, tick => {
+        // console.log(tick);
+        console.log(JSON.parse(tick.body));
+      });
     },
 
     startGame() {
@@ -187,13 +192,13 @@ export default {
         console.log("GAME ID IS TRUE");
         this.stompClient.connect(
           {},
-          (frame) => {
+          frame => {
             console.log(frame);
             this.connected = true;
             this.subscriptions();
             this.confirmSecondPlayer();
           },
-          (error) => {
+          error => {
             console.log(error);
             this.connected = false;
           }
@@ -201,11 +206,11 @@ export default {
       } else {
         axios
           .get(`http://localhost:8080/game/${this.playerName}`)
-          .then((response) => (this.gameId = response.data.id))
+          .then(response => (this.gameId = response.data.id))
           .then(
             this.stompClient.connect(
               {},
-              (frame) => {
+              frame => {
                 console.log(frame);
                 this.connected = true;
                 this.$router.push(`/game/${this.gameId}`);
@@ -220,7 +225,7 @@ export default {
 
                 this.subscriptions();
               },
-              (error) => {
+              error => {
                 console.log(error);
                 this.connected = false;
               }
@@ -232,8 +237,8 @@ export default {
     start() {
       axios
         .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`)
-        .then((response) => (this.whoWon = response.data));
-    },
+        .then(response => (this.whoWon = response.data));
+    }
 
     /*    createGame() {
             axios.get('http://localhost:8080/game/')
@@ -248,9 +253,8 @@ export default {
         }
 
         */
-  },
+  }
 };
-
 </script>
 
 <style scoped>
@@ -261,8 +265,8 @@ export default {
   padding: 10px;
   width: fit-content;
 }
-#header img{
-width: 10em;
+#header img {
+  width: 10em;
 }
 #scoreboard {
   min-width: 320px;
