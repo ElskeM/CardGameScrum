@@ -12,6 +12,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import com.yrgo.sp.cardgame.chat.ChatMessage;
 import com.yrgo.sp.cardgame.domain.Card;
 
 @Controller
@@ -127,4 +128,16 @@ public class GameWSController implements GameIsDrawListener {
 	 * id, Card card){ return card; }
 	 * 
 	 */
+	
+	
+	
+	@MessageMapping("/chatmessage/{id}")
+	@SendTo("/cardgame/chat/{id}")
+	public ChatMessage newChatMessage(ChatMessage message) {
+		System.out.println("Nu är det nån som skickar meddelanden här");
+		//Chat chat = chatService.findChatById(id);
+		//chat.addNewChatMessage(message);
+		return message;
+	
+	}
 }

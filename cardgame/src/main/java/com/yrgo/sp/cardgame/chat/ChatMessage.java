@@ -10,12 +10,24 @@ public class ChatMessage {
 		this.message= message;
 	}
 	
+	public ChatMessage() {
+		
+	}
+	
 	public String getName() {
 		return name;
 	}
 	
 	public String getMessage() {
 		return message;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 }

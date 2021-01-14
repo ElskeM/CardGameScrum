@@ -40,7 +40,7 @@
           <h1>DISCONNECTED</h1>
         </div>
       </div>
-    </div>
+   </div>
     <div v-if="this.connected">
       <span v-if="this.$refs.gb.playerTurn">Your turn</span>
       <span v-else>Other player's turn</span>
@@ -51,6 +51,12 @@
       :playerHand="playerHand"
       ref="gb"
     />
+    <Chat 
+      v-on:messageSent="sendChatMessage" 
+      :playerName="playerName" 
+      :chatMessages="chatMessages"
+      
+      />
   </div>
 </template>
 
@@ -60,8 +66,13 @@ import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
 
 import GameBoard from "../components/GameBoard.vue";
+import Chat from "../components/Chat.vue";
+
 export default {
-  components: { GameBoard },
+  components: { 
+      GameBoard,
+      Chat 
+    },
   data() {
     return {
       connected: "",
@@ -75,6 +86,7 @@ export default {
       gameInfo: null,
       playerHand: [],
       playedCards: [],
+      chatMessages: [],
     };
   },
   methods: {
@@ -93,6 +105,18 @@ export default {
       }
     },
     drawCard() {},
+
+    sendChatMessage(message) {
+      console.log("NU FÖRSÖKER JAG SKICKA MEDDELANDE")
+      console.log(JSON.stringify(message))
+      console.log(this.playerName)
+      this.stompClient.send(
+        `/app/chatmessage/${this.gameId}`,
+        JSON.stringify(message)
+      )
+
+    },
+
 
     confirmSecondPlayer() {
       if (this.stompClient && this.stompClient.connected) {
@@ -139,6 +163,13 @@ export default {
           console.log("UPPDATERAT GAMEBOARD!!!!");
         }
       );
+      this.stompClient.subscribe(
+        `cardgame/chat/${this.gameId}`,
+        (tick) => {
+          console.log(tick);
+          console.log(JSON.parse(tick.body));
+        }
+        )
     },
 
     startGame() {
