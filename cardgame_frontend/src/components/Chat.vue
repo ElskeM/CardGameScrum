@@ -1,19 +1,27 @@
 <template>
     <div>
-        <div class="chat-window">
-            <div v-for="message in chatMessages" :key="message.id">
-                <ChatMessage v-bind:message="message" class="chat-message"/>
+    <div class="chat-container">
+        <div class="chat-border">
+            <p>Chatta</p>
+            <div class="minimize-icon-container">
+                <img class="minimize-icon" src="../assets/minimize-window.png"/>
             </div>
-        </div>     
-        <div>
-            <input type="text" v-model="message"/>
-            <input type="button" value="Send" @click="sendMessage">
         </div>
-           
+        <div class="chat-window-and-input">
+            <div class="chat-window">
+                <div v-for="message in chatMessages" :key="message.id">
+                    <ChatMessage v-bind:message="message" class="chat-message"/>
+                </div>
+            </div>     
+            <div class="text-input">
+                <input type="text" v-model="message"/>
+                <input type="button" value="Send" @click="sendMessage">
+            </div>
+        </div>
 
 
     </div>
-
+    </div>
     
 </template>
 
@@ -50,8 +58,40 @@ export default {
 </script>
 
 <style scoped>
-    .chat-window {
+
+
+    .chat-border {
+        height: 30px;
+        width: 100%;
+        background-color: lightblue;
+        display:flex;
+        align-items: center;
+        border: blue solid 3px;
+    }
+
+    .minimize-icon-container {
+        width: 30px;
+        height: 30px;
+        border: solid green 2px;
+        margin-left: auto
+
+    }
+
+    .minimize-icon {
+        width: 100%;
+    }
+
+
+    .chat-container {
+        display: flex;
+        flex-direction: column;
         width: 20%;
+        height: 350px;
+        border: solid red 3px;
+    }
+
+    .chat-window {
+        width: 100%;
         height: 300px;
         display: flex;
        /* flex-direction: column;*/
@@ -66,5 +106,12 @@ export default {
         margin: 3px;
 
     }
+
+    .text-input {
+        width:100%;
+        height: 20px
+    }
+
+
 
 </style>
