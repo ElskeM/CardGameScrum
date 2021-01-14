@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <div v-for="message in chattMessages" :key="message.id">
+            <div v-for="message in chatMessages" :key="message.id">
                 <ChatMessage v-bind:message="message"/>
             </div>
             <div>
@@ -27,25 +27,13 @@ export default {
         },
     props: {
         playerName: String,
+        chatMessageColor: String,
         chatMessages: Array
     },
 
     data() {
         return {
-            message: "",
-
-            chattMessages: [
-                {
-                    name: "Pontus",
-                    message: "Hej",
-                    id: 0
-                },
-                {
-                    name: "Lasse",
-                    message: "Hej hej",
-                    id: 1
-                }
-            ]
+            message: ""
         }
     },
     methods: {
@@ -53,7 +41,7 @@ export default {
             console.log("DENNA SPELARES NAMN")
             console.log(this.playerName)
             console.log("SLUT P ÅDENNA SPELARES NAMN")
-            this.$emit('messageSent', {name: this.playerName, message:this.message})
+            this.$emit('messageSent', {name: this.playerName, message:this.message, color:this.chatMessageColor})
 
         }
     }

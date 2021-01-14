@@ -16,6 +16,7 @@ public class ChatWSController {
 	@SendTo("/cardgame/chat/{id}")
 	public ChatMessage newChatMessage(ChatMessage message) {
 		System.out.println("Nu är det nån som skickar meddelanden här");
+		System.out.println(message);
 		//Chat chat = chatService.findChatById(id);
 		//chat.addNewChatMessage(message);
 		return message;
