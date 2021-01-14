@@ -6,11 +6,11 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
-//@Controller
+@Controller
 public class ChatWSController {
 	
-	@Autowired
-	ChatService chatService;
+	//@Autowired
+	//ChatService chatService;
 	
 	@MessageMapping("/chatmessage/{id}")
 	@SendTo("/cardgame/chat/{id}")

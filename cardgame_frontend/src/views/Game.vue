@@ -166,7 +166,7 @@ export default {
       this.stompClient.subscribe(
         `cardgame/chat/${this.gameId}`,
         (tick) => {
-          console.log(tick);
+         // console.log(tick);
           console.log(JSON.parse(tick.body));
         }
         )
