@@ -4,23 +4,18 @@
       <div id="gamecontroller">
         <input
           type="text"
-          v-model="this.$route.params.id"
-          placeholder="Har du redan ett id?"
-        />
-        <button @click="startGame">Starta Spel</button>
-        <button @click="drawCard">Dra kort</button>
-        <div>
-          Länk till spelet:
-          <span v-if="this.linkToGame">
-            <a :href="this.linkToGame"> {{ this.linkToGame }}</a></span>
-        </div>
-
-        <input
-          type="text"
           v-model="playerName"
           placeholder="Ditt namn"
         />
-        <button @click="playerMove">TEST</button>
+        <button id="btn-start" @click="startGame" v-if="!this.gameId">Starta Spel</button>
+        <button id="btn-start" @click="startGame" v-else-if="!this.connected">Gå med</button>
+        <div>
+          <span v-if="this.linkToGame">
+          Länk till spelet:
+            <a :href="this.linkToGame"> {{ this.linkToGame }}</a></span>
+        </div>
+
+        <!--<button @click="playerMove">TEST</button>-->
       </div>
 
       <div id="scoreboard">
@@ -76,7 +71,7 @@ export default {
       connected: "",
       twoPlayers: false,
       started: false,
-      gameId: "",
+      gameId: this.$route.params.id,
 
       gameEnd: false,
       winner: "",
@@ -233,10 +228,13 @@ export default {
 <style scoped>
 #gamecontroller,
 #scoreboard {
-  border: 1px solid black;
+  border: 1px solid;
   margin: 10px;
   padding: 10px;
   width: fit-content;
+}
+#header img{
+width: 10em;
 }
 #scoreboard {
   min-width: 320px;
@@ -250,7 +248,7 @@ export default {
 }
 
 .flex {
-  display: flex;
+  display: inline-flex;
 }
 
 .spacer {
