@@ -47,6 +47,7 @@
       @moved="playerMove"
       :playedCards="playedCards"
       :playerHand="playerHand"
+      :muck="muck"
       ref="gb"
     />
     <Chat 
@@ -137,11 +138,13 @@ export default {
       this.stompClient.subscribe(
         `/cardgame/startCard/${this.gameId}/${this.playerName}`,
         (tick) => {
+          console.log("HEEEEEEEJ");
+          console.log(tick);
+          console.log(JSON.parse(tick.body))
           this.playedCards = JSON.parse(tick.body).table;
           this.playerHand = JSON.parse(tick.body).player.hand;
           this.muck = JSON.parse(tick.body).muck;
           this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
-          console.log("HEEEEEEEJ");
           this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
 
         }
