@@ -24,13 +24,17 @@ export default {
 .name {
     font-size: 70%;
     font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
     margin-left: 5px;
     margin-top: 5px
    
 }
 
 .message {
-    margin: 5px
+    margin: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    color:white
 }
 
 .msg-container {
