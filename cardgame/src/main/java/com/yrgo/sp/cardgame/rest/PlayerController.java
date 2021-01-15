@@ -66,7 +66,16 @@ public class PlayerController {
 	@PostMapping("/newPlayer")
 	public ResponseEntity<Object> createPlayer(@RequestBody Player player) {
 		LOG.info("Method CreatePlayer called with following parameter: " + player.toString());
+		
+		if(player.getPassword().isEmpty()) {
+			throw new IllegalArgumentException("password must not be empty!");
+		}
 		player.setPassword(passwordEncoder.encode(player.getPassword()));
+		
+		if(player.getEmail().isBlank()) {
+			player.setEmail(null);			
+		}
+		
 		Player newPlayer = playerData.save(player);
 		LOG.info("Saving new Player in Repository");
 
