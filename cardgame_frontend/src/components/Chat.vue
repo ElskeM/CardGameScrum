@@ -1,13 +1,16 @@
 <template>
     <div>
     <div class="chat-container">
-        <div class="chat-border">
-            <p>Chatta</p>
-            <div class="minimize-icon-container">
+
+                    <div class="chat-border" v-bind:class="{ bottom: hideChat }">
+                <p>Chatta</p>
+                <div class="minimize-icon-container">
                 <img class="minimize-icon" @click="hideChat = !hideChat" src="../assets/minimize-window.png"/>
+                </div>
             </div>
-        </div>
+        
         <div class="chat-window-and-input" v-bind:class="{ invisible: hideChat }">
+
             <div class="chat-window">
                 <div v-for="message in chatMessages" :key="message.id">
                     <ChatMessage v-bind:message="message" class="chat-message"/>
@@ -73,7 +76,8 @@ export default {
     .minimize-icon-container {
         width: 30px;
         height: 30px;
-        margin-left: auto
+        margin-left: auto;
+        
 
     }
 
@@ -87,18 +91,18 @@ export default {
         flex-direction: column;
         width: 20%;
         height: 350px;
-  /*      border: solid red 3px; */
+        /*border: solid red 3px;*/
     }
 
     .chat-window {
         width: 100%;
         height: 300px;
         display: flex;
-       /* flex-direction: column;*/
         flex-direction: column-reverse;
         border: solid black 2px;
         overflow: scroll
     }
+
 
     .chat-message {
         width: 80%;
@@ -116,6 +120,9 @@ export default {
         display:none
     }
 
+    .bottom {
+       margin-top: auto;
+    }
 
 
 </style>
