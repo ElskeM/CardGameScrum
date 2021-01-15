@@ -16,9 +16,9 @@
                     <ChatMessage v-bind:message="message" class="chat-message"/>
                 </div>
             </div>     
-            <div class="text-input">
-                <input type="text" v-model="message"/>
-                <input type="button" value="Send" @click="sendMessage">
+            <div class="text-input-container">
+                <textarea class="text-area" v-model="message"  @keyup.enter.exact="sendMessage"></textarea>
+
             </div>
         </div>
 
@@ -52,6 +52,7 @@ export default {
             console.log(this.playerName)
             console.log("SLUT P ÅDENNA SPELARES NAMN")
             this.$emit('messageSent', {name: this.playerName, message:this.message, color:this.chatMessageColor})
+            this.message = ""
 
         }
     }
@@ -71,6 +72,7 @@ export default {
         display:flex;
         align-items: center;
         border: blue solid 3px;
+        border-radius: 5px 5px 0px 0px
     }
 
     .minimize-icon-container {
@@ -90,7 +92,8 @@ export default {
         display: flex;
         flex-direction: column;
         width: 20%;
-        height: 350px;
+        height: 400px;
+        
         /*border: solid red 3px;*/
     }
 
@@ -100,7 +103,8 @@ export default {
         display: flex;
         flex-direction: column-reverse;
         border: solid black 2px;
-        overflow: scroll
+        overflow:auto;
+        
     }
 
 
@@ -111,10 +115,20 @@ export default {
 
     }
 
-    .text-input {
+    .text-input-container {
         width:100%;
-        height: 20px
+        height: 60px
     }
+
+    .text-area {
+        height: 40px;
+        width: 80%;
+        border-radius: 4px;
+        resize: none;
+        font-family: Arial, Helvetica, sans-serif;
+        
+    }
+
 
     .invisible {
         display:none
