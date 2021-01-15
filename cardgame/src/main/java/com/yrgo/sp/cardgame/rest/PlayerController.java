@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,9 @@ public class PlayerController {
 			
 	@Autowired
 	private PlayerRepository playerData;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@GetMapping("/player/{userName}")
 	public ResponseEntity<Player> findByUserName(@PathVariable String userName) {
@@ -62,12 +66,12 @@ public class PlayerController {
 	@PostMapping("/newPlayer")
 	public ResponseEntity<Object> createPlayer(@RequestBody Player player) {
 		LOG.info("Method CreatePlayer called with following parameter: " + player.toString());
-		
+		player.setPassword(passwordEncoder.encode(player.getPassword()));
 		Player newPlayer = playerData.save(player);
 		LOG.info("Saving new Player in Repository");
 
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(newPlayer.getClass()).toUri();
+				.buildAndExpand(newPlayer.getId()).toUri();
 		LOG.info("URI to Player created and returned to Client");
 		
 		return ResponseEntity.created(location).build();
