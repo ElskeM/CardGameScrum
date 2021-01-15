@@ -180,7 +180,7 @@ export default {
         );
       } else {
         axios
-          .get(`http://localhost:8080/game/${this.playerName}`,authHeader())
+          .get(`http://localhost:8080/game/${this.playerName}`, {headers:authHeader()})
           .then(response => (this.gameId = response.data.id))
           .then(
             this.stompClient.connect(
@@ -211,7 +211,7 @@ export default {
 
     start() {
       axios
-        .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`, authHeader())
+        .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`, {headers:authHeader()})
         .then(response => (this.whoWon = response.data));
     }
 
