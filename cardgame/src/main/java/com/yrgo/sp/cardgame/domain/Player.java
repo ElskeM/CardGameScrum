@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 
 /**
@@ -22,10 +24,14 @@ public class Player {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@Column(unique=true, nullable=false)
+	@Column(unique=true, nullable=false)//TODO: nullable=false gör ingenting, varför?
+	@NotEmpty
 	private String userName;
+	@Email
 	private String email;
-	private String password;
+	@Column(nullable = false) //TODO: nullable=false gör ingenting, varför?
+	@NotEmpty
+	private String password; 
 	
 	@OneToMany//(mappedBy = "player")
 	private Set<Card> favoriteCards;
