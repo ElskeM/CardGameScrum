@@ -18,7 +18,7 @@ import javax.persistence.ManyToMany;
 
 
 /**
- * 
+ * A deck of cards that can be stored in a database.
  * @author ptemrz
  *
  */
@@ -43,6 +43,7 @@ public class Deck {
 
 	/**
 	 * Is this deck publicly visible, or only for the creator?
+	 * NOT IMPLEMENTED
 	 */
 	private boolean isPublic;
 
