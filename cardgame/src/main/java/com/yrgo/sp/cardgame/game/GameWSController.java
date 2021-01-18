@@ -12,6 +12,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import com.yrgo.sp.cardgame.chat.ChatMessage;
 import com.yrgo.sp.cardgame.domain.Card;
 
 @Controller
@@ -78,6 +79,7 @@ public class GameWSController implements GameIsDrawListener {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("table", g.getTable());
+		map.put("muck", g.getMuck());
 		map.put("player", null);
 		map.put("winner", g.checkWin());
 		for (Player player : g.getPlayers()) {
@@ -127,4 +129,7 @@ public class GameWSController implements GameIsDrawListener {
 	 * id, Card card){ return card; }
 	 * 
 	 */
+	
+	
+
 }

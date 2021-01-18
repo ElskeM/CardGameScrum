@@ -40,6 +40,7 @@
         </div>
       </transition-group>
     </draggable>
+    <div v-for="card in muck" :key="card.id">{{card.score}}</div>
   </div>
 </template>
 
@@ -52,6 +53,7 @@ export default {
   props: {
     playedCards: Array,
     playerHand: Array,
+    muck: Array
   },
   data() {
     return {

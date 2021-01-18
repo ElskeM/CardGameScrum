@@ -1,11 +1,14 @@
 package com.yrgo.sp.cardgame.game;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 
 public class Game {
 
@@ -16,6 +19,7 @@ public class Game {
 	private List<Player> players;
 	private long id;
 	private List<MappedCard> table;
+	private List<MappedCard> muck;//Slängda kort aka slasken
 	private List<GameIsDrawListener> drawListeners = new ArrayList<GameIsDrawListener>();
 
 	public Game(long id, int numberOfPlayers) {
@@ -24,11 +28,27 @@ public class Game {
 			players.add(null);
 		}
 		this.table = new ArrayList<MappedCard>();
+		this.muck = new ArrayList<MappedCard>();
 		// skapar en deck som fylls med kort i Decks konstruktor
 		this.deck = new Deck();
 		this.id = id;
 	}
+	
+	public void startNewGame() {
+		this.table.clear();
+		this.muck.clear();
+		turns = 0;
+		this.table.add(this.deck.draw());
+		this.table.add(this.deck.draw());
+		Collections.sort(table);
+		for (Player p : players) {
+			for (int i = 0; i < 3; i++) {
+				p.addCardToHand(deck.draw());
+			}
 
+		}
+	}
+	
 	public void addPlayer(String name) {
 		try {
 			players.set(players.indexOf(null), new Player(name));
@@ -41,22 +61,13 @@ public class Game {
 		return this.table;
 	}
 
+	public List<MappedCard> getMuck() {
+		return muck;
+	}
+
 	public MappedCard findCardInTableById(long id) {
 		Optional<MappedCard> c = table.stream().filter(ca -> ca.getId() == id).findFirst();
 		return c.get();
-	}
-
-	public void startNewGame() {
-		turns = 0;
-		this.table.add(this.deck.draw());
-		this.table.add(this.deck.draw());
-		Collections.sort(table);
-		for (Player p : players) {
-			for (int i = 0; i < 3; i++) {
-				p.addCardToHand(deck.draw());
-			}
-
-		}
 	}
 
 	public boolean makeMove(Player player, long cardId, int index) {
@@ -71,6 +82,7 @@ public class Game {
 		Collections.sort(table);
 		if (!(table.equals(temp))) {
 			table.remove(playedCard);
+			muck.add(playedCard);
 			try {
 
 				player.addCardToHand(deck.draw());
@@ -151,12 +163,6 @@ public class Game {
 
 	public Deck getDeck() {
 		return deck;
-	}
-
-	public List<MappedCard> playCard(MappedCard playedCard) {
-		table.add(playedCard);
-		Collections.sort(table);
-		return table;
 	}
 
 	public String startGame() {

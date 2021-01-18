@@ -4,23 +4,26 @@
       <div id="gamecontroller">
         <input
           type="text"
-          v-model="this.$route.params.id"
-          placeholder="Har du redan ett id?"
-        />
-        <button @click="startGame">Starta Spel</button>
-        <button @click="drawCard">Dra kort</button>
-        <div>
-          Länk till spelet:
-          <span v-if="this.linkToGame">
-            <a :href="this.linkToGame"> {{ this.linkToGame }}</a></span>
-        </div>
-
-        <input
-          type="text"
           v-model="playerName"
           placeholder="Ditt namn"
         />
-        <button @click="playerMove">TEST</button>
+        <button
+          id="btn-start"
+          @click="startGame"
+          v-if="!this.gameId"
+        >Starta Spel</button>
+        <button
+          id="btn-start"
+          @click="startGame"
+          v-else-if="!this.connected"
+        >Gå med</button>
+        <div>
+          <span v-if="this.linkToGame">
+             Länk till spelet:
+            <a :href="this.linkToGame" target="_blank"> {{ this.linkToGame }}</a></span>
+        </div>
+
+        <!--<button @click="playerMove">TEST</button>-->
       </div>
 
       <div id="scoreboard">
@@ -54,12 +57,14 @@
       @moved="playerMove"
       :playedCards="playedCards"
       :playerHand="playerHand"
+      :muck="muck"
       ref="gb"
     />
-    <div
-      v-if="this.gameEnd"
-      class="win-prompt"
-    >Vinnare är: {{this.winner}}</div>
+    <Chat
+      v-on:messageSent="sendChatMessage"
+      :playerName="playerName"
+      :chatMessages="chatMessages"
+    />
   </div>
 </template>
 
@@ -71,22 +76,28 @@ import "../services/auth-header";
 
 import GameBoard from "../components/GameBoard.vue";
 import authHeader from '../services/auth-header';
+import Chat from "../components/Chat.vue";
+
 export default {
-  components: { GameBoard },
+  components: {
+    GameBoard,
+    Chat
+  },
   data() {
     return {
       connected: "",
       twoPlayers: false,
       started: false,
-      gameId: "",
+      gameId: this.$route.params.id,
 
-      gameEnd: false,
-      winner: "",
+      whoWon: "",
       linkToGame: "",
       playerName: "",
       gameInfo: null,
       playerHand: [],
-      playedCards: []
+      playedCards: [],
+      muck: [],
+      chatMessages: []
     };
   },
   methods: {
@@ -105,6 +116,16 @@ export default {
       }
     },
     drawCard() {},
+
+    sendChatMessage(message) {
+      console.log("NU FÖRSÖKER JAG SKICKA MEDDELANDE");
+      console.log(JSON.stringify(message));
+      console.log(this.playerName);
+      this.stompClient.send(
+        `/app/chatmessage/${this.gameId}`,
+        JSON.stringify(message)
+      );
+    },
 
     confirmSecondPlayer() {
       if (this.stompClient && this.stompClient.connected) {
@@ -128,15 +149,17 @@ export default {
         tick => {
           this.playedCards = JSON.parse(tick.body).table;
           this.playerHand = JSON.parse(tick.body).player.hand;
+          this.muck = JSON.parse(tick.body).muck;
           if (JSON.parse(tick.body).winner != null) {
             this.gameEnd = true;
             this.winner = JSON.parse(tick.body).winner;
             console.log("Vinnare är :" + this.winner);
+            this.$alert("Vill du spela en gång till?", "Vinnare är: " + this.winner + "!");
             this.$refs.gb.setPlayerTurn(false);
           } else {
             this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
           }
-
+          this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
           this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
         }
       );
@@ -157,6 +180,10 @@ export default {
           console.log("UPPDATERAT GAMEBOARD!!!!");
         }
       );
+      this.stompClient.subscribe(`cardgame/chat/${this.gameId}`, tick => {
+        // console.log(tick);
+        console.log(JSON.parse(tick.body));
+      });
     },
 
     startGame() {
@@ -221,10 +248,10 @@ export default {
             .catch(error => console.log(error))
         },
         setNumber() {
-            axios.get(`http://localhost:8080/game/start/${this.playerNumber}`)
+            fetch(`http://localhost:8080/game/start/${this.playerNumber}`)
         },
         whoWins() {
-            axios.get('http://localhost:8080/game/play')
+            fetch('http://localhost:8080/game/play')
         }
 
         */
@@ -235,24 +262,20 @@ export default {
 <style scoped>
 #gamecontroller,
 #scoreboard {
-  border: 1px solid black;
+  border: 1px solid;
   margin: 10px;
   padding: 10px;
   width: fit-content;
 }
+#header img {
+  width: 10em;
+}
 #scoreboard {
   min-width: 320px;
 }
-.win-prompt {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 8em;
-}
 
 .flex {
-  display: flex;
+  display: inline-flex;
 }
 
 .spacer {

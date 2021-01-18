@@ -1,19 +1,52 @@
 <template>
   <div id="app">
-    <NavBar/>
+    <div id="header">
+      <a href="/">
+        <img src="./assets/header.png" />
+      </a>
+    </div>
+    <NavBar />
   </div>
 </template>
 <script>
-import NavBar from '@/components/NavBar.vue';
+import NavBar from "@/components/NavBar.vue";
 
 export default {
-  name: 'test',
+  name: "test",
   components: {
-    NavBar
-  }
-}
+    NavBar,
+  },
+};
 </script>
 <style>
+#header {
+  text-align: center;
+}
+#header img {
+  width: 20em;
+}
+#nav {
+  font-family: Aria, Helvetica, sns-serif;
+  background: #1d1f48;
+  color: #f4efec;
+  text-align: center;
+}
+a {
+  color: #f4efec;
+}
+#app {
+  color: #f4efec;
+}
+html {
+  height: 100%;
+  min-height: 100%;
+  background: #f4efec;
+}
+body {
+  min-height: 98%;
+  background: #1d1f48;
+  text-align: center;
+}
 /*
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
