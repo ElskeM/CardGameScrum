@@ -67,6 +67,7 @@ export default {
 * {
     box-sizing: border-box;
     border-radius: 5px;
+    color:black;
 }
 input {
   width: 100%;

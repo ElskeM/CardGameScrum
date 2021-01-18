@@ -8,16 +8,11 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class ChatWSController {
-	
-	//@Autowired
-	//ChatService chatService;
+
 	
 	@MessageMapping("/chatmessage/{id}")
 	@SendTo("/cardgame/chat/{id}")
 	public ChatMessage newChatMessage(ChatMessage message) {
-		System.out.println("Nu är det nån som skickar meddelanden här");
-		//Chat chat = chatService.findChatById(id);
-		//chat.addNewChatMessage(message);
 		return message;
 	
 	}

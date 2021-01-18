@@ -64,7 +64,9 @@
       v-on:messageSent="sendChatMessage"
       :playerName="playerName"
       :chatMessages="chatMessages"
-    />
+      :chatMessageColor="chatMessageColor"
+      
+      />
   </div>
 </template>
 
@@ -96,8 +98,9 @@ export default {
       gameInfo: null,
       playerHand: [],
       playedCards: [],
-      muck: [],
-      chatMessages: []
+      chatMessages: [],
+      chatMessageColor: "",
+      muck: []
     };
   },
   methods: {
@@ -118,9 +121,9 @@ export default {
     drawCard() {},
 
     sendChatMessage(message) {
-      console.log("NU FÖRSÖKER JAG SKICKA MEDDELANDE");
-      console.log(JSON.stringify(message));
-      console.log(this.playerName);
+      console.log("NU FÖRSÖKER JAG SKICKA MEDDELANDE")
+     // console.log(JSON.stringify(message))
+      console.log(this.playerName)
       this.stompClient.send(
         `/app/chatmessage/${this.gameId}`,
         JSON.stringify(message)
@@ -180,10 +183,15 @@ export default {
           console.log("UPPDATERAT GAMEBOARD!!!!");
         }
       );
-      this.stompClient.subscribe(`cardgame/chat/${this.gameId}`, tick => {
-        // console.log(tick);
-        console.log(JSON.parse(tick.body));
-      });
+      this.stompClient.subscribe(
+        `/cardgame/chat/${this.gameId}`,
+        (tick) => {
+         // console.log(tick);
+          console.log("Detta fick jag tillbaka")
+          console.log(JSON.parse(tick.body));
+          this.chatMessages.unshift(JSON.parse(tick.body))
+        }
+        )
     },
 
     startGame() {
@@ -191,6 +199,7 @@ export default {
       this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
       this.stompClient = Stomp.over(this.socket);
       if (this.gameId) {
+        this.chatMessageColor = "blue" //ljusblå
         console.log("GAME ID IS TRUE");
         this.stompClient.connect(
           {},
@@ -206,6 +215,7 @@ export default {
           }
         );
       } else {
+        
         axios
           .get(`http://localhost:8080/game/${this.playerName}`, {headers:authHeader()})
           .then(response => (this.gameId = response.data.id))
@@ -224,7 +234,7 @@ export default {
                     console.log("twoPlayers = " + this.twoPlayers);
                   }
                 );*/
-
+                this.chatMessageColor = "green"
                 this.subscriptions();
               },
               error => {

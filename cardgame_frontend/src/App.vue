@@ -26,7 +26,7 @@ export default {
   width: 20em;
 }
 #nav {
-  font-family: Aria, Helvetica, sns-serif;
+  font-family: Arial, Helvetica, sans-serif;
   background: #1d1f48;
   color: #f4efec;
   text-align: center;
@@ -45,7 +45,6 @@ html {
 body {
   min-height: 98%;
   background: #1d1f48;
-  text-align: center;
 }
 /*
 #app {
