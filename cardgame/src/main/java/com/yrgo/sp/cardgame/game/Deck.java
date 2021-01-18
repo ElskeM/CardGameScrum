@@ -10,6 +10,14 @@ import java.util.stream.Collectors;
 
 import com.yrgo.sp.cardgame.domain.Card;
 
+/**
+ * A deck of face down cards. This deck is in play and is not managed by an ORM.
+ * It is meant to be destroyed when the game is over.
+ * 
+ * Face down cards cannot be viewed until they're drawn from the deck (and implicitely flipped)
+ * @author ptemrz
+ *
+ */
 public class Deck {
 
 	private Set<MappedCard> cards = new HashSet<>();
