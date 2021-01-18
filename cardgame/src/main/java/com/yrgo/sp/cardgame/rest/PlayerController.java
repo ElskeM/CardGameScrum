@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,11 +32,14 @@ public class PlayerController {
 			
 	@Autowired
 	private PlayerRepository playerData;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@GetMapping("/player/{userName}")
 	public ResponseEntity<Player> findByUserName(@PathVariable String userName) {
 		LOG.info("Method FindByUserName called with following parameter: " + userName);
-		Player playerByUN = playerData.findByUserName(userName);
+		Player playerByUN = playerData.findByUserName(userName).get();
 		
 		if (!playerByUN.getUserName().equals(userName)) {
 			LOG.info("Invalid parameter, casting PlayerNotFoundException");
@@ -63,11 +67,20 @@ public class PlayerController {
 	public ResponseEntity<Object> createPlayer(@RequestBody Player player) {
 		LOG.info("Method CreatePlayer called with following parameter: " + player.toString());
 		
+		if(player.getPassword().isEmpty()) {
+			throw new IllegalArgumentException("password must not be empty!");
+		}
+		player.setPassword(passwordEncoder.encode(player.getPassword()));
+		
+		if(player.getEmail().isBlank()) {
+			player.setEmail(null);			
+		}
+		
 		Player newPlayer = playerData.save(player);
 		LOG.info("Saving new Player in Repository");
 
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(newPlayer.getClass()).toUri();
+				.buildAndExpand(newPlayer.getId()).toUri();
 		LOG.info("URI to Player created and returned to Client");
 		
 		return ResponseEntity.created(location).build();

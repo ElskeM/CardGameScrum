@@ -74,8 +74,10 @@
 import axios from "axios";
 import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
+import "../services/auth-header";
 
 import GameBoard from "../components/GameBoard.vue";
+import authHeader from '../services/auth-header';
 import Chat from "../components/Chat.vue";
 
 export default {
@@ -215,7 +217,7 @@ export default {
       } else {
         
         axios
-          .get(`http://localhost:8080/game/${this.playerName}`)
+          .get(`http://localhost:8080/game/${this.playerName}`, {headers:authHeader()})
           .then(response => (this.gameId = response.data.id))
           .then(
             this.stompClient.connect(
@@ -246,7 +248,7 @@ export default {
 
     start() {
       axios
-        .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`)
+        .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`, {headers:authHeader()})
         .then(response => (this.whoWon = response.data));
     }
 
