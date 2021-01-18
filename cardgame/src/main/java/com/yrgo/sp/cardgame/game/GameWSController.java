@@ -79,6 +79,7 @@ public class GameWSController implements GameIsDrawListener {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("table", g.getTable());
+		map.put("muck", g.getMuck());
 		map.put("player", null);
 		map.put("winner", g.checkWin());
 		for (Player player : g.getPlayers()) {

@@ -72,7 +72,7 @@ public class CategoryControllerTest {
 				return c;
 			}
 		});
-		this.mockMvc.perform(post("/newCategory").contentType(MediaType.APPLICATION_JSON).content("{\"category\": \"TestCategory\"}").with(csrf())
+		this.mockMvc.perform(post("/newCategory").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content("{\"category\": \"TestCategory\"}").with(csrf())
 		)
 		.andDo(print())
 		.andExpect(status().isCreated());
@@ -92,7 +92,7 @@ public class CategoryControllerTest {
 			}
 		});
 
-        this.mockMvc.perform(put("/categories/1").contentType(MediaType.APPLICATION_JSON).content("{\"category\": \"UpdatedCategory\"}").with(csrf())
+        this.mockMvc.perform(put("/categories/1").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content("{\"category\": \"UpdatedCategory\"}").with(csrf())
         		)
         		.andDo(print())
         		.andExpect(status().isOk());

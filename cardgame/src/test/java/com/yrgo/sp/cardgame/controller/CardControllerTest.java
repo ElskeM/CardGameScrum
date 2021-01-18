@@ -77,7 +77,7 @@ public class CardControllerTest {
 				return c;
 			}
 		});
-		this.mockMvc.perform(post("/newCard").contentType(MediaType.APPLICATION_JSON).content("{\"title\": \"TestCard\", \"score\":100}").with(csrf())
+		this.mockMvc.perform(post("/newCard").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content("{\"title\": \"TestCard\", \"score\":100}").with(csrf())
 		)
 		.andDo(print())
 		.andExpect(status().isCreated());
@@ -97,7 +97,7 @@ public class CardControllerTest {
 			}
 		});
 		
-        this.mockMvc.perform(put("/card/1").contentType(MediaType.APPLICATION_JSON).content("{\"title\": \"UpdatedCard\", \"score\":7500}").with(csrf())
+        this.mockMvc.perform(put("/card/1").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content("{\"title\": \"UpdatedCard\", \"score\":7500}").with(csrf())
         		)
         		.andDo(print())
         		.andExpect(status().isOk());

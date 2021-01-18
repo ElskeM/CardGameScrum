@@ -66,7 +66,7 @@ public class PlayerControllerTest {
 				return p;
 			}
 		});
-		this.mockMvc.perform(post("/newPlayer").contentType(MediaType.APPLICATION_JSON).content("{\"username\": \"TP\", \"email\":\"tp@tp.se\", \"password\":\"secret\"}").with(csrf())
+		this.mockMvc.perform(post("/newPlayer").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content("{\"username\": \"TP\", \"email\":\"tp@tp.se\", \"password\":\"secret\"}").with(csrf())
 		)
 		.andDo(print())
 		.andExpect(status().isCreated());
@@ -86,7 +86,7 @@ public class PlayerControllerTest {
 			}
 		});
 		
-        this.mockMvc.perform(put("/player/1").contentType(MediaType.APPLICATION_JSON).content("{\"username\": \"testPlayer\", \"email\":\"testplayer@tp.se\", \"password\":\"secret\"}").with(csrf())
+        this.mockMvc.perform(put("/player/1").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content("{\"username\": \"testPlayer\", \"email\":\"testplayer@tp.se\", \"password\":\"secret\"}").with(csrf())
         		)
         		.andDo(print())
         		.andExpect(status().isOk());
