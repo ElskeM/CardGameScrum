@@ -21,34 +21,42 @@
         </div>
       </draggable>
     </div>
-    <draggable
-      group="cards"
-      class="card-holder"
-      @start="dragging = true"
-      @end="onDrop"
-      v-bind="dragOptions"
-      id="player-hand"
-    >
-      <transition-group type="transition" name="card-holder">
-        <div
-          v-for="card in playerHand"
-          :value="card.id"
-          :key="card.id"
-          class="card list-group-item player-card"
-        >
-          <img class="card-image" :src="card.frontImage" />
-        </div>
-      </transition-group>
-    </draggable>
+    <div id="player-board"> 
+      <draggable
+        group="cards"
+        class="card-holder"
+        @start="dragging = true"
+        @end="onDrop"
+        v-bind="dragOptions"
+        id="player-hand"
+      >
+        <transition-group type="transition" name="card-holder">
+          <div
+            v-for="card in playerHand"
+            :value="card.id"
+            :key="card.id"
+            class="card list-group-item player-card"
+          >
+            <img class="card-image" :src="card.frontImage" />
+          </div>
+        </transition-group>
+      </draggable>
+
+      <div id="muck-card">
+          <MiniCardGallery :muck="muck" id="mini-gallery" />
+      </div>  
+    </div>
     <div v-for="card in muck" :key="card.id">{{card.score}}</div>
   </div>
 </template>
 
 <script>
 import draggable from "vuedraggable";
+import MiniCardGallery from './MiniCardGallery.vue'
 export default {
   components: {
     draggable,
+    MiniCardGallery,
   },
   props: {
     playedCards: Array,
@@ -130,6 +138,31 @@ export default {
 #played-cards {
   background-color: grey;
 }
+
+#player-board {
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  margin-left: 20%
+}
+
+#player-hand {
+
+  width: 75%;
+  margin-right: auto
+  /*margin-left: 20% */
+}
+
+#muck-card {
+  width: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center
+}
+
+
+
+
 .scrollbar {
   overflow-x: auto;
 }

@@ -100,7 +100,7 @@ export default {
       playedCards: [],
       chatMessages: [],
       chatMessageColor: "",
-      muck: []
+      muck: [] // lista med slängda kort
     };
   },
   methods: {
@@ -246,11 +246,12 @@ export default {
       }
     },
 
-    start() {
+   start() {
       axios
         .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`, {headers:authHeader()})
         .then(response => (this.whoWon = response.data));
     }
+    
 
     /*    createGame() {
             axios.get('http://localhost:8080/game/')
