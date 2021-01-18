@@ -96,6 +96,7 @@ export default {
       linkToGame: "",
       playerName: "",
       gameInfo: null,
+      numberOfGames: 0,
       playerHand: [],
       playedCards: [],
       chatMessages: [],
@@ -145,7 +146,11 @@ export default {
     },
     subscriptions() {
       this.stompClient.subscribe(`/cardgame/gameInfo/${this.gameId}`, msg => {
+        console.log("HÄR KOMMER GAMEINFO");
+        console.log(JSON.parse(msg.body));
         this.gameInfo = JSON.parse(msg.body);
+        console.log("VARIABELN");
+        console.log(this.gameInfo)
       });
       this.stompClient.subscribe(
         `/cardgame/startCard/${this.gameId}/${this.playerName}`,

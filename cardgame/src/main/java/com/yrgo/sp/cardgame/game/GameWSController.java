@@ -2,6 +2,7 @@ package com.yrgo.sp.cardgame.game;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -52,6 +53,17 @@ public class GameWSController implements GameIsDrawListener {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("table", g.getTable());
 		map.put("player", null);
+		HashMap<String, Object> gameInfo = new HashMap<String, Object>();
+		int matches = 0;
+		HashMap<Integer, HashMap<String,String>> stats = new HashMap<Integer, HashMap<String,String>>();
+		Integer tmp=0;
+		for (Player player : g.getPlayers()) {
+			stats.put(tmp++, new HashMap<>(Map.of("name", player.getName(),"wins",""+player.getWins())));
+			matches += player.getWins();
+		}
+		gameInfo.put("players", stats);
+		gameInfo.put("matches", matches);
+		this.template.convertAndSend(("/cardgame/gameInfo/" + g.getId()), gameInfo);
 		for (Player player : g.getPlayers()) {
 			map.replace("player", player);
 			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
@@ -82,6 +94,7 @@ public class GameWSController implements GameIsDrawListener {
 		map.put("muck", g.getMuck());
 		map.put("player", null);
 		map.put("winner", g.checkWin());
+
 		for (Player player : g.getPlayers()) {
 			map.replace("player", player);
 			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
@@ -129,7 +142,5 @@ public class GameWSController implements GameIsDrawListener {
 	 * id, Card card){ return card; }
 	 * 
 	 */
-	
-	
 
 }
