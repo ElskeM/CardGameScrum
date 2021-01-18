@@ -109,7 +109,8 @@ export default {
 
 
     .chat-message {
-        width: 80%;
+        
+        max-width: auto;
         border-radius: 5px;
         margin: 3px;
 

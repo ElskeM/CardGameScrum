@@ -14,11 +14,14 @@ export default {
 <style scoped>
 
 .blue {
-    background-color: #62adb3
+    background-color: #62adb3;
+
 }
 
 .green {
-    background-color: #275258
+    background-color: #275258;
+    
+    
 }
 
 .name {
@@ -27,19 +30,24 @@ export default {
     font-family: Arial, Helvetica, sans-serif;
     color: white;
     margin-left: 5px;
-    margin-top: 5px
+    margin-top: 5px;
+
+    
+
    
 }
 
 .message {
     margin: 5px;
     font-family: Arial, Helvetica, sans-serif;
-    color:white
+    color:white;
+
 }
 
 .msg-container {
     display: flex;
     flex-direction: column;
+    width: 60%
 }
 
 
