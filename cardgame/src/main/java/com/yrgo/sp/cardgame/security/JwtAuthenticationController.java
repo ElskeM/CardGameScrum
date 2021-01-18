@@ -1,8 +1,7 @@
 package com.yrgo.sp.cardgame.security;
 
-import java.util.Objects;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,11 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.yrgo.sp.cardgame.security.*;
-
 
 @RestController
 @CrossOrigin
+@Profile("development")
 public class JwtAuthenticationController {
 
 	@Autowired
