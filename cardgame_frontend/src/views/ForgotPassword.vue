@@ -1,26 +1,45 @@
 <template>
-    <div>
-        <form>
-            <h3>Forgot Password</h3>
-
-            <div class="form">
-                <label>Email address</label>
-                <input type="email">
-            </div>
-            <button type="submit">Reset password</button>
-        </form>
-    </div>
+  <div class="overall">
+    <form>
+      <fieldset>
+        <legend>Forgot Password</legend>
+        <div class="form">
+          <input type="email" placeholder="Email address" />
+          <button type="submit">Reset password</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
 </template>
 
 <script>
 export default {
-    data() {
-        return {}
-        
-    }
-}
+  data() {
+    return {};
+  },
+};
 </script>
 <style scoped>
-* {
-    color: white;
+.overall {
+  margin-top: 30px;
 }
+legend {
+  font-size: 18px;
+}
+form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 30px;
+}
+input,
+button {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: 2px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+</style>
