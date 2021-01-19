@@ -1,19 +1,13 @@
 import axios from 'axios'
-//import deck from '../mockData/deckOfCards.js'
 
 
 const state = {
-    fullDeck: 
-    
-    
-    [   
-    ] 
+    fullDeck: [] 
     
 }
 
 const getters = {
-    wholeCollection: (state) => state.fullDeck,
-   
+    wholeCollection: (state) => state.fullDeck,   
     
 }
 
@@ -24,9 +18,7 @@ const actions = {
         const response = await axios.get('http://localhost:8080/allCards')
        commit('fillFullDeck', response.data.cards)
          console.log(response.data) 
-
-
-    }
+    },
 
 
 }
@@ -34,7 +26,7 @@ const actions = {
 const mutations = {
     fillFullDeck(state, deck) {
         state.fullDeck = deck
-    }
+    },
 
 }
 

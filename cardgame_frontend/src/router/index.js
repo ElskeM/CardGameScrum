@@ -118,7 +118,7 @@ async function hej(to, from, next) {
       });
   }
 
-  else {next()}
+  next()
 }
 
 export default router;

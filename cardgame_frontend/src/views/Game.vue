@@ -90,6 +90,11 @@ export default {
     GameBoard,
     Chat
   },
+
+  mounted() {
+    this.playerName = this.user.username
+  },
+  
   data() {
     return {
       connected: "",
@@ -99,7 +104,7 @@ export default {
 
       whoWon: "",
       linkToGame: "",
-      playerName: this.$store.state.user.username,
+      playerName: "",
       gameInfo: null,
       playerHand: [],
       playedCards: [],
