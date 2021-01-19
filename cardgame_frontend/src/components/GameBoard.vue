@@ -46,7 +46,6 @@
           <MiniCardGallery :muck="muck" id="mini-gallery" />
       </div>  
     </div>
-    <div v-for="card in muck" :key="card.id">{{card.score}}</div>
   </div>
 </template>
 

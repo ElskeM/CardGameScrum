@@ -1,58 +1,58 @@
 <template>
   <div>
     <div class="center-text">
-    <div class="flex">
-      <div id="gamecontroller">
-        <input
-          type="text"
-          v-model="playerName"
-          placeholder="Ditt namn"
-        />
-        <button
-          id="btn-start"
-          @click="startGame"
-          v-if="!this.gameId"
-        >Starta Spel</button>
-        <button
-          id="btn-start"
-          @click="startGame"
-          v-else-if="!this.connected"
-        >Gå med</button>
-        <div>
-          <span v-if="this.linkToGame">
-            Länk till spelet:
-            <a
-              :href="this.linkToGame"
-              target="_blank"
-            > {{ this.linkToGame }}</a></span>
-        </div>
-
-        <!--<button @click="playerMove">TEST</button>-->
-      </div>
-
-      <div id="scoreboard">
-        <div v-if="this.connected">
-          <h3>Connected to game: {{ this.gameId }}</h3>
-          <div v-if="this.gameInfo">
-            <span id="matches">Matches: {{ this.gameInfo.matches }}</span><br />
-            <b>Wins</b>
-            <div>
-              <span
-                v-for="player in this.gameInfo.players"
-                :key="player.name"
-              >
-                {{ player.name }}: {{ player.wins }}
-                <span class="spacer"></span>
-              </span>
-            </div>
+      <div class="flex">
+        <div id="gamecontroller">
+          <input
+            type="text"
+            v-model="playerName"
+            placeholder="Ditt namn"
+          />
+          <button
+            id="btn-start"
+            @click="startGame"
+            v-if="!this.gameId"
+          >Starta Spel</button>
+          <button
+            id="btn-start"
+            @click="startGame"
+            v-else-if="!this.connected"
+          >Gå med</button>
+          <div>
+            <span v-if="this.linkToGame">
+              Länk till spelet:
+              <a
+                :href="this.linkToGame"
+                target="_blank"
+              > {{ this.linkToGame }}</a></span>
           </div>
-          <div v-else>Waiting for game info...</div>
+
+          <!--<button @click="playerMove">TEST</button>-->
         </div>
-        <div v-else>
-          <h1>DISCONNECTED</h1>
+
+        <div id="scoreboard">
+          <div v-if="this.connected">
+            <h3>Connected to game: {{ this.gameId }}</h3>
+            <div v-if="this.gameInfo">
+              <span id="matches">Matches: {{ this.gameInfo.matches }}</span><br />
+              <b>Wins</b>
+              <div>
+                <span
+                  v-for="player in this.gameInfo.players"
+                  :key="player.name"
+                >
+                  {{ player.name }}: {{ player.wins }}
+                  <span class="spacer"></span>
+                </span>
+              </div>
+            </div>
+            <div v-else>Waiting for game info...</div>
+          </div>
+          <div v-else>
+            <h1>DISCONNECTED</h1>
+          </div>
         </div>
       </div>
-    </div>
     </div>
     <div v-if="this.connected">
       <span v-if="this.$refs.gb.playerTurn">Your turn</span>
@@ -150,11 +150,7 @@ export default {
     },
     subscriptions() {
       this.stompClient.subscribe(`/cardgame/gameInfo/${this.gameId}`, msg => {
-        console.log("HÄR KOMMER GAMEINFO");
-        console.log(JSON.parse(msg.body));
         this.gameInfo = JSON.parse(msg.body);
-        console.log("VARIABELN");
-        console.log(this.gameInfo);
       });
       this.stompClient.subscribe(
         `/cardgame/startCard/${this.gameId}/${this.playerName}`,
@@ -165,7 +161,6 @@ export default {
           if (JSON.parse(tick.body).winner != null) {
             this.gameEnd = true;
             this.winner = JSON.parse(tick.body).winner;
-            console.log("Vinnare är :" + this.winner);
             this.$alert(
               "Vill du spela en gång till?",
               "Vinnare är: " + this.winner + "!"
@@ -234,36 +229,36 @@ export default {
           .then(
             response => (
               console.log("4 I response"),
-              console.log(response),
-              (this.gameId = response.data.id)
-            ,
-
-            console.log("5 Efter axios är gameId: " + this.gameId),
-            this.stompClient.connect(
-              {},
-              frame => {
-                console.log(frame);
-                this.connected = true;
-                console.log("6 I connect är gameId: " + this.gameId);
-                this.$router.push(`/game/${this.gameId}`);
-                this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
-                /*this.stompClient.subscribe(
+              (this.gameId = response.data.id),
+              console.log("5 Efter axios är gameId: " + this.gameId),
+              this.stompClient.connect(
+                {},
+                frame => {
+                  console.log(frame);
+                  this.connected = true;
+                  console.log("6 I connect är gameId: " + this.gameId);
+                  this.$router.push(`/game/${this.gameId}`);
+                  this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
+                  /*this.stompClient.subscribe(
                   `/cardgame/connected/${this.gameId}`,
                   tick => {
                     this.twoPlayers = JSON.parse(tick.body);
                     console.log("twoPlayers = " + this.twoPlayers);
                   }
                 );*/
-                console.log("7 Efter länken är satt är gameId: " + this.gameId);
-                this.chatMessageColor = "green";
-                this.subscriptions();
-                console.log("8 Efter subs är gameId: " + this.gameId);
-              },
-              error => {
-                console.log(error);
-                this.connected = false;
-              }
-            ))
+                  console.log(
+                    "7 Efter länken är satt är gameId: " + this.gameId
+                  );
+                  this.chatMessageColor = "green";
+                  this.subscriptions();
+                  console.log("8 Efter subs är gameId: " + this.gameId);
+                },
+                error => {
+                  console.log(error);
+                  this.connected = false;
+                }
+              )
+            )
           );
       }
     },
@@ -307,9 +302,7 @@ export default {
 #scoreboard {
   min-width: 320px;
 }
-.center-text{
-  text-align: center;
-}
+
 .flex {
   display: inline-flex;
 }
