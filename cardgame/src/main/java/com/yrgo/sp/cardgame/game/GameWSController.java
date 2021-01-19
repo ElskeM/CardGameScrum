@@ -13,9 +13,6 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import com.yrgo.sp.cardgame.chat.ChatMessage;
-import com.yrgo.sp.cardgame.domain.Card;
-
 @Controller
 public class GameWSController implements GameIsDrawListener {
 
@@ -96,7 +93,7 @@ public class GameWSController implements GameIsDrawListener {
 
 		g.changeTurnForPlayers(currentPlayer);
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<String, Object>();// Innehåller informationen som skickas till klienten
 		map.put("table", g.getTable());
 		map.put("muck", g.getMuck());
 		map.put("player", null);

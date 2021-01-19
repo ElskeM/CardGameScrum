@@ -199,11 +199,9 @@ export default {
     },
 
     startGame() {
-      console.log("1 STARTAR SPEL");
       this.gameId = this.$route.params.id;
       this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
       this.stompClient = Stomp.over(this.socket);
-      console.log("2 INNAN IF är id: " + this.gameId);
       if (this.gameId) {
         this.chatMessageColor = "blue"; //ljusblå
         console.log("GAME ID IS TRUE");
@@ -221,22 +219,18 @@ export default {
           }
         );
       } else {
-        console.log("3 I else är gameId: " + this.gameId);
         axios
           .get(`http://localhost:8080/game/${this.playerName}`, {
             headers: authHeader()
           })
           .then(
-            response => (
-              console.log("4 I response"),
-              (this.gameId = response.data.id),
-              console.log("5 Efter axios är gameId: " + this.gameId),
+            response => (this.gameId = response.data.id))
+            .then(()=>{
               this.stompClient.connect(
                 {},
                 frame => {
                   console.log(frame);
                   this.connected = true;
-                  console.log("6 I connect är gameId: " + this.gameId);
                   this.$router.push(`/game/${this.gameId}`);
                   this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
                   /*this.stompClient.subscribe(
@@ -246,20 +240,19 @@ export default {
                     console.log("twoPlayers = " + this.twoPlayers);
                   }
                 );*/
-                  console.log(
-                    "7 Efter länken är satt är gameId: " + this.gameId
-                  );
+                  
                   this.chatMessageColor = "green";
                   this.subscriptions();
-                  console.log("8 Efter subs är gameId: " + this.gameId);
                 },
                 error => {
                   console.log(error);
                   this.connected = false;
                 }
               )
+              }
             )
-          );
+            
+          
       }
     },
 

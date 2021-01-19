@@ -21,6 +21,8 @@ export default {
 <style>
 #header {
   text-align: center;
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 #header img {
   width: 20em;

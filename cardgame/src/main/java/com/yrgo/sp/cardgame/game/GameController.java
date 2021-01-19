@@ -38,12 +38,6 @@ public class GameController {
 	
 	
 
-	
-	
-	
-	
-	
-
 /*	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Game> findGame(@PathVariable long id) {

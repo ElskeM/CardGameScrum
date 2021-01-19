@@ -9,6 +9,7 @@
         @end="onDrop"
         id="played-cards"
       >
+      <!-- Här hamnar de spelade korten. Är även en drag and drop-yta som bara blir aktiv om spelaren drar ett kort från handen. -->
         <div
           v-for="card in playedCards"
           :value="card.id"
@@ -30,6 +31,7 @@
         v-bind="dragOptions"
         id="player-hand"
       >
+      <!-- Korten i spelarens hand. Drag and drop-funktionen är bara aktiv om det är spelarens tur. -->
         <transition-group type="transition" name="card-holder">
           <div
             v-for="card in playerHand"
@@ -58,9 +60,9 @@ export default {
     MiniCardGallery,
   },
   props: {
-    playedCards: Array,
-    playerHand: Array,
-    muck: Array
+    playedCards: Array, //Spelade korten
+    playerHand: Array, //Spelarens hand
+    muck: Array //Slänghögen, kort som lagts fel
   },
   data() {
     return {
@@ -85,9 +87,9 @@ export default {
           card: evt.item.getAttribute("value"),
           index: evt.newIndex,
         };
-        this.playerHand.splice(evt.oldIndex, 1);
+        this.playerHand.splice(evt.oldIndex, 1); //Tar bort kortet från spelarens hand
         console.log(move);
-        this.$emit("moved", move);
+        this.$emit("moved", move); //Bubblar upp att ett move har gjorts
       }
       this.dragging = false;
     },
@@ -158,10 +160,6 @@ export default {
   justify-content: center;
   align-items: center
 }
-
-
-
-
 .scrollbar {
   overflow-x: auto;
 }
