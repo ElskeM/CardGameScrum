@@ -3,8 +3,11 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import NewCard from '../views/NewCard.vue'
 import AuthService from '../services/auth.service'
+import axios from 'axios'
+//import axios from "axios";
 
 Vue.use(VueRouter)
+
 
 const routes = [
   {
@@ -74,6 +77,11 @@ const routes = [
     path: '/forgot-password',
     name: 'forgot-password',
     component: () => import('../views/ForgotPassword.vue')
+  },
+  {
+    path: '/server-down',
+    name: 'server-down',
+    component: () => import('../views/ServerDown.vue')
   }
 ]
 
@@ -81,5 +89,50 @@ const router = new VueRouter({
   mode: 'history',
   routes
 })
+
+/*
+router.beforeEach((to,from,next) => {
+  fetch('http://localhost:8080/status')
+  .then(res => {
+    if(res.status === 200) {
+      next()}
+    })
+  .catch(() => {
+    next({path: '/server-down'})
+})
+})
+*/
+
+router.beforeEach((to, from, next) => {
+  axios.get('http://localhost:8080/status')
+  .then(res => {
+    /*if(res.status === 200) {
+      next()}*/
+      console.log(res)
+      next()
+    })
+  .catch(() => {
+    next({path: '/server-down'})
+})})
+
+/*
+router.beforeEach((to,from,next) => {
+  hej(to, from, next)
+}) 
+*/
+
+/*
+async function hej(to, from , next) {
+  await axios
+  .get('http://localhost:8080/status')
+  .catch(error => {
+    next({path: '/server-down'})
+    console.log(error)
+    }
+  )
+
+  next()
+} 
+*/
 
 export default router
