@@ -105,12 +105,17 @@ router.beforeEach((to,from,next) => {
 
 router.beforeEach((to, from, next) => {
   axios.get('http://localhost:8080/status')
-  .then(res => {
-    /*if(res.status === 200) {
-      next()}*/
-      console.log(res)
-      next()
-    })
+  .then(
+    /*res => {
+    if(res.status === 200) {
+      next()}
+      console.log(res) */
+      res => {
+        if(res) {
+           next()
+        } 
+      }
+    )
   .catch(() => {
     next({path: '/server-down'})
 })})
