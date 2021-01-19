@@ -79,9 +79,13 @@ import "../services/auth-header";
 import GameBoard from "../components/GameBoard.vue";
 import authHeader from '../services/auth-header';
 import Chat from "../components/Chat.vue";
+import { mapGetters } from "vuex";
 
 
 export default {
+  
+  computed: mapGetters(["user"]),
+
   components: {
     GameBoard,
     Chat
@@ -95,7 +99,7 @@ export default {
 
       whoWon: "",
       linkToGame: "",
-      playerName: "",
+      playerName: this.$store.state.user.username,
       gameInfo: null,
       playerHand: [],
       playedCards: [],
@@ -105,6 +109,8 @@ export default {
     };
   },
   methods: {
+
+
     playerMove(value) {
       if (this.stompClient && this.stompClient.connected) {
         this.stompClient.send(
