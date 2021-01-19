@@ -23,6 +23,8 @@ public class GameController {
 
 	@Autowired
 	private GameService gameService;
+	// @Value(value = "game")
+	private long lastId = 0;
 
 	@GetMapping(value = "/{firstPlayerName}")
 	public ResponseEntity<Game> startGame(@PathVariable String firstPlayerName) {
@@ -33,16 +35,14 @@ public class GameController {
 		
 		return ResponseEntity.ok(game);
 	}
+	
+	
 
 	
 	
 	
 	
 	
-	
-	
-	// @Value(value = "game")
-	private long lastId = -1;
 
 /*	
 	@GetMapping(value = "/{id}")

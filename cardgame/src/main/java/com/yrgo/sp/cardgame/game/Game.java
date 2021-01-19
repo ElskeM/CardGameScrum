@@ -23,7 +23,7 @@ public class Game {
 	private List<GameIsDrawListener> drawListeners = new ArrayList<GameIsDrawListener>();
 
 	public Game(long id, int numberOfPlayers) {
-		this.players = new ArrayList<Player>();// Skapa arraylist med storleken satt till antal spelare FUNKAR EJ!
+		this.players = new ArrayList<Player>();// Skapa arraylist med storleken satt till antal spelare
 		for (int i = 0; i < numberOfPlayers; i++) {
 			players.add(null);
 		}

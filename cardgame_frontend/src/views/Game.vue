@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="center-text">
     <div class="flex">
       <div id="gamecontroller">
         <input
@@ -19,8 +20,11 @@
         >Gå med</button>
         <div>
           <span v-if="this.linkToGame">
-             Länk till spelet:
-            <a :href="this.linkToGame" target="_blank"> {{ this.linkToGame }}</a></span>
+            Länk till spelet:
+            <a
+              :href="this.linkToGame"
+              target="_blank"
+            > {{ this.linkToGame }}</a></span>
         </div>
 
         <!--<button @click="playerMove">TEST</button>-->
@@ -49,6 +53,7 @@
         </div>
       </div>
     </div>
+    </div>
     <div v-if="this.connected">
       <span v-if="this.$refs.gb.playerTurn">Your turn</span>
       <span v-else>Other player's turn</span>
@@ -65,8 +70,7 @@
       :playerName="playerName"
       :chatMessages="chatMessages"
       :chatMessageColor="chatMessageColor"
-      
-      />
+    />
   </div>
 </template>
 
@@ -77,7 +81,7 @@ import Stomp from "webstomp-client";
 import "../services/auth-header";
 
 import GameBoard from "../components/GameBoard.vue";
-import authHeader from '../services/auth-header';
+import authHeader from "../services/auth-header";
 import Chat from "../components/Chat.vue";
 
 export default {
@@ -122,9 +126,9 @@ export default {
     drawCard() {},
 
     sendChatMessage(message) {
-      console.log("NU FÖRSÖKER JAG SKICKA MEDDELANDE")
-     // console.log(JSON.stringify(message))
-      console.log(this.playerName)
+      console.log("NU FÖRSÖKER JAG SKICKA MEDDELANDE");
+      // console.log(JSON.stringify(message))
+      console.log(this.playerName);
       this.stompClient.send(
         `/app/chatmessage/${this.gameId}`,
         JSON.stringify(message)
@@ -150,7 +154,7 @@ export default {
         console.log(JSON.parse(msg.body));
         this.gameInfo = JSON.parse(msg.body);
         console.log("VARIABELN");
-        console.log(this.gameInfo)
+        console.log(this.gameInfo);
       });
       this.stompClient.subscribe(
         `/cardgame/startCard/${this.gameId}/${this.playerName}`,
@@ -162,7 +166,10 @@ export default {
             this.gameEnd = true;
             this.winner = JSON.parse(tick.body).winner;
             console.log("Vinnare är :" + this.winner);
-            this.$alert("Vill du spela en gång till?", "Vinnare är: " + this.winner + "!");
+            this.$alert(
+              "Vill du spela en gång till?",
+              "Vinnare är: " + this.winner + "!"
+            );
             this.$refs.gb.setPlayerTurn(false);
           } else {
             this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
@@ -188,23 +195,22 @@ export default {
           console.log("UPPDATERAT GAMEBOARD!!!!");
         }
       );
-      this.stompClient.subscribe(
-        `/cardgame/chat/${this.gameId}`,
-        (tick) => {
-         // console.log(tick);
-          console.log("Detta fick jag tillbaka")
-          console.log(JSON.parse(tick.body));
-          this.chatMessages.unshift(JSON.parse(tick.body))
-        }
-        )
+      this.stompClient.subscribe(`/cardgame/chat/${this.gameId}`, tick => {
+        // console.log(tick);
+        console.log("Detta fick jag tillbaka");
+        console.log(JSON.parse(tick.body));
+        this.chatMessages.unshift(JSON.parse(tick.body));
+      });
     },
 
     startGame() {
+      console.log("1 STARTAR SPEL");
       this.gameId = this.$route.params.id;
       this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
       this.stompClient = Stomp.over(this.socket);
+      console.log("2 INNAN IF är id: " + this.gameId);
       if (this.gameId) {
-        this.chatMessageColor = "blue" //ljusblå
+        this.chatMessageColor = "blue"; //ljusblå
         console.log("GAME ID IS TRUE");
         this.stompClient.connect(
           {},
@@ -220,16 +226,25 @@ export default {
           }
         );
       } else {
-        
+        console.log("3 I else är gameId: " + this.gameId);
         axios
-          .get(`http://localhost:8080/game/${this.playerName}`, {headers:authHeader()})
-          .then(response => (this.gameId = response.data.id))
+          .get(`http://localhost:8080/game/${this.playerName}`, {
+            headers: authHeader()
+          })
           .then(
+            response => (
+              console.log("4 I response"),
+              console.log(response),
+              (this.gameId = response.data.id)
+            ,
+
+            console.log("5 Efter axios är gameId: " + this.gameId),
             this.stompClient.connect(
               {},
               frame => {
                 console.log(frame);
                 this.connected = true;
+                console.log("6 I connect är gameId: " + this.gameId);
                 this.$router.push(`/game/${this.gameId}`);
                 this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
                 /*this.stompClient.subscribe(
@@ -239,24 +254,27 @@ export default {
                     console.log("twoPlayers = " + this.twoPlayers);
                   }
                 );*/
-                this.chatMessageColor = "green"
+                console.log("7 Efter länken är satt är gameId: " + this.gameId);
+                this.chatMessageColor = "green";
                 this.subscriptions();
+                console.log("8 Efter subs är gameId: " + this.gameId);
               },
               error => {
                 console.log(error);
                 this.connected = false;
               }
-            )
+            ))
           );
       }
     },
 
-   start() {
+    start() {
       axios
-        .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`, {headers:authHeader()})
+        .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`, {
+          headers: authHeader()
+        })
         .then(response => (this.whoWon = response.data));
     }
-    
 
     /*    createGame() {
             axios.get('http://localhost:8080/game/')
@@ -289,7 +307,9 @@ export default {
 #scoreboard {
   min-width: 320px;
 }
-
+.center-text{
+  text-align: center;
+}
 .flex {
   display: inline-flex;
 }
