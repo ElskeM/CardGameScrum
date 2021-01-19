@@ -1,10 +1,12 @@
 package com.yrgo.sp.cardgame.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,87 +26,84 @@ public class GameController {
 	@Autowired
 	private GameService gameService;
 
-	@GetMapping(value = "/{firstPlayerName}")
-	public ResponseEntity<Game> startGame(@PathVariable String firstPlayerName) {
-		Game game = gameService.createGame(++lastId);
-		game.addPlayer(firstPlayerName);//.getPlayers().get(0).setName(firstPlayerName);
-		System.out.println("Storlek på listan spelare: "+game.getPlayers().size());
-		System.out.println(game.getPlayers().get(0).getName());
-		
-		return ResponseEntity.ok(game);
-	}
-
-	
-	
-	
-	
-	
-	
-	
-	// @Value(value = "game")
-	private long lastId = -1;
-
-/*	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<Game> findGame(@PathVariable long id) {
-		Game g = gameService.getGameById(id);
-		if (g == null) {
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.ok(g);
-	}
-	
-	@GetMapping(value = "/{id}/{playerName}")
-	public ResponseEntity<String> startGame(@PathVariable int id, @PathVariable String playerName) {
-		
-		Game g = gameService.getGameById(id);
-		if (g == null) {
-			return ResponseEntity.notFound().build();
-		}
-		
-		Player player = new Player(playerName);
-		g.setPlayer(player);
-		String message = g.startGame();
-		
-		return ResponseEntity.ok(message);
-	}
-	
-*/
-
-	/*
-	@GetMapping(value = "/{id}/{playerName}/draw")
-	public ResponseEntity<Card> draw(@PathVariable int id, @PathVariable String playerName) {
-		
-		Game game = gameService.getGameById(id);
-		if (game == null) {
-			return ResponseEntity.notFound().build();
-		}
-		
-		Optional<Player> p = game.getPlayers().stream().filter(a -> a.getName() == playerName).findFirst();
-		Player player = p.get();
-		
-		player.setCard(game.getDeck().draw());
-		
-		return ResponseEntity.ok(player.getCard());
-	}
-	
-*/	
-	
-/*	
 	@Autowired
 	private SimpMessagingTemplate template;
 
+	@GetMapping(value = "/{firstPlayerName}")
+	public ResponseEntity<Game> startGame(@PathVariable String firstPlayerName) {
+		Game game = gameService.createGame(++lastId);
+		game.addPlayer(firstPlayerName);// .getPlayers().get(0).setName(firstPlayerName);
+		System.out.println("Storlek på listan spelare: " + game.getPlayers().size());
+		System.out.println(game.getPlayers().get(0).getName());
 
-	@RequestMapping(value = "/sendMessage")
-	public void sendMessage() throws Exception {
-	    this.template.convertAndSend("/topic/greetings", new HelloMessage(
-	            (int) Math.random(), "This is Send From Server"));
+		return ResponseEntity.ok(game);
 	}
-	
-*/	
-	
-	
-	
+
+	@GetMapping(value = "/{id}/confirm")
+	public ResponseEntity<String> restartGame(@PathVariable Long id) {
+		Game g = gameService.getGameById(id);
+		if (g.confirmReplay() == true) {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("table", g.getTable());
+			map.put("player", null);
+			map.put("muck", g.getMuck());
+			for (Player player : g.getPlayers()) {
+				map.replace("player", player);
+				this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
+			}
+		}
+		return new ResponseEntity<>("Check", HttpStatus.OK);
+
+	}
+
+	// @Value(value = "game")
+	private long lastId = -1;
+
+	/*
+	 * @GetMapping(value = "/{id}") public ResponseEntity<Game>
+	 * findGame(@PathVariable long id) { Game g = gameService.getGameById(id); if (g
+	 * == null) { return ResponseEntity.notFound().build(); } return
+	 * ResponseEntity.ok(g); }
+	 * 
+	 * @GetMapping(value = "/{id}/{playerName}") public ResponseEntity<String>
+	 * startGame(@PathVariable int id, @PathVariable String playerName) {
+	 * 
+	 * Game g = gameService.getGameById(id); if (g == null) { return
+	 * ResponseEntity.notFound().build(); }
+	 * 
+	 * Player player = new Player(playerName); g.setPlayer(player); String message =
+	 * g.startGame();
+	 * 
+	 * return ResponseEntity.ok(message); }
+	 * 
+	 */
+
+	/*
+	 * @GetMapping(value = "/{id}/{playerName}/draw") public ResponseEntity<Card>
+	 * draw(@PathVariable int id, @PathVariable String playerName) {
+	 * 
+	 * Game game = gameService.getGameById(id); if (game == null) { return
+	 * ResponseEntity.notFound().build(); }
+	 * 
+	 * Optional<Player> p = game.getPlayers().stream().filter(a -> a.getName() ==
+	 * playerName).findFirst(); Player player = p.get();
+	 * 
+	 * player.setCard(game.getDeck().draw());
+	 * 
+	 * return ResponseEntity.ok(player.getCard()); }
+	 * 
+	 */
+
+	/*
+	 * @Autowired private SimpMessagingTemplate template;
+	 * 
+	 * 
+	 * @RequestMapping(value = "/sendMessage") public void sendMessage() throws
+	 * Exception { this.template.convertAndSend("/topic/greetings", new
+	 * HelloMessage( (int) Math.random(), "This is Send From Server")); }
+	 * 
+	 */
+
 //	@GetMapping(value = "/{id}/{playerName}/{guess}")
 //	public ResponseEntity<String> play(@PathVariable int id, @PathVariable String playerName, @PathVariable int guess) {
 //		
@@ -122,16 +121,11 @@ public class GameController {
 //		return ResponseEntity.ok(message);
 //	}
 	/*
-	@GetMapping(value = "/{id}/{guess}")
-	public ResponseEntity<String> play(@PathVariable int id, @PathVariable int guess) {
-		Optional<Game> g = this.games.stream().filter(a -> a.getId() == id).findFirst();
-		if (!g.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		Game game = g.get();
-		String message = game.whoWins(game.getNumber(), guess);
-		this.games.remove(game);
-		return ResponseEntity.ok(message);
-	}
-*/
+	 * @GetMapping(value = "/{id}/{guess}") public ResponseEntity<String>
+	 * play(@PathVariable int id, @PathVariable int guess) { Optional<Game> g =
+	 * this.games.stream().filter(a -> a.getId() == id).findFirst(); if
+	 * (!g.isPresent()) { return ResponseEntity.notFound().build(); } Game game =
+	 * g.get(); String message = game.whoWins(game.getNumber(), guess);
+	 * this.games.remove(game); return ResponseEntity.ok(message); }
+	 */
 }
