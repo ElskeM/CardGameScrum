@@ -2,7 +2,7 @@
   <div>
     <div class="flex">
       <div id="gamecontroller">
-        <input type="text" v-model="playerName" placeholder="Ditt namn" />
+       
         <button id="btn-start" @click="startGame" v-if="!this.gameId">
           Starta Spel
         </button>
@@ -290,5 +290,18 @@ export default {
 
 h3 {
   margin: 5px;
+}
+
+#btn-start {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: green;
+  font-weight: bold;
+  color: white
+}
+
+#btn-start:hover {
+  background-color:rgb(4, 82, 4)
 }
 </style>
