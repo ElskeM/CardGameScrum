@@ -70,6 +70,12 @@ public class Game {
 		return c.get();
 	}
 
+	/**Adds a card to the table if the card was correctly placed, otherwise it ends up in the muck.
+	 * @param player
+	 * @param cardId
+	 * @param index of the placement of the new card.
+	 * @return A boolean indicating if it was if it is the players turn.
+	 */
 	public boolean makeMove(Player player, long cardId, int index) {
 		if (!player.isTurn()) {// Exception av slag här va? Det var inte den här spelarens tur!
 			// return null;
@@ -97,6 +103,12 @@ public class Game {
 		return true;
 	}
 
+	/**
+	 * Checks if a players hand is empty and thus is the winner. 
+	 * If more than one player places their last card during the same turn, these players draws one more card.
+	 * If the draw pile depletes the game ends as a draw.
+	 * @return The name of the winner
+	 */
 	public String checkWin() {
 		turns++;
 		if (turns % players.size() == 0) {
@@ -121,21 +133,13 @@ public class Game {
 				}
 				return null;
 			} else if (!winners.isEmpty()) {
-
+				winners.get(0).addWin();
 				return winners.get(0).getName();
 			}
 		}
 		return null;
 	}
 
-//		if(winners.size()>1&&deck.getSize()<winners.size()) {
-//			return gameStatus.DRAW;
-//		}
-//		if(winners.size()>1) {
-//			for (Player player : winners) {
-//				player.addCardToHand(deck.draw());
-//			}
-//		}
 
 	public void changeTurnForPlayers(Player currentPlayer) {
 		currentPlayer.setTurn(false);
@@ -191,57 +195,4 @@ public class Game {
 	public void addGameIsDrawListener(GameIsDrawListener listener) {
 		drawListeners.add(listener);
 	}
-
-	/*
-	 * public void setPlayer(Player player) { if players.size() == 2) {
-	 * players.add(player) whoWins() } else { players.add(player) }
-	 *
-	 * }
-	 *
-	 */
-
-	/*
-	 * public String whoWins() {
-	 * 
-	 * while (players.size() != 2) { try { Thread.sleep(500);
-	 * System.out.println("HEEEEEEEJ"); } catch (InterruptedException e) {
-	 * 
-	 * // TODO Auto-generated catch block e.printStackTrace(); } }
-	 * 
-	 * System.out.println(players.get(0).getGuess());
-	 * System.out.println(players.get(1).getGuess()); if (players.get(0).getGuess()
-	 * > players.get(1).getGuess()) {
-	 * 
-	 * return players.get(0).getName(); } else if (players.get(0).getGuess() <
-	 * players.get(1).getGuess()) { return players.get(1).getName(); } else { return
-	 * "Oavgjort"; }
-	 * 
-	 * }
-	 */
-
-	/*
-	 * loopa listan jämför players(0).guess med players(1).guess kolla vem som van
-	 * return vinnandePlayer.name + "vann";
-	 */
-
-	/*
-	 *
-	 * private int number = new Random().nextInt(10); private int userNumber;
-	 *
-	 * public Game() { // this.id = UUID.randomUUID().toString(); // this.id = id; }
-	 *
-	 * public String whoWins(int number, int userNumber) { if(number > userNumber) {
-	 * return "YOU LOSE!"; } else { return "YOU WIN!"; } }
-	 *
-	 * public void setId(long id) { this.id = id; }
-	 *
-	 * public long getId() { return this.id; }
-	 *
-	 * public void setUserNumber(int userNumber) { this.userNumber = userNumber; }
-	 *
-	 * public int getNumber() { return number; }
-	 *
-	 * public int getUserNumber() { return userNumber; }
-	 *
-	 */
 }

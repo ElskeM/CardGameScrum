@@ -53,6 +53,17 @@ public class GameWSController implements GameIsDrawListener {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("table", g.getTable());
 		map.put("player", null);
+		
+		sendGameInfo(g);
+		
+		for (Player player : g.getPlayers()) {
+			map.replace("player", player);
+			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
+		}
+
+	}
+
+	private void sendGameInfo(Game g) {
 		HashMap<String, Object> gameInfo = new HashMap<String, Object>();
 		int matches = 0;
 		HashMap<Integer, HashMap<String,String>> stats = new HashMap<Integer, HashMap<String,String>>();
@@ -64,11 +75,7 @@ public class GameWSController implements GameIsDrawListener {
 		gameInfo.put("players", stats);
 		gameInfo.put("matches", matches);
 		this.template.convertAndSend(("/cardgame/gameInfo/" + g.getId()), gameInfo);
-		for (Player player : g.getPlayers()) {
-			map.replace("player", player);
-			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
-		}
-
+		
 	}
 
 	@MessageMapping("/connected/playerMove/{id}/{playerName}")
@@ -93,8 +100,11 @@ public class GameWSController implements GameIsDrawListener {
 		map.put("table", g.getTable());
 		map.put("muck", g.getMuck());
 		map.put("player", null);
-		map.put("winner", g.checkWin());
-
+		String winner = g.checkWin();
+		map.put("winner", winner);
+		if(winner!=null) {
+			sendGameInfo(g);
+		}
 		for (Player player : g.getPlayers()) {
 			map.replace("player", player);
 			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
