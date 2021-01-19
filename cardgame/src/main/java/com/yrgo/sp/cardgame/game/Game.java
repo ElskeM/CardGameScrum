@@ -3,6 +3,7 @@ package com.yrgo.sp.cardgame.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,7 @@ public class Game {
 	private List<Player> players;
 	private long id;
 	private List<MappedCard> table;
-	private List<MappedCard> muck;//Slängda kort aka slasken
+	private LinkedList<MappedCard> muck;//Slängda kort aka slasken
 	private List<GameIsDrawListener> drawListeners = new ArrayList<GameIsDrawListener>();
 
 	public Game(long id, int numberOfPlayers) {
@@ -28,7 +29,7 @@ public class Game {
 			players.add(null);
 		}
 		this.table = new ArrayList<MappedCard>();
-		this.muck = new ArrayList<MappedCard>();
+		this.muck = new LinkedList<MappedCard>();
 		// skapar en deck som fylls med kort i Decks konstruktor
 		this.deck = new Deck();
 		this.id = id;
@@ -89,7 +90,7 @@ public class Game {
 		Collections.sort(table);
 		if (!(table.equals(temp))) {
 			table.remove(playedCard);
-			muck.add(playedCard);
+			muck.push(playedCard);
 			try {
 
 				player.addCardToHand(deck.draw());
