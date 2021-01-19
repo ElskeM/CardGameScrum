@@ -4,7 +4,8 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.yrgo.sp.cardgame.domain.Player;
+import com.yrgo.sp.cardgame.domain.user.Player;
+import com.yrgo.sp.cardgame.domain.user.User;
 
 
 /**
@@ -13,8 +14,5 @@ import com.yrgo.sp.cardgame.domain.Player;
  */
 public interface PlayerRepository extends JpaRepository<Player, Long> {
 
-	public Optional<Player> findByUserName(String userName);
-	public Player findByEmail(String email);
-
-	
+	public Optional<Player> findByUser(User user);	
 }

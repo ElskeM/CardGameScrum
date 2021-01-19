@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.yrgo.sp.cardgame.data.PlayerRepository;
-import com.yrgo.sp.cardgame.domain.Player;
+import com.yrgo.sp.cardgame.data.UserRepository;
+import com.yrgo.sp.cardgame.domain.user.Player;
+import com.yrgo.sp.cardgame.domain.user.User;
 import com.yrgo.sp.exception.PlayerNotFoundException;
 
 @RestController
@@ -34,14 +36,18 @@ public class PlayerController {
 	private PlayerRepository playerData;
 	
 	@Autowired
+	private UserRepository userData;
+	
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	@GetMapping("/player/{userName}")
-	public ResponseEntity<Player> findByUserName(@PathVariable String userName) {
-		LOG.info("Method FindByUserName called with following parameter: " + userName);
-		Player playerByUN = playerData.findByUserName(userName).get();
+	public ResponseEntity<Player> findByUserName(@PathVariable String username) {
+		LOG.info("Method FindByUserName called with following parameter: " + username);
+		User userByUN = userData.findByUsername(username).get();
+		Player playerByUN = playerData.findByUser(userByUN).get();
 		
-		if (!playerByUN.getUserName().equals(userName)) {
+		if (!userByUN.getUsername().equals(username)) {
 			LOG.info("Invalid parameter, casting PlayerNotFoundException");
 			throw new PlayerNotFoundException();
 		}
@@ -52,9 +58,10 @@ public class PlayerController {
 	@GetMapping("/player")
 	public ResponseEntity<Player> findByEmail(@RequestParam String email) {
 		LOG.info("Method FindByEmail called with following parameter: " + email);
-		Player playerByEmail = playerData.findByEmail(email);
+		User userByEmail = userData.findByEmail(email).get();
+		Player playerByEmail = playerData.findByUser(userByEmail).get();
 		
-		if (!playerByEmail.getEmail().equals(email)) {
+		if (!userByEmail.getEmail().equals(email)) {
 			LOG.info("Invalid parameter, casting PlayerNotFoundException");
 			throw new PlayerNotFoundException();
 		}
@@ -64,21 +71,19 @@ public class PlayerController {
 	
 
 	@PostMapping("/newPlayer")
-	public ResponseEntity<Object> createPlayer(@RequestBody Player player) {
-		LOG.info("Method CreatePlayer called with following parameter: " + player.toString());
+	public ResponseEntity<Object> createPlayer(@RequestBody User user) {
+		LOG.info("Method CreatePlayer called with following parameter: " + user.toString());
 		
-		if(player.getPassword().isEmpty()) {
+		if(user.getPassword().isEmpty()) {
 			throw new IllegalArgumentException("password must not be empty!");
 		}
-		player.setPassword(passwordEncoder.encode(player.getPassword()));
-		
-		if(player.getEmail().isBlank()) {
-			player.setEmail(null);			
-		}
-		
-		Player newPlayer = playerData.save(player);
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+		User newUser = userData.save(user);
 		LOG.info("Saving new Player in Repository");
 
+		Player newPlayer = playerData.save(new Player(newUser));
+		
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(newPlayer.getId()).toUri();
 		LOG.info("URI to Player created and returned to Client");

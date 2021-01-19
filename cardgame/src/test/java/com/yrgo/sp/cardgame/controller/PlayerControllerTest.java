@@ -26,8 +26,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.yrgo.sp.cardgame.data.PlayerRepository;
-import com.yrgo.sp.cardgame.domain.Card;
-import com.yrgo.sp.cardgame.domain.Player;
+import com.yrgo.sp.cardgame.data.UserRepository;
+import com.yrgo.sp.cardgame.domain.user.Player;
+import com.yrgo.sp.cardgame.domain.user.User;
 import com.yrgo.sp.cardgame.rest.PlayerController;
 
 @WebMvcTest(PlayerController.class)
@@ -39,19 +40,26 @@ public class PlayerControllerTest {
 	
 	@MockBean
 	private PlayerRepository playerData;
+	
+	@MockBean
+	private UserRepository userData;
 
 	@Test
 	public void testGetPlayerByUsername() throws Exception {
-		Player p = new Player("tp", "tp@tp.se", "password");
-		when(playerData.findByUserName("tp").get()).thenReturn(p);
+		User u = new User("tp", "tp@tp.se", "password", null);
+		Player p = new Player(u);
+		when(userData.findByUsername("tp").get()).thenReturn(u);
+		when(playerData.findByUser(u).get()).thenReturn(p);
 		this.mockMvc.perform(get("/player/tp")).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.userName").value("tp"));
 		
 	}
 
 	@Test
 	public void testGetPlayerByEmail() throws Exception {
-		Player p = new Player("tp", "tp@tp.se", "password");
-		when(playerData.findByEmail("tp@tp.se")).thenReturn(p);
+		User u = new User("tp", "tp@tp.se", "password", null);
+		Player p = new Player(u);
+		when(userData.findByEmail("tp@tp.se").get()).thenReturn(u);
+		when(playerData.findByUser(u).get()).thenReturn(p);
 		this.mockMvc.perform(get("/player?email=tp@tp.se")).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.email").value("tp@tp.se"));
 		
 	}
@@ -74,7 +82,9 @@ public class PlayerControllerTest {
 	
 	@Test
 	public void testUpdatePlayer() throws Exception {
-		Player p = new Player("tp", "tp@tp.se", "password");
+		User u = new User("tp", "tp@tp.se", "password", null);
+		u.setId(1L);
+		Player p = new Player(u);
 		p.setId(1L);
 		Optional<Player> opP = Optional.of(p);
 		when(playerData.findById(1L)).thenReturn(opP);
@@ -94,7 +104,9 @@ public class PlayerControllerTest {
 	
 	@Test
 	public void testDeletePlayer() throws Exception {
-		Player p = new Player("PlayerToDelete", "tp@tp.se", "password");
+		User u = new User("PlayerToDelete", "tp@tp.se", "password", null);
+		u.setId(1L);
+		Player p = new Player(u);
 		p.setId(1L);
 		when(playerData.save(ArgumentMatchers.any(Player.class))).thenAnswer(new Answer() {
 			@Override
