@@ -109,7 +109,7 @@ button {
   -webkit-box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
   align-content: center;
-  border-radius: 5px;
+  border-radius: 4px;
   padding: 30px;
   width: 25%;
   margin: auto;

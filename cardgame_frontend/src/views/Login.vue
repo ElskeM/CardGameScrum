@@ -54,6 +54,9 @@ export default {
 .overall {
   margin-top: 30px;
 }
+legend {
+  font-size: 18px;
+}
 form {
   display: flex;
   align-items: center;
