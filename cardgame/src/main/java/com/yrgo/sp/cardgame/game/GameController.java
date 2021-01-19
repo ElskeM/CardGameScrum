@@ -1,19 +1,14 @@
 package com.yrgo.sp.cardgame.game;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.yrgo.sp.cardgame.domain.Card;
+import com.yrgo.sp.cardgame.security.annotations.IsPlayer;
 
 @RestController
 @RequestMapping(value = "game")
@@ -24,6 +19,7 @@ public class GameController {
 	@Autowired
 	private GameService gameService;
 
+	@IsPlayer
 	@GetMapping(value = "/{firstPlayerName}")
 	public ResponseEntity<Game> startGame(@PathVariable String firstPlayerName) {
 		Game game = gameService.createGame(++lastId);

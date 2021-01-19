@@ -2,12 +2,18 @@ package com.yrgo.sp.cardgame.rest;
 
 import java.net.URI;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,11 +27,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.yrgo.sp.cardgame.data.PlayerRepository;
+import com.yrgo.sp.cardgame.data.SecurityRoleRepository;
 import com.yrgo.sp.cardgame.data.UserRepository;
 import com.yrgo.sp.cardgame.domain.user.Player;
 import com.yrgo.sp.cardgame.domain.user.User;
+import com.yrgo.sp.cardgame.security.annotations.IsPlayer;
 import com.yrgo.sp.exception.PlayerNotFoundException;
 
+@DependsOn("SecurityRoleManager")
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")
 public class PlayerController {
@@ -39,8 +48,19 @@ public class PlayerController {
 	private UserRepository userData;
 	
 	@Autowired
+	private SecurityRoleRepository roleData;
+	
+	private Set<? extends GrantedAuthority> defaultRoles;
+	
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@PostConstruct
+	private void initializeController() {
+		defaultRoles = roleData.findByAuthority("PLAYER").stream().collect(Collectors.toSet());
+	}
+	
+	@IsPlayer
 	@GetMapping("/player/{userName}")
 	public ResponseEntity<Player> findByUserName(@PathVariable String username) {
 		LOG.info("Method FindByUserName called with following parameter: " + username);
@@ -55,6 +75,7 @@ public class PlayerController {
 		return new ResponseEntity<>(playerByUN, HttpStatus.OK);
 	}
 
+	@IsPlayer
 	@GetMapping("/player")
 	public ResponseEntity<Player> findByEmail(@RequestParam String email) {
 		LOG.info("Method FindByEmail called with following parameter: " + email);
@@ -78,7 +99,7 @@ public class PlayerController {
 			throw new IllegalArgumentException("password must not be empty!");
 		}
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-
+		user.setRoles(defaultRoles);
 		User newUser = userData.save(user);
 		LOG.info("Saving new Player in Repository");
 
@@ -91,6 +112,7 @@ public class PlayerController {
 		return ResponseEntity.created(location).build();
 	}
 
+	@IsPlayer
 	@PutMapping("/player/{id}")
 	public ResponseEntity<Object> updatePlayer(@RequestBody Player player, @PathVariable Long id) {
 		LOG.info("Metod UpdatePlayer called for Player with following Id: " + id);
@@ -113,6 +135,7 @@ public class PlayerController {
 		return new ResponseEntity<>(player, HttpStatus.OK);
 	}
 
+	@IsPlayer
 	@DeleteMapping("/player/{id}")
 	public ResponseEntity<HttpStatus> deletePlayer(@PathVariable Long id) {
 		LOG.info("Method deletePlayer called for Player with id: " + id);

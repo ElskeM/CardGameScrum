@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,7 +43,7 @@ public class User implements UserDetails{
 	@NotEmpty
 	private String password;
 	
-	@ManyToMany(targetEntity = SecurityRole.class)
+	@ManyToMany(targetEntity = SecurityRole.class, fetch = FetchType.EAGER)
 	private Set<? extends GrantedAuthority> roles;
 	
 	public User() {}
@@ -57,6 +58,10 @@ public class User implements UserDetails{
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", email=" + email + "]";
+	}
+	
+	public void setRoles(Set<? extends GrantedAuthority> roles) {
+		this.roles = roles;		
 	}
 
 	public void setUserName(String userName) {

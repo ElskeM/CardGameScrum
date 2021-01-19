@@ -25,7 +25,13 @@ public class SecurityRole implements GrantedAuthority {
 	@Column(unique = true)
 	private String authority;
 	
+	public SecurityRole() {
+		
+	}
 	
+	public SecurityRole(String authority) {
+		this.authority = authority;
+	}
 	
 	private Long getId() {
 		return id;
