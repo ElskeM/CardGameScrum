@@ -60,15 +60,7 @@ public class GameWSController implements GameIsDrawListener {
 	}
 
 	private void sendGameInfo(Game g) {
-		HashMap<String, Object> gameInfo = new HashMap<String, Object>();
-		HashMap<Integer, GameInfoDetails> stats = new HashMap<Integer, GameInfoDetails>();
-		Integer tmp=0;
-		for (Player player : g.getPlayers()) {
-			stats.put(tmp++, new GameInfoDetails(player.getName(), player.getWins()));
-		}
-		gameInfo.put("players", stats);
-		gameInfo.put("matches", g.getNumberOfGames());
-		this.template.convertAndSend(("/cardgame/gameInfo/" + g.getId()), gameInfo);
+		this.template.convertAndSend(("/cardgame/gameInfo/" + g.getId()), new GameInfoDetails(g));
 		
 	}
 
