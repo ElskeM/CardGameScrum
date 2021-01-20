@@ -3,8 +3,6 @@ package com.yrgo.sp.cardgame.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.yrgo.sp.cardgame.domain.Card;
-
 public class Player {
 
 	private String name;

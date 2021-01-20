@@ -1,11 +1,23 @@
 package com.yrgo.sp.cardgame.game;
 
-public class GameInfoDetails {
-	public String name;
-	public int wins;
+import java.util.HashMap;
 
-	public GameInfoDetails(String name, int wins) {
-		this.name = name;
-		this.wins = wins;
+public class GameInfoDetails {
+	private int matches;
+	private HashMap<String, Integer> playerWins = new HashMap<>();
+
+	public GameInfoDetails(Game g) {
+		this.matches = g.getNumberOfGames();
+		for(Player p: g.getPlayers()) {
+			playerWins.put(p.getName(), p.getWins());
+		}
+	}
+	
+	public int getMatches() {
+		return this.matches;
+	}
+	
+	public HashMap<String, Integer> getPlayers(){
+		return this.playerWins;
 	}
 }

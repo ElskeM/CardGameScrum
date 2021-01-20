@@ -29,7 +29,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.yrgo.sp.cardgame.data.CategoryRepository;
-import com.yrgo.sp.cardgame.domain.Card;
 import com.yrgo.sp.cardgame.domain.Category;
 import com.yrgo.sp.cardgame.rest.CategoryController;
 
@@ -64,7 +63,7 @@ public class CategoryControllerTest {
 	
 	@Test
 	public void testCreateCategory() throws Exception {
-		when(categoryData.save(ArgumentMatchers.any(Category.class))).thenAnswer(new Answer() {
+		when(categoryData.save(ArgumentMatchers.any(Category.class))).thenAnswer(new Answer<>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Category c = (Category) invocation.getArgument(0);
@@ -84,7 +83,7 @@ public class CategoryControllerTest {
 		c.setId(1L);
 		Optional<Category> opC = Optional.of(c);
 		when(categoryData.findById(1L)).thenReturn(opC);
-		when(categoryData.save(ArgumentMatchers.any(Category.class))).thenAnswer(new Answer() {
+		when(categoryData.save(ArgumentMatchers.any(Category.class))).thenAnswer(new Answer<>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Category c = (Category) invocation.getArgument(0);
@@ -102,7 +101,7 @@ public class CategoryControllerTest {
 	public void testDeleteCategory() throws Exception {
 		Category c = new Category("CatToDelete");
 		c.setId(1L);
-		when(categoryData.save(ArgumentMatchers.any(Category.class))).thenAnswer(new Answer() {
+		when(categoryData.save(ArgumentMatchers.any(Category.class))).thenAnswer(new Answer<>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Category c = (Category) invocation.getArgument(0);

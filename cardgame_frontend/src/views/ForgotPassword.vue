@@ -30,7 +30,6 @@ form {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: Arial, Helvetica, sans-serif;
   padding: 30px;
 }
 input,
