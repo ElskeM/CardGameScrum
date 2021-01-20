@@ -162,6 +162,7 @@ public class Game {
 		counter++;
 		if(counter == players.size()) {
 			startNewGame();
+			counter = 0;
 			return true;
 		}
 		return false;

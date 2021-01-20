@@ -32,7 +32,4 @@
   display: flex;
   justify-content: center;
 }
-.about {
-  font-family: Arial, Helvetica, sans-serif;
-}
 </style>
