@@ -2,13 +2,20 @@ package com.yrgo.sp.cardgame.rest;
 
 import java.net.URI;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.yrgo.sp.cardgame.data.PlayerRepository;
-import com.yrgo.sp.cardgame.domain.Player;
+import com.yrgo.sp.cardgame.data.SecurityRoleRepository;
+import com.yrgo.sp.cardgame.data.UserRepository;
+import com.yrgo.sp.cardgame.domain.user.Player;
+import com.yrgo.sp.cardgame.domain.user.User;
+import com.yrgo.sp.cardgame.security.annotations.IsPlayer;
 import com.yrgo.sp.exception.PlayerNotFoundException;
 
+@DependsOn("SecurityRoleManager")
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")
 public class PlayerController {
@@ -34,14 +46,29 @@ public class PlayerController {
 	private PlayerRepository playerData;
 	
 	@Autowired
+	private UserRepository userData;
+	
+	@Autowired
+	private SecurityRoleRepository roleData;
+	
+	private Set<? extends GrantedAuthority> defaultRoles;
+	
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@PostConstruct
+	private void initializeController() {
+		defaultRoles = roleData.findByAuthority("PLAYER").stream().collect(Collectors.toSet());
+	}
+	
+	@IsPlayer
 	@GetMapping("/player/{userName}")
-	public ResponseEntity<Player> findByUserName(@PathVariable String userName) {
-		LOG.info("Method FindByUserName called with following parameter: " + userName);
-		Player playerByUN = playerData.findByUserName(userName).get();
+	public ResponseEntity<Player> findByUserName(@PathVariable String username) {
+		LOG.info("Method FindByUserName called with following parameter: " + username);
+		User userByUN = userData.findByUsername(username).get();
+		Player playerByUN = playerData.findByUser(userByUN).get();
 		
-		if (!playerByUN.getUserName().equals(userName)) {
+		if (!userByUN.getUsername().equals(username)) {
 			LOG.info("Invalid parameter, casting PlayerNotFoundException");
 			throw new PlayerNotFoundException();
 		}
@@ -49,12 +76,14 @@ public class PlayerController {
 		return new ResponseEntity<>(playerByUN, HttpStatus.OK);
 	}
 
+	@IsPlayer
 	@GetMapping("/player")
 	public ResponseEntity<Player> findByEmail(@RequestParam String email) {
 		LOG.info("Method FindByEmail called with following parameter: " + email);
-		Player playerByEmail = playerData.findByEmail(email);
+		User userByEmail = userData.findByEmail(email).get();
+		Player playerByEmail = playerData.findByUser(userByEmail).get();
 		
-		if (!playerByEmail.getEmail().equals(email)) {
+		if (!userByEmail.getEmail().equals(email)) {
 			LOG.info("Invalid parameter, casting PlayerNotFoundException");
 			throw new PlayerNotFoundException();
 		}
@@ -64,21 +93,20 @@ public class PlayerController {
 	
 
 	@PostMapping("/newPlayer")
-	public ResponseEntity<Object> createPlayer(@RequestBody Player player) {
-		LOG.info("Method CreatePlayer called with following parameter: " + player.toString());
+	@Transactional
+	public ResponseEntity<Object> createPlayer(@RequestBody User user) {
+		LOG.info("Method CreatePlayer called with following parameter: " + user.toString());
 		
-		if(player.getPassword().isEmpty()) {
+		if(user.getPassword().isEmpty()) {
 			throw new IllegalArgumentException("password must not be empty!");
 		}
-		player.setPassword(passwordEncoder.encode(player.getPassword()));
-		
-		if(player.getEmail().isBlank()) {
-			player.setEmail(null);			
-		}
-		
-		Player newPlayer = playerData.save(player);
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setRoles(defaultRoles);
+		User newUser = userData.save(user);
 		LOG.info("Saving new Player in Repository");
 
+		Player newPlayer = playerData.save(new Player(newUser));
+		
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(newPlayer.getId()).toUri();
 		LOG.info("URI to Player created and returned to Client");
@@ -86,6 +114,7 @@ public class PlayerController {
 		return ResponseEntity.created(location).build();
 	}
 
+	@IsPlayer
 	@PutMapping("/player/{id}")
 	public ResponseEntity<Object> updatePlayer(@RequestBody Player player, @PathVariable Long id) {
 		LOG.info("Metod UpdatePlayer called for Player with following Id: " + id);
@@ -108,6 +137,7 @@ public class PlayerController {
 		return new ResponseEntity<>(player, HttpStatus.OK);
 	}
 
+	@IsPlayer
 	@DeleteMapping("/player/{id}")
 	public ResponseEntity<HttpStatus> deletePlayer(@PathVariable Long id) {
 		LOG.info("Method deletePlayer called for Player with id: " + id);
