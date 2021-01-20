@@ -20,36 +20,30 @@ public class SecurityRole implements GrantedAuthority {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@NotBlank
 	@Column(unique = true)
 	private String authority;
-	
+
 	public SecurityRole() {
-		
+
 	}
-	
+
 	public SecurityRole(String authority) {
 		this.authority = authority;
 	}
-	
-	private Long getId() {
+
+	public Long getId() {
 		return id;
 	}
 
-
-
-	private void setId(Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-
-
-	private void setAuthority(String authority) {
+	public void setAuthority(String authority) {
 		this.authority = authority;
 	}
-
-
 
 	@Override
 	public String getAuthority() {

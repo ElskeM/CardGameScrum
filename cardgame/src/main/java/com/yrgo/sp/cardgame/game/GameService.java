@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yrgo.sp.cardgame.data.CardRepository;
-import com.yrgo.sp.cardgame.domain.Card;
 
 @Service
 public class GameService implements CardGameApi {

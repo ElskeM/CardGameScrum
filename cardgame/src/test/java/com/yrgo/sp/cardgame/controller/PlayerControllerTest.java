@@ -66,7 +66,7 @@ public class PlayerControllerTest {
 	
 	@Test
 	public void testCreatePlayer() throws Exception {
-		when(playerData.save(ArgumentMatchers.any(Player.class))).thenAnswer(new Answer() {
+		when(playerData.save(ArgumentMatchers.any(Player.class))).thenAnswer(new Answer<>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Player p = (Player) invocation.getArgument(0);
@@ -88,7 +88,7 @@ public class PlayerControllerTest {
 		p.setId(1L);
 		Optional<Player> opP = Optional.of(p);
 		when(playerData.findById(1L)).thenReturn(opP);
-		when(playerData.save(ArgumentMatchers.any(Player.class))).thenAnswer(new Answer() {
+		when(playerData.save(ArgumentMatchers.any(Player.class))).thenAnswer(new Answer<>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Player p = (Player) invocation.getArgument(0);
@@ -108,7 +108,7 @@ public class PlayerControllerTest {
 		u.setId(1L);
 		Player p = new Player(u);
 		p.setId(1L);
-		when(playerData.save(ArgumentMatchers.any(Player.class))).thenAnswer(new Answer() {
+		when(playerData.save(ArgumentMatchers.any(Player.class))).thenAnswer(new Answer<>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Player p = (Player) invocation.getArgument(0);

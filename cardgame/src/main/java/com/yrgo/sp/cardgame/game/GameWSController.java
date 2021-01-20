@@ -12,9 +12,6 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import com.yrgo.sp.cardgame.chat.ChatMessage;
-import com.yrgo.sp.cardgame.domain.Card;
-
 @Controller
 public class GameWSController implements GameIsDrawListener {
 
