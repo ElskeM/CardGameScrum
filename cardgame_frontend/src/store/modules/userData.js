@@ -1,32 +1,34 @@
-import axios from 'axios'
-
 
 const state = {
-    fullDeck: [] 
+    user: { 
+        username: "Pontus",
+        email: "bollpiska@hotmail.com"
+    } 
     
 }
 
 const getters = {
-    wholeCollection: (state) => state.fullDeck,   
-    
+    user: (state) => state.user
 }
 
 const actions = {
-
-
-    async fetchFullDeck({commit}) {
+    /*async fetchFullDeck({commit}) {
         const response = await axios.get('http://localhost:8080/allCards')
        commit('fillFullDeck', response.data.cards)
          console.log(response.data) 
-    },
+         */
+    setUser({commit, user}) {
+          commit('addUser', user)
+
+    } 
 
 
 }
 
 const mutations = {
-    fillFullDeck(state, deck) {
-        state.fullDeck = deck
-    },
+    addUser(state, user) {
+        state.user = user
+    }
 
 }
 

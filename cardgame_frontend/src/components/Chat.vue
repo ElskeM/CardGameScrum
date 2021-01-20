@@ -91,7 +91,7 @@ export default {
     .chat-container {
         display: flex;
         flex-direction: column;
-        width: 20%;
+        width: 250px;
         height: 400px;
         
         /*border: solid red 3px;*/
@@ -104,6 +104,7 @@ export default {
         flex-direction: column-reverse;
         border: solid black 2px;
         overflow:auto;
+        background-color: white
         
     }
 

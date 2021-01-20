@@ -3,6 +3,7 @@ package com.yrgo.sp.cardgame.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +20,9 @@ public class Game {
 	private List<Player> players;
 	private long id;
 	private List<MappedCard> table;
-	private List<MappedCard> muck;//Slängda kort aka slasken
+	private LinkedList<MappedCard> muck;//Slängda kort aka slasken
 	private List<GameIsDrawListener> drawListeners = new ArrayList<GameIsDrawListener>();
+	private int counter = 0;
 
 	public Game(long id, int numberOfPlayers) {
 		this.players = new ArrayList<Player>();// Skapa arraylist med storleken satt till antal spelare FUNKAR EJ!
@@ -28,7 +30,7 @@ public class Game {
 			players.add(null);
 		}
 		this.table = new ArrayList<MappedCard>();
-		this.muck = new ArrayList<MappedCard>();
+		this.muck = new LinkedList<MappedCard>();
 		// skapar en deck som fylls med kort i Decks konstruktor
 		this.deck = new Deck();
 		this.id = id;
@@ -42,6 +44,7 @@ public class Game {
 		this.table.add(this.deck.draw());
 		Collections.sort(table);
 		for (Player p : players) {
+			p.getHand().clear();
 			for (int i = 0; i < 3; i++) {
 				p.addCardToHand(deck.draw());
 			}
@@ -82,7 +85,7 @@ public class Game {
 		Collections.sort(table);
 		if (!(table.equals(temp))) {
 			table.remove(playedCard);
-			muck.add(playedCard);
+			muck.push(playedCard);
 			try {
 
 				player.addCardToHand(deck.draw());
@@ -147,6 +150,15 @@ public class Game {
 
 		}
 	}
+	
+	public Boolean confirmReplay() {
+		counter++;
+		if(counter == players.size()) {
+			startNewGame();
+			return true;
+		}
+		return false;
+	}
 
 	public void setPlayer(Player player) {
 		players.add(player);
@@ -163,6 +175,14 @@ public class Game {
 
 	public Deck getDeck() {
 		return deck;
+	}
+	
+	public void setCounter(int counter) {
+		this.counter = counter;
+	}
+	
+	public int getCounter() {
+		return counter;
 	}
 
 	public String startGame() {
