@@ -17,4 +17,16 @@ public class JwtResponseUser {
 		this.email = u.getEmail();
 		this.roles = u.getAuthorities();
 	}
+	
+	public String getUsername() {
+		return this.username;
+	}
+	
+	public String getEmail() {
+		return this.email;
+	}
+	
+	public Collection<? extends GrantedAuthority> getRoles(){
+		return roles;
+	}
 }
