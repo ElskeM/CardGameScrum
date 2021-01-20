@@ -5,11 +5,9 @@ import java.util.List;
 
 public class Chat {
 	
-	private long id;
 	private List<ChatMessage> messages;
 	
-	public Chat(long id) {
-		this.id = id;
+	public Chat() {
 		messages = new ArrayList<ChatMessage>();
 	}
 	

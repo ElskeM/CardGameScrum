@@ -69,7 +69,7 @@ public class CardControllerTest {
     
 	@Test
 	public void testCreateCard() throws Exception {
-		when(cardData.save(ArgumentMatchers.any(Card.class))).thenAnswer(new Answer() {
+		when(cardData.save(ArgumentMatchers.any(Card.class))).thenAnswer(new Answer<>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Card c = (Card) invocation.getArgument(0);
@@ -89,7 +89,7 @@ public class CardControllerTest {
 		c.setId(1L);
 		Optional<Card> opC = Optional.of(c);
 		when(cardData.findById(1L)).thenReturn(opC);
-		when(cardData.save(ArgumentMatchers.any(Card.class))).thenAnswer(new Answer() {
+		when(cardData.save(ArgumentMatchers.any(Card.class))).thenAnswer(new Answer<>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Card c = (Card) invocation.getArgument(0);
@@ -107,7 +107,7 @@ public class CardControllerTest {
 	public void testDeleteCard() throws Exception {
 		Card c = new Card("CardToDelete", 275);
 		c.setId(1L);
-		when(cardData.save(ArgumentMatchers.any(Card.class))).thenAnswer(new Answer() {
+		when(cardData.save(ArgumentMatchers.any(Card.class))).thenAnswer(new Answer<>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Card c = (Card) invocation.getArgument(0);

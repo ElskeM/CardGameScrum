@@ -18,19 +18,19 @@ public class Teacher {
 	@OneToMany
 	private Collection<User> students;
 
-	private Long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	private void setId(Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	private Collection<User> getStudents() {
+	public Collection<User> getStudents() {
 		return students;
 	}
 
-	private void setStudents(Collection<User> students) {
+	public void setStudents(Collection<User> students) {
 		this.students = students;
 	}
 	

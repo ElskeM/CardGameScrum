@@ -88,7 +88,7 @@ public class DeckControllerTest {
 
 	@Test
 	public void testCreateDeck() throws Exception {
-		when(deckData.save(ArgumentMatchers.any(Deck.class))).thenAnswer(new Answer() {
+		when(deckData.save(ArgumentMatchers.any(Deck.class))).thenAnswer(new Answer<>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Deck d = (Deck) invocation.getArgument(0);
@@ -116,7 +116,7 @@ public class DeckControllerTest {
 		d.setId(2L);
 		Optional<Deck> opD = Optional.of(d);
 		when(deckData.findById(2L)).thenReturn(opD);
-		when(deckData.save(ArgumentMatchers.any(Deck.class))).thenAnswer(new Answer() {
+		when(deckData.save(ArgumentMatchers.any(Deck.class))).thenAnswer(new Answer<>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Deck d = (Deck) invocation.getArgument(0);
@@ -142,7 +142,7 @@ public class DeckControllerTest {
 
 		Deck d = new Deck("DeckToDelete", "TestAdmin", cards);
 		d.setId(2L);
-		when(deckData.save(ArgumentMatchers.any(Deck.class))).thenAnswer(new Answer() {
+		when(deckData.save(ArgumentMatchers.any(Deck.class))).thenAnswer(new Answer<>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				Deck d = (Deck) invocation.getArgument(0);

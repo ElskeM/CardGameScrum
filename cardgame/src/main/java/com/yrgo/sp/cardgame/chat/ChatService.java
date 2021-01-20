@@ -9,7 +9,7 @@ public class ChatService {
 	private Map<Long,Chat> chats = new HashMap<>();
 	
 	public Chat createChat(long id) {
-		Chat chat = new Chat(id);
+		Chat chat = new Chat();
 		chats.put(id, chat);
 		return chat;
 	}
