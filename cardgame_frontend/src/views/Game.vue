@@ -104,7 +104,6 @@ export default {
       chatMessages: [],
       chatMessageColor: "",
       muck: [], // lista med slängda kort
-      varC: 0,
     };
   },
   methods: {
@@ -165,15 +164,10 @@ export default {
               "Vill du spela en gång till?",
               "Vinnare är: " + this.winner + "!"
             ).then(() => {
-              this.varC = this.varC++;
-              console.log("are we counting or not?" + this.varC)
-                if(this.varC % 2 === 0) {
-                    this.startGame()
-                  } else {
-                    this.$alert("Tyvärr, andra spelaren vill inte fortsätta spela!")
-                  }
+              axios.get(`http://localhost:8080/game/${this.gameId}/confirm`, {
+                headers: authHeader(),
+              });
             });
-            
           } else {
             this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
           }
