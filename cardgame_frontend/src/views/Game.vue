@@ -2,7 +2,7 @@
   <div>
     <div class="flex">
       <div id="gamecontroller">
-       
+        <input type="text" v-model="playerName" placeholder="Ditt namn" />
         <button id="btn-start" @click="startGame" v-if="!this.gameId">
           Starta Spel
         </button>
@@ -46,6 +46,7 @@
       <span v-if="this.$refs.gb.playerTurn">Your turn</span>
       <span v-else>Other player's turn</span>
     </div>
+    
     <GameBoard
       @moved="playerMove"
       :playedCards="playedCards"
@@ -53,7 +54,7 @@
       :muck="muck"
       ref="gb"
     />
-    <Chat
+    <Chat id="chat"
       v-on:messageSent="sendChatMessage"
       :playerName="playerName"
       :chatMessages="chatMessages"
@@ -304,4 +305,12 @@ h3 {
 #btn-start:hover {
   background-color:rgb(4, 82, 4)
 }
+
+/*
+#chat {
+  position:fixed;
+  top: 30%;
+  left: 1%
+}
+*/
 </style>
