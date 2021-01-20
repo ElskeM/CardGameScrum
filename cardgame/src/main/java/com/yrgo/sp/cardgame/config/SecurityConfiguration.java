@@ -12,13 +12,17 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.yrgo.sp.cardgame.data.SecurityRoleRepository;
+import com.yrgo.sp.cardgame.domain.user.SecurityRole;
 import com.yrgo.sp.cardgame.security.JwtAuthenticationEntryPoint;
 import com.yrgo.sp.cardgame.security.JwtRequestFilter;
+import com.yrgo.sp.cardgame.security.SecurityRoleManager;
 
 @Configuration
 @EnableWebSecurity
@@ -32,7 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -51,17 +55,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	protected void configure(HttpSecurity http) throws Exception {
-				http.cors().and()
-						// authenticate this particular request
-						.authorizeRequests().antMatchers("/game/**").authenticated().and().
-						// make sure we use stateless session; session won't be used to
-						// store user's state.
-						exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-						.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.cors().and()
+				// authenticate this particular request
+				.authorizeRequests().antMatchers("/game/**").authenticated().and().
+				// make sure we use stateless session; session won't be used to
+				// store user's state.
+				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-				// Add a filter to validate the tokens with every request
-				http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+		// Add a filter to validate the tokens with every request
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
+
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		super.configure(web);
@@ -70,6 +75,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers(HttpMethod.POST, "/authenticate");
 		web.ignoring().antMatchers(HttpMethod.POST, "/h2-console/**");
 		web.ignoring().antMatchers(HttpMethod.GET, "/h2-console/**");
-		
+		web.ignoring().antMatchers(HttpMethod.POST, "/import_json");
+
 	}
 }

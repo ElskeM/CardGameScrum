@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yrgo.sp.cardgame.data.UserRepository;
+import com.yrgo.sp.cardgame.domain.user.User;
+
 
 @RestController
 @CrossOrigin
@@ -28,17 +31,21 @@ public class JwtAuthenticationController {
 
 	@Autowired
 	private JwtUserDetailsService userDetailsService;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
+		final User user = userRepository.findByUsername(authenticationRequest.getUsername()).get();
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
-		return ResponseEntity.ok(new JwtResponse(token));
+		return ResponseEntity.ok(new JwtResponse(token, new JwtResponseUser(user)));
 	}
 
 	private void authenticate(String username, String password) throws Exception {
