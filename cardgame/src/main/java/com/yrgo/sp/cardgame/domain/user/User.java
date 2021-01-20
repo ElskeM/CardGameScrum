@@ -11,15 +11,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import com.yrgo.sp.cardgame.domain.Card;
 
 
 /**
@@ -33,13 +29,16 @@ public class User implements UserDetails{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@Column(unique=true, nullable=false)//TODO: nullable=false gör ingenting, varför?
+	@Column(unique=true, nullable=false)
 	@NotEmpty
 	private String username;
+	
 	@Email
-	@NotNull
+	@NotEmpty
+	@Column(unique=true, nullable=false)
 	private String email;
-	@Column(nullable = false) //TODO: nullable=false gör ingenting, varför?
+	
+	@Column(nullable = false)
 	@NotEmpty
 	private String password;
 	

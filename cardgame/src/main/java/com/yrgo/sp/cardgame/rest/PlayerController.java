@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -92,6 +93,7 @@ public class PlayerController {
 	
 
 	@PostMapping("/newPlayer")
+	@Transactional
 	public ResponseEntity<Object> createPlayer(@RequestBody User user) {
 		LOG.info("Method CreatePlayer called with following parameter: " + user.toString());
 		
