@@ -2,6 +2,7 @@ package com.yrgo.sp.cardgame.game;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -49,11 +50,27 @@ public class GameWSController implements GameIsDrawListener {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("table", g.getTable());
 		map.put("player", null);
+		
+		sendGameInfo(g);
+		
 		for (Player player : g.getPlayers()) {
 			map.replace("player", player);
 			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
 		}
 
+	}
+
+	private void sendGameInfo(Game g) {
+		HashMap<String, Object> gameInfo = new HashMap<String, Object>();
+		HashMap<Integer, GameInfoDetails> stats = new HashMap<Integer, GameInfoDetails>();
+		Integer tmp=0;
+		for (Player player : g.getPlayers()) {
+			stats.put(tmp++, new GameInfoDetails(player.getName(), player.getWins()));
+		}
+		gameInfo.put("players", stats);
+		gameInfo.put("matches", g.getNumberOfGames());
+		this.template.convertAndSend(("/cardgame/gameInfo/" + g.getId()), gameInfo);
+		
 	}
 
 	@MessageMapping("/connected/playerMove/{id}/{playerName}")
@@ -74,11 +91,15 @@ public class GameWSController implements GameIsDrawListener {
 
 		g.changeTurnForPlayers(currentPlayer);
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<String, Object>();// Innehåller informationen som skickas till klienten
 		map.put("table", g.getTable());
 		map.put("muck", g.getMuck());
 		map.put("player", null);
-		map.put("winner", g.checkWin());
+		String winner = g.checkWin();
+		map.put("winner", winner);
+		if(winner!=null) {
+			sendGameInfo(g);
+		}
 		for (Player player : g.getPlayers()) {
 			map.replace("player", player);
 			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
@@ -126,7 +147,5 @@ public class GameWSController implements GameIsDrawListener {
 	 * id, Card card){ return card; }
 	 * 
 	 */
-	
-	
 
 }

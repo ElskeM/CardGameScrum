@@ -1,6 +1,5 @@
 package com.yrgo.sp.cardgame.game;
 
-
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,25 +22,26 @@ public class GameController {
 
 	@Autowired
 	private GameService gameService;
-	
+
 	@Autowired
 	private SimpMessagingTemplate template;
-	
+
 	private long lastId = -1;
 
 	@IsPlayer
 	@GetMapping(value = "/{firstPlayerName}")
 	public ResponseEntity<Game> startGame(@PathVariable String firstPlayerName) {
 		Game game = gameService.createGame(++lastId);
-		game.addPlayer(firstPlayerName);//.getPlayers().get(0).setName(firstPlayerName);
-		System.out.println("Storlek på listan spelare: "+game.getPlayers().size());
+		game.addPlayer(firstPlayerName);// .getPlayers().get(0).setName(firstPlayerName);
+		System.out.println("Storlek på listan spelare: " + game.getPlayers().size());
 		System.out.println(game.getPlayers().get(0).getName());
-		
+
 		return ResponseEntity.ok(game);
 	}
 
 	@GetMapping(value = "/{id}/confirm")
 	public ResponseEntity<String> restartGame(@PathVariable Long id) {
+
 		Game g = gameService.getGameById(id);
 		if (g.confirmReplay() == true) {
 			HashMap<String, Object> map = new HashMap<String, Object>();

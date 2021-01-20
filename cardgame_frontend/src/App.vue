@@ -21,6 +21,8 @@ export default {
 <style>
 #header {
   text-align: center;
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 #header img {
   width: 20em;
@@ -45,6 +47,14 @@ html {
 body {
   min-height: 98%;
   background: #1d1f48;
+}
+.center-text{
+  text-align: center;
+}
+.center-div {
+  display: flex;
+  justify-content: center;
+  margin-top: 2em;
 }
 /*
 #app {

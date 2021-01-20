@@ -1,44 +1,56 @@
 <template>
   <div>
-    <div class="flex">
-      <div id="gamecontroller">
-        <input type="text" v-model="playerName" placeholder="Ditt namn" />
-        <button id="btn-start" @click="startGame" v-if="!this.gameId">
-          Starta Spel
-        </button>
-        <button id="btn-start" @click="startGame" v-else-if="!this.connected">
-          Gå med
-        </button>
-        <div>
-          <span v-if="this.linkToGame">
-            Länk till spelet:
-            <a :href="this.linkToGame" target="_blank">
-              {{ this.linkToGame }}</a
-            ></span
-          >
-        </div>
-
-        <!--<button @click="playerMove">TEST</button>-->
-      </div>
-
-      <div id="scoreboard">
-        <div v-if="this.connected">
-          <h3>Connected to game: {{ this.gameId }}</h3>
-          <div v-if="this.gameInfo">
-            <span id="matches">Matches: {{ this.gameInfo.matches }}</span
-            ><br />
-            <b>Wins</b>
-            <div>
-              <span v-for="player in this.gameInfo.players" :key="player.name">
-                {{ player.name }}: {{ player.wins }}
-                <span class="spacer"></span>
-              </span>
-            </div>
+    <div class="center-text">
+      <div class="flex">
+        <div id="gamecontroller">
+          <input
+            type="text"
+            v-model="playerName"
+            placeholder="Ditt namn"
+          />
+          <button
+            id="btn-start"
+            @click="startGame"
+            v-if="!this.gameId"
+          >Starta Spel</button>
+          <button
+            id="btn-start"
+            @click="startGame"
+            v-else-if="!this.connected"
+          >Gå med</button>
+          <div>
+            <span v-if="this.linkToGame">
+              Länk till spelet:
+              <a
+                :href="this.linkToGame"
+                target="_blank"
+              > {{ this.linkToGame }}</a></span>
           </div>
-          <div v-else>Waiting for game info...</div>
+
+          <!--<button @click="playerMove">TEST</button>-->
         </div>
-        <div v-else>
-          <h1>DISCONNECTED</h1>
+
+        <div id="scoreboard">
+          <div v-if="this.connected">
+            <h3>Connected to game: {{ this.gameId }}</h3>
+            <div v-if="this.gameInfo">
+              <span id="matches">Matches: {{ this.gameInfo.matches }}</span><br />
+              <b>Wins</b>
+              <div>
+                <span
+                  v-for="player in this.gameInfo.players"
+                  :key="player.name"
+                >
+                  {{ player.name }}: {{ player.wins }}
+                  <span class="spacer"></span>
+                </span>
+              </div>
+            </div>
+            <div v-else>Waiting for game info...</div>
+          </div>
+          <div v-else>
+            <h1>DISCONNECTED</h1>
+          </div>
         </div>
       </div>
     </div>
@@ -99,6 +111,7 @@ export default {
       linkToGame: "",
       playerName: "",
       gameInfo: null,
+      numberOfGames: 0,
       playerHand: [],
       playedCards: [],
       chatMessages: [],
@@ -229,14 +242,17 @@ export default {
                 this.connected = false;
               }
             )
-          );
+          ) 
+          
       }
     },
 
 /*
    start() {
       axios
-        .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`, {headers:authHeader()})
+        .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`, {
+          headers: authHeader()
+        })
         .then(response => (this.whoWon = response.data));
     }
     

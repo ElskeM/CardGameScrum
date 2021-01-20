@@ -31,7 +31,7 @@
     </div>
   </div>
 </template>
-
+ 
 <script>
 import User from "../models/User";
 import AuthService from "../services/auth.service";
@@ -43,7 +43,7 @@ export default {
       user: new User("", ""),
       showStatus: false,
       status: "",
-      isProcessing: false,
+      isProcessing: false
     };
   },
   methods: {
@@ -63,8 +63,8 @@ export default {
     reset() {
       this.showStatus = false;
       this.isProcessing = false;
-    },
-  },
+    }
+  }
 };
 </script>
 
