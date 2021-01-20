@@ -118,6 +118,9 @@ export default {
   padding: 10px;
   transition: transform 0.5s;
 }
+.card-image{
+  border-radius: 1rem;
+}
 /*.card-image {
   transition: transform 0.5s;
 }

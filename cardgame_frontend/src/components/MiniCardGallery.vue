@@ -51,7 +51,8 @@ export default {
 
     img {
         width: 245px;
-        height: 350px
+        height: 350px;
+        border-radius: 1rem;
     }
 
     #gallery-container {
