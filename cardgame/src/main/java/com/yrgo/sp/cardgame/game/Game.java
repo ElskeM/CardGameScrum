@@ -16,7 +16,8 @@ public class Game {
 	@JsonIgnore
 	private Deck deck;
 
-	int turns;
+	private int nGames=0;
+	private int turns;
 	private List<Player> players;
 	private long id;
 	private List<MappedCard> table;
@@ -130,12 +131,14 @@ public class Game {
 						for (GameIsDrawListener listener : drawListeners) {
 							listener.gameIsDraw(id);
 						}
+						nGames++;
 						return "Oavgjort";
 					}
 				}
 				return null;
 			} else if (!winners.isEmpty()) {
 				winners.get(0).addWin();
+				nGames++;
 				return winners.get(0).getName();
 			}
 		}
@@ -196,5 +199,9 @@ public class Game {
 
 	public void addGameIsDrawListener(GameIsDrawListener listener) {
 		drawListeners.add(listener);
+	}
+
+	public int getNumberOfGames() {
+		return nGames;
 	}
 }
