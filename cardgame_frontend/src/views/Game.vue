@@ -41,6 +41,13 @@
           <h1>DISCONNECTED</h1>
         </div>
       </div>
+
+     <div id="chat-icon-container" @click="chatIconClicked" v-bind:class="{ invisible: hideChatSymbol}">
+       <img src="../assets/chat-icon.png" id="chat-icon">
+      <div id="chat-alert"  v-bind:class="{ invisible: hideAlert }">{{unreadMessages}}</div>
+    
+    </div>
+
     </div>
     <div v-if="this.connected">
       <span v-if="this.$refs.gb.playerTurn">Your turn</span>
@@ -54,7 +61,10 @@
       :muck="muck"
       ref="gb"
     />
-    <Chat id="chat"
+    <Chat id="chat" 
+      
+      v-on:minimize="hideChat = !hideChat"
+      v-bind:class="{ invisible: hideChat }"
       v-on:messageSent="sendChatMessage"
       :playerName="playerName"
       :chatMessages="chatMessages"
@@ -104,10 +114,19 @@ export default {
       chatMessages: [],
       chatMessageColor: "",
       muck: [], // lista med slängda kort
+      hideChat: true,
+      hideAlert: true,
+      hideChatSymbol: true,
+      unreadMessages: 0
     };
   },
   methods: {
 
+    chatIconClicked() {
+      this.hideChat = !this.hideChat
+      this.unreadMessages = 0
+      this.hideAlert = true
+    },
 
     playerMove(value) {
       if (this.stompClient && this.stompClient.connected) {
@@ -150,8 +169,10 @@ export default {
         this.gameInfo = JSON.parse(msg.body);
       });
       this.stompClient.subscribe(
+        
         `/cardgame/startCard/${this.gameId}/${this.playerName}`,
         (tick) => {
+          this.hideChatSymbol = false
           this.playedCards = JSON.parse(tick.body).table;
           this.playerHand = JSON.parse(tick.body).player.hand;
           this.muck = JSON.parse(tick.body).muck;
@@ -185,6 +206,12 @@ export default {
         `/cardgame/chat/${this.gameId}`,
         (tick) => {
           this.chatMessages.unshift(JSON.parse(tick.body))
+          if((JSON.parse(tick.body)).name !== this.playerName) {
+            this.unreadMessages++
+            if(this.hideChat) {
+            this.hideAlert = false;
+            }
+          }
         }
         )
     }, 
@@ -274,8 +301,42 @@ export default {
   min-width: 320px;
 }
 
+#chat-icon-container {
+  width: 5rem;
+  height: 5rem;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative
+}
+
+#chat-icon {
+  max-width: 80%;
+  max-height: 80%;
+}
+
+#chat-alert {
+  height: 2rem;
+  width: 2rem;
+  background-color: red;
+  border-radius: 50%;
+  position:absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 1%;
+  top: 1%;
+  color: white;
+  
+
+}
+
 .flex {
   display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .spacer {
@@ -300,11 +361,16 @@ h3 {
   background-color:rgb(4, 82, 4)
 }
 
-/*
+
 #chat {
   position:fixed;
-  top: 30%;
+  bottom: 0%;
   left: 1%
 }
-*/
+
+.invisible {
+  opacity: 0%;
+ 
+    }
+
 </style>

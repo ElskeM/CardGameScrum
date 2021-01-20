@@ -2,10 +2,11 @@
     <div>
     <div class="chat-container">
 
-                    <div class="chat-border" v-bind:class="{ bottom: hideChat }">
+     <div class="chat-border" v-bind:class="{ bottom: hideChat }">
                 <p>Chatta</p>
                 <div class="minimize-icon-container">
-                <img class="minimize-icon" @click="hideChat = !hideChat" src="../assets/minimize-window.png"/>
+                <!--<img class="minimize-icon" @click="hideChat = !hideChat" src="../assets/minimize-window.png"/>-->
+                 <img class="minimize-icon"  @click="$emit('minimize')" src="../assets/minimize-window.png"/>
                 </div>
             </div>
         
@@ -43,7 +44,7 @@ export default {
     data() {
         return {
             message: "",
-            hideChat: true
+            hideChat: false
         }
     },
     methods: {

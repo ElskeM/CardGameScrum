@@ -12,11 +12,7 @@ const getters = {
 }
 
 const actions = {
-    /*async fetchFullDeck({commit}) {
-        const response = await axios.get('http://localhost:8080/allCards')
-       commit('fillFullDeck', response.data.cards)
-         console.log(response.data) 
-         */
+
     setUser({commit, user}) {
           commit('addUser', user)
 
