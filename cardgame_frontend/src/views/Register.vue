@@ -98,7 +98,6 @@ input[type="submit"]:hover {
 }
 
 button {
-  font-family: Arial, Helvetica, sans-serif;
   font-size: inherit;
   padding: 5px;
 }
@@ -107,7 +106,6 @@ button {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
   align-content: center;
   border-radius: 4px;
   padding: 30px;

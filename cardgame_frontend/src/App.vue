@@ -19,6 +19,10 @@ export default {
 };
 </script>
 <style>
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 #header {
   text-align: center;
   padding-top: 1em;
