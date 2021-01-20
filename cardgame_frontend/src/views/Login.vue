@@ -44,7 +44,12 @@ export default {
   },
   methods: {
     login() {
-      AuthService.login(this.user).then(() => this.$router.push("/"));
+        AuthService.login(this.user).then((res) => {
+        this.$store.commit('addUser', {username: res.user.username, email: res.user.email})
+        this.$router.push("/")
+          });
+          
+          
     },
   },
 };
