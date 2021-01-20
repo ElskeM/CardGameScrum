@@ -1,15 +1,15 @@
 package com.yrgo.sp.cardgame.game;
 
-import java.util.HashMap;
+import java.util.List;
 
 public class GameInfoDetails {
 	private int matches;
-	private HashMap<String, Integer> playerWins = new HashMap<>();
+	private List<GameInfoPlayer> playerWins;
 
 	public GameInfoDetails(Game g) {
 		this.matches = g.getNumberOfGames();
 		for(Player p: g.getPlayers()) {
-			playerWins.put(p.getName(), p.getWins());
+			playerWins.add(new GameInfoPlayer(p));
 		}
 	}
 	
@@ -17,7 +17,7 @@ public class GameInfoDetails {
 		return this.matches;
 	}
 	
-	public HashMap<String, Integer> getPlayers(){
+	public List<GameInfoPlayer> getPlayers(){
 		return this.playerWins;
 	}
 }
