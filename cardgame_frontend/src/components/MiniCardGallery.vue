@@ -2,7 +2,7 @@
     <div>
         <div id="gallery-container">
             <div id="previous_button" class="button" @click="nextCard">&lt;</div>
-            <div id="card-container">
+            <div v-if="this.muck&&this.muck.length" id="card-container">
                 <img id="card" :src="muck[index].backImage">
             </div>
         <div id="next-button" class="button" @click="previousCard">&gt;</div>
