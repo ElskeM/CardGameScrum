@@ -29,6 +29,7 @@ import com.yrgo.sp.cardgame.data.CardRepository;
 import com.yrgo.sp.cardgame.data.CategoryRepository;
 import com.yrgo.sp.cardgame.domain.Card;
 import com.yrgo.sp.cardgame.domain.Category;
+import com.yrgo.sp.cardgame.security.annotations.IsCreator;
 import com.yrgo.sp.exception.CardNotFoundException;
 
 @RestController
@@ -86,6 +87,7 @@ public class CardController {
 		return new ResponseEntity<>(foundCard.get(), HttpStatus.OK);
 	}
 
+	@IsCreator
 	@PostMapping("/newCard")
 	public ResponseEntity<Card> createNewCard(@RequestBody Card card) {
 		LOG.info("Method createNewCard is called with following parameter: " + card.toString());
@@ -118,6 +120,7 @@ public class CardController {
 		return "Success!";
 	}
 
+	@IsCreator
 	@PutMapping("/card/{id}")
 	public ResponseEntity<Object> updateCard(@RequestBody Card card, @PathVariable Long id) {
 		LOG.info("Method updateCard called for Card with id: " + id);
@@ -141,6 +144,7 @@ public class CardController {
 		return new ResponseEntity<>(card, HttpStatus.OK);
 	}
 
+	@IsCreator
 	@DeleteMapping("/card/{id}")
 	public ResponseEntity<HttpStatus> deleteCard(@PathVariable Long id) {
 		LOG.info("Method deleteCard called for Card with id: " + id);

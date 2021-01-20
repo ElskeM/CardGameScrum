@@ -23,6 +23,7 @@ public class Game {
 	private List<MappedCard> table;
 	private LinkedList<MappedCard> muck;//Slängda kort aka slasken
 	private List<GameIsDrawListener> drawListeners = new ArrayList<GameIsDrawListener>();
+	private int counter = 0;
 
 	public Game(long id, int numberOfPlayers) {
 		this.players = new ArrayList<Player>();// Skapa arraylist med storleken satt till antal spelare
@@ -156,6 +157,15 @@ public class Game {
 
 		}
 	}
+	
+	public Boolean confirmReplay() {
+		counter++;
+		if(counter == players.size()) {
+			startNewGame();
+			return true;
+		}
+		return false;
+	}
 
 	public void setPlayer(Player player) {
 		players.add(player);
@@ -172,6 +182,14 @@ public class Game {
 
 	public Deck getDeck() {
 		return deck;
+	}
+	
+	public void setCounter(int counter) {
+		this.counter = counter;
+	}
+	
+	public int getCounter() {
+		return counter;
 	}
 
 	public String startGame() {

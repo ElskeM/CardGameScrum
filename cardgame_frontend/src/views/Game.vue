@@ -58,6 +58,7 @@
       <span v-if="this.$refs.gb.playerTurn">Your turn</span>
       <span v-else>Other player's turn</span>
     </div>
+    
     <GameBoard
       @moved="playerMove"
       :playedCards="playedCards"
@@ -65,7 +66,7 @@
       :muck="muck"
       ref="gb"
     />
-    <Chat
+    <Chat id="chat"
       v-on:messageSent="sendChatMessage"
       :playerName="playerName"
       :chatMessages="chatMessages"
@@ -83,12 +84,22 @@ import "../services/auth-header";
 import GameBoard from "../components/GameBoard.vue";
 import authHeader from "../services/auth-header";
 import Chat from "../components/Chat.vue";
+import { mapGetters } from "vuex";
+
 
 export default {
+  
+  computed: mapGetters(["user"]),
+
   components: {
     GameBoard,
-    Chat
+    Chat,
   },
+
+  mounted() {
+    this.playerName = this.user.username
+  },
+  
   data() {
     return {
       connected: "",
@@ -105,20 +116,20 @@ export default {
       playedCards: [],
       chatMessages: [],
       chatMessageColor: "",
-      muck: [] // lista med slängda kort
+      muck: [], // lista med slängda kort
     };
   },
   methods: {
+
+
     playerMove(value) {
-      console.log("Tester Coolio!");
       if (this.stompClient && this.stompClient.connected) {
-        console.log("TESTING!");
         this.stompClient.send(
           `/app/connected/playerMove/${this.gameId}/${this.playerName}`,
           JSON.stringify({
             playerName: this.playerName,
             cardPosition: value.index,
-            cardId: value.card
+            cardId: value.card,
           })
         );
       }
@@ -126,9 +137,6 @@ export default {
     drawCard() {},
 
     sendChatMessage(message) {
-      console.log("NU FÖRSÖKER JAG SKICKA MEDDELANDE");
-      // console.log(JSON.stringify(message))
-      console.log(this.playerName);
       this.stompClient.send(
         `/app/chatmessage/${this.gameId}`,
         JSON.stringify(message)
@@ -137,7 +145,6 @@ export default {
 
     confirmSecondPlayer() {
       if (this.stompClient && this.stompClient.connected) {
-        console.log("HALLELUJAH!");
         this.stompClient.send(
           `/app/connected/${this.gameId}/${this.playerName}`,
           {}
@@ -148,24 +155,32 @@ export default {
     changeTurns(bool) {
       this.$refs.gb.setPlayerTurn(bool);
     },
+
+    
+
     subscriptions() {
-      this.stompClient.subscribe(`/cardgame/gameInfo/${this.gameId}`, msg => {
+      this.stompClient.subscribe(`/cardgame/gameInfo/${this.gameId}`, (msg) => {
         this.gameInfo = JSON.parse(msg.body);
       });
       this.stompClient.subscribe(
         `/cardgame/startCard/${this.gameId}/${this.playerName}`,
-        tick => {
+        (tick) => {
           this.playedCards = JSON.parse(tick.body).table;
           this.playerHand = JSON.parse(tick.body).player.hand;
           this.muck = JSON.parse(tick.body).muck;
           if (JSON.parse(tick.body).winner != null) {
             this.gameEnd = true;
             this.winner = JSON.parse(tick.body).winner;
-            this.$alert(
+            this.$alert("Vill du spela en gång till?", "Vinnare är: " + this.winner + "!");
+            this.$refs.gb.setPlayerTurn(false);
+            this.$confirm(
               "Vill du spela en gång till?",
               "Vinnare är: " + this.winner + "!"
-            );
-            this.$refs.gb.setPlayerTurn(false);
+            ).then(() => {
+              axios.get(`http://localhost:8080/game/${this.gameId}/confirm`, {
+                headers: authHeader(),
+              });
+            });
           } else {
             this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
           }
@@ -176,44 +191,31 @@ export default {
       this.stompClient.subscribe(
         `/cardgame/updateGameBoard/${this.gameId}`,
         tick => {
-          console.log(tick);
-          this.playedCards = JSON.parse(tick.body);
-          console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-          console.log(JSON.parse(tick.body));
-          /*if (JSON.parse(tick.body)[1].name === this.playerName) {
-            //this.changeTurns(true)
-            this.$refs.gb.setPlayerTurn(true);
-          } else {
-            //this.changeTurns(false)
-            this.$refs.gb.setPlayerTurn(false);
-          }*/
-          console.log("UPPDATERAT GAMEBOARD!!!!");
+          this.playedCards = JSON.parse(tick.body);  
         }
       );
-      this.stompClient.subscribe(`/cardgame/chat/${this.gameId}`, tick => {
-        // console.log(tick);
-        console.log("Detta fick jag tillbaka");
-        console.log(JSON.parse(tick.body));
-        this.chatMessages.unshift(JSON.parse(tick.body));
-      });
-    },
+      this.stompClient.subscribe(
+        `/cardgame/chat/${this.gameId}`,
+        (tick) => {
+          this.chatMessages.unshift(JSON.parse(tick.body))
+        }
+        )
+    }, 
 
     startGame() {
       this.gameId = this.$route.params.id;
       this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
       this.stompClient = Stomp.over(this.socket);
       if (this.gameId) {
-        this.chatMessageColor = "blue"; //ljusblå
-        console.log("GAME ID IS TRUE");
+        this.chatMessageColor = "blue"
         this.stompClient.connect(
           {},
-          frame => {
-            console.log(frame);
+          () => {
             this.connected = true;
             this.subscriptions();
             this.confirmSecondPlayer();
           },
-          error => {
+          (error) => {
             console.log(error);
             this.connected = false;
           }
@@ -221,48 +223,40 @@ export default {
       } else {
         axios
           .get(`http://localhost:8080/game/${this.playerName}`, {
-            headers: authHeader()
+            headers: authHeader(),
           })
+          .then((response) => (this.gameId = response.data.id))
           .then(
-            response => (this.gameId = response.data.id))
-            .then(()=>{
-              this.stompClient.connect(
-                {},
-                frame => {
-                  console.log(frame);
-                  this.connected = true;
-                  this.$router.push(`/game/${this.gameId}`);
-                  this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
-                  /*this.stompClient.subscribe(
-                  `/cardgame/connected/${this.gameId}`,
-                  tick => {
-                    this.twoPlayers = JSON.parse(tick.body);
-                    console.log("twoPlayers = " + this.twoPlayers);
-                  }
-                );*/
-                  
-                  this.chatMessageColor = "green";
-                  this.subscriptions();
-                },
-                error => {
-                  console.log(error);
-                  this.connected = false;
-                }
-              )
+            this.stompClient.connect(
+              {},
+              (frame) => {
+                console.log(frame);
+                this.connected = true;
+                this.$router.push(`/game/${this.gameId}`);
+                this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
+                this.chatMessageColor = "green"
+                this.subscriptions();
+              },
+              (error) => {
+                console.log(error);
+                this.connected = false;
               }
             )
-            
+          ) 
           
       }
     },
 
-    start() {
+/*
+   start() {
       axios
         .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`, {
           headers: authHeader()
         })
         .then(response => (this.whoWon = response.data));
     }
+    
+    */
 
     /*    createGame() {
             axios.get('http://localhost:8080/game/')
@@ -277,7 +271,7 @@ export default {
         }
 
         */
-  }
+  },
 };
 </script>
 
@@ -308,4 +302,25 @@ export default {
 h3 {
   margin: 5px;
 }
+
+#btn-start {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: green;
+  font-weight: bold;
+  color: white
+}
+
+#btn-start:hover {
+  background-color:rgb(4, 82, 4)
+}
+
+/*
+#chat {
+  position:fixed;
+  top: 30%;
+  left: 1%
+}
+*/
 </style>
