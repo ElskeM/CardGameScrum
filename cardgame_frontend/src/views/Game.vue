@@ -108,6 +108,7 @@ export default {
 
   mounted() {
     this.playerName = this.user.username
+
   },
   
   data() {
