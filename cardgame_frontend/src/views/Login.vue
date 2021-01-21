@@ -1,7 +1,7 @@
 <template>
   <div class="overall">
     <div id="login">
-      <form>
+      <form @submit="login">
         <fieldset>
           <legend>Login</legend>
           <input
@@ -18,7 +18,7 @@
             placeholder="Password"
             autocomplete="current-password"
           />
-          <button type="button" v-on:click="login()">Login</button>
+          <button type="submit">Login</button>
           <button
             type="button"
             onclick="window.location.href='/ForgotPassword'"
@@ -43,16 +43,16 @@ export default {
     };
   },
   methods: {
-    login() {
+    login: function (e) {
         AuthService.login(this.user).then((res) => {
         this.$store.commit('addUser', res.user
         //{username: res.user.username, email: res.user.email}
         )
         this.$router.push("/")
           });
+      e.preventDefault();
           
-          
-    },
+    }
   },
 };
 </script>
