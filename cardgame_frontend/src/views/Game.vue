@@ -258,6 +258,8 @@ export default {
             this.stompClient.connect(
               {},
               (frame) => {
+                console.log("HÄR ÄR JAG!");
+                console.log(this.gameId)
                 console.log(frame);
                 this.connected = true;
                 this.$router.push(`/game/${this.gameId}`);
