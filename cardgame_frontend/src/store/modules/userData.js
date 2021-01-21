@@ -1,4 +1,6 @@
 
+
+
 const state = {
     user: { 
   
@@ -31,5 +33,5 @@ export default {
     state,
     getters,
     actions,
-    mutations
+    mutations,
 }
