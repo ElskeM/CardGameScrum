@@ -13,7 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class GameWSController implements GameIsDrawListener {
+public class GameWSController implements KlimatkollListener {
 
 	@Autowired
 	private GameService game;
@@ -80,8 +80,26 @@ public class GameWSController implements GameIsDrawListener {
 
 		g.makeMove(currentPlayer, move.getCardId(), move.getCardPosition());
 
-		g.changeTurnForPlayers(currentPlayer);
+		g.changeTurnForPlayers();
 
+		sendGameUpdate(g);
+		return g.getTable();// Kanske inte behövs då alla spelare redan fått uppdaterat bord
+
+	}
+
+	@Override
+	public void gameIsDraw(Game g) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("table", g.getTable());
+		map.put("player", null);
+		map.put("winner", "Oavgjort!");
+		for (Player player : g.getPlayers()) {
+			map.replace("player", player);
+			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
+		}
+	}
+
+	private void sendGameUpdate(Game g) {
 		HashMap<String, Object> map = new HashMap<String, Object>();// Innehåller informationen som skickas till klienten
 		map.put("table", g.getTable());
 		map.put("muck", g.getMuck());
@@ -95,17 +113,20 @@ public class GameWSController implements GameIsDrawListener {
 			map.replace("player", player);
 			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
 		}
-		return g.getTable();// Kanske inte behövs då alla spelare redan fått uppdaterat bord
-
+	}
+	@Override
+	public void timerRunOut(Game g) {
+		sendGameUpdate(g);
 	}
 
 	@Override
-	public void gameIsDraw(long id) {
-		Game g = game.getGameById(id);
-		HashMap<String, Object> map = new HashMap<String, Object>();
+	public void walkover(Game g, Player winner) {
+		HashMap<String, Object> map = new HashMap<String, Object>();// Innehåller informationen som skickas till klienten
 		map.put("table", g.getTable());
+		map.put("muck", g.getMuck());
 		map.put("player", null);
-		map.put("winner", "Oavgjort!");
+		map.put("winner", winner.getName());
+		sendGameInfo(g);
 		for (Player player : g.getPlayers()) {
 			map.replace("player", player);
 			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);

@@ -9,6 +9,7 @@ public class Player {
 	private boolean turn = false;
 	private List<MappedCard> hand;
 	private int wins = 0;
+	private int missedTurns=0;
 
 	public void addCardToHand(MappedCard card) {
 		hand.add(card);
@@ -49,5 +50,14 @@ public class Player {
 
 	public void addWin() {
 		wins++;
+	}
+	public void addMissedTurn() {
+		missedTurns++;
+	}
+	public int getMissedTurns() {
+		return missedTurns;
+	}
+	public void resetMissedTurns() {
+		missedTurns=0;
 	}
 }
