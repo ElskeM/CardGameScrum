@@ -1,8 +1,7 @@
 <template>
   <div>
-    <div class="error" v-if="wholeCollection.length === 0">
-      Warning: No cards in database<br>
-      Is the backend set-up correctly?
+    <div v-if="wholeCollection.length === 0">
+      {{ showError() }}
     </div>
     <div class="gallery" v-bind:class="{ blurred: isBlurred }">
       <div
@@ -49,6 +48,18 @@ export default {
   },
   methods: {
     ...mapActions(["fetchFullDeck"]),
+
+    showError() {
+      this.$toasted.show(
+        "Warning: No cards in database<br>Is the backend set-up correctly?",
+        {
+          position: "bottom-center",
+          type: "error",
+          singleton: true,
+          duration: 5000,
+        }
+      );
+    },
 
     setBigCard(card) {
       this.bigCard = card;
@@ -110,5 +121,4 @@ export default {
 .visible {
   visibility: visible;
 }
-
 </style>

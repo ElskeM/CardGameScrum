@@ -5,13 +5,15 @@ const state = {
 };
 
 const getters = {
-  wholeCollection: (state) => state.fullDeck
+  wholeCollection: (state) => state.fullDeck,
 };
 
 const actions = {
   fetchFullDeck({ commit }) {
     cardService.fetchFullDeck().then((fullDeck) => {
-      commit("fillFullDeck", fullDeck);
+      if (fullDeck.length != 0) {
+        commit("fillFullDeck", fullDeck);
+      }
     });
   },
 };
