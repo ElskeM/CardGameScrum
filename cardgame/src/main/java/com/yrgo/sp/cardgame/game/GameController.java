@@ -26,7 +26,7 @@ public class GameController {
 	@Autowired
 	private SimpMessagingTemplate template;
 
-	private long lastId = -1;
+	private long lastId = 0;
 
 	@IsPlayer
 	@GetMapping(value = "/{firstPlayerName}")
