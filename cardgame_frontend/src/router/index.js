@@ -4,7 +4,11 @@ import Home from "../views/Home.vue";
 import NewCard from "../views/NewCard.vue";
 import AuthService from "../services/auth.service";
 import axios from "axios";
-//import axios from "axios";
+import authHeader from "../services/auth-header";
+import store from '../store/index'
+
+
+
 
 Vue.use(VueRouter);
 
@@ -106,10 +110,13 @@ router.beforeEach((to,from,next) => {
 */
 
 router.beforeEach((to, from, next) => {
-  hej(to, from, next);
+  isServerUp(to, from, next)
+  .then(
+    setUserName
+  );
 });
 
-async function hej(to, from, next) {
+async function isServerUp(to, from, next) {
   if (to.name != "server-down") {
     await axios
       .get("http://localhost:8080/status", { timeout: 1000 })
@@ -119,6 +126,16 @@ async function hej(to, from, next) {
   }
 
   next()
+}
+
+//hämtar username ifrån vårt api och sätter detta i vuex store
+async function setUserName() {
+  await axios.get("http://localhost:8080/user", {
+    headers: authHeader(),
+  })
+  .then(res => {
+    store.commit('addUser', {username: res.data.username})
+  })
 }
 
 export default router;
