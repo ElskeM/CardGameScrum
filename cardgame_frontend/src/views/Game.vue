@@ -322,8 +322,8 @@ export default {
 }
 
 #chat-icon-container {
-  width: 5rem;
-  height: 5rem;
+  width: 3rem;
+  height: 3rem;
   background-color: white;
   border-radius: 50%;
   display: flex;
@@ -332,14 +332,18 @@ export default {
   position: relative
 }
 
+#chat-icon-container:hover {
+  cursor: pointer
+}
+
 #chat-icon {
   max-width: 80%;
   max-height: 80%;
 }
 
 #chat-alert {
-  height: 2rem;
-  width: 2rem;
+  height: 1.3rem;
+  width: 1.3rem;
   background-color: red;
   border-radius: 50%;
   position:absolute;
@@ -349,6 +353,8 @@ export default {
   right: 1%;
   top: 1%;
   color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
   
 
 }

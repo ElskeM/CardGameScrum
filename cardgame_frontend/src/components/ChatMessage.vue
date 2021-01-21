@@ -25,15 +25,12 @@ export default {
 }
 
 .name {
-    font-size: 70%;
+    font-size: 80%;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
     color: white;
     margin-left: 5px;
     margin-top: 5px;
-
-    
-
    
 }
 
@@ -41,13 +38,15 @@ export default {
     margin: 5px;
     font-family: Arial, Helvetica, sans-serif;
     color:white;
+    font-size: 18px;
 
 }
 
 .msg-container {
     display: flex;
     flex-direction: column;
-    width: 60%
+    width: 60%;
+    
 }
 
 

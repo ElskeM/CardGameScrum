@@ -5,8 +5,10 @@
      <div class="chat-border" v-bind:class="{ bottom: hideChat }">
                 <p>Chatta</p>
                 <div class="minimize-icon-container">
-                <!--<img class="minimize-icon" @click="hideChat = !hideChat" src="../assets/minimize-window.png"/>-->
-                 <img class="minimize-icon"  @click="$emit('minimize')" src="../assets/minimize-window.png"/>
+               <!--  <img class="minimize-icon"  @click="$emit('minimize')" src="../assets/minimize-window.png"/> -->
+                    <div class="minimize-icon"  @click="$emit('minimize')">
+                        <p>X</p>
+                    </div>
                 </div>
             </div>
         
@@ -69,10 +71,10 @@ export default {
     .chat-border {
         height: 30px;
         width: 100%;
-        background-color: lightblue;
+        background-color: #1d1f48;
         display:flex;
         align-items: center;
-        border: blue solid 3px;
+        border: white solid 3px;
         border-radius: 5px 5px 0px 0px
     }
 
@@ -85,15 +87,27 @@ export default {
     }
 
     .minimize-icon {
-        width: 100%;
+        width: 1.5rem;
+        height: 1.5rem;
+        border: solid white 2px;
+        border-radius: 50%;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .minimize-icon:hover {
+        cursor: pointer;
+        background-color:  #2d3069
     }
 
 
     .chat-container {
         display: flex;
         flex-direction: column;
-        width: 250px;
+        width: 300px;
         height: 400px;
+       
         
         /*border: solid red 3px;*/
     }
@@ -105,7 +119,9 @@ export default {
         flex-direction: column-reverse;
         border: solid black 2px;
         overflow:auto;
-        background-color: white
+        background-color: white;
+        border: solid 4px  #1d1f48
+
         
     }
 
@@ -120,15 +136,16 @@ export default {
 
     .text-input-container {
         width:100%;
-        height: 60px
+        height: 60px;
     }
 
     .text-area {
         height: 40px;
-        width: 80%;
+        width: 100%;
         border-radius: 4px;
         resize: none;
         font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
         
     }
 
