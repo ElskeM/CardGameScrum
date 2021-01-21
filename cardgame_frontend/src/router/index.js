@@ -36,6 +36,13 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Game.vue"),
+    beforeEnter: (to, from, next) => {
+      if (!AuthService.isLoggedIn()) {
+        next("/login");
+        Vue.toasted.info("Please log in");
+      }
+      next();
+    },
   },
   {
     path: "/game/:id",
@@ -106,6 +113,7 @@ router.beforeEach((to,from,next) => {
 */
 
 router.beforeEach((to, from, next) => {
+  Vue.toasted.clear();
   hej(to, from, next);
 });
 
@@ -118,7 +126,7 @@ async function hej(to, from, next) {
       });
   }
 
-  next()
+  next();
 }
 
 export default router;
