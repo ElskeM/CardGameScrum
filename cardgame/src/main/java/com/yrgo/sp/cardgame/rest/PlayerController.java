@@ -32,8 +32,8 @@ import com.yrgo.sp.cardgame.data.SecurityRoleRepository;
 import com.yrgo.sp.cardgame.data.UserRepository;
 import com.yrgo.sp.cardgame.domain.user.Player;
 import com.yrgo.sp.cardgame.domain.user.User;
+import com.yrgo.sp.cardgame.exception.PlayerNotFoundException;
 import com.yrgo.sp.cardgame.security.annotations.IsPlayer;
-import com.yrgo.sp.exception.PlayerNotFoundException;
 
 @DependsOn("SecurityRoleManager")
 @RestController

@@ -29,8 +29,8 @@ import com.yrgo.sp.cardgame.data.CardRepository;
 import com.yrgo.sp.cardgame.data.CategoryRepository;
 import com.yrgo.sp.cardgame.domain.Card;
 import com.yrgo.sp.cardgame.domain.Category;
+import com.yrgo.sp.cardgame.exception.CardNotFoundException;
 import com.yrgo.sp.cardgame.security.annotations.IsCreator;
-import com.yrgo.sp.exception.CardNotFoundException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")

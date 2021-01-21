@@ -21,7 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.yrgo.sp.cardgame.data.CategoryRepository;
 import com.yrgo.sp.cardgame.domain.Category;
-import com.yrgo.sp.exception.CategoryNotFoundException;
+import com.yrgo.sp.cardgame.exception.CategoryNotFoundException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")
