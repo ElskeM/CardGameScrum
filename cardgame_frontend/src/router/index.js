@@ -90,6 +90,13 @@ const routes = [
     name: "server-down",
     component: () => import("../views/ServerDown.vue"),
   },
+  {
+    path: "*",
+    name: "not found",
+    component: () => import("../views/PageNotFound.vue"),
+  }
+
+
 ];
 
 const router = new VueRouter({
