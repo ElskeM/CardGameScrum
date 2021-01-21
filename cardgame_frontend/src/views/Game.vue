@@ -75,7 +75,7 @@
     />
     <Chat id="chat" 
       
-      v-on:minimize="hideChat = !hideChat"
+      v-on:minimize="chatIconClicked"
       v-bind:class="{ invisible: hideChat }"
       v-on:messageSent="sendChatMessage"
       :playerName="playerName"
