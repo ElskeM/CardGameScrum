@@ -24,8 +24,9 @@ public class Game implements ActionListener {
 	private List<MappedCard> table;
 	private LinkedList<MappedCard> muck;// Slängda kort aka slasken
 	private List<KlimatkollListener> gameListener = new ArrayList<KlimatkollListener>();
-	private int counter = 0;
+	private int replayCounter = 0;
 	private Timer timer;
+	private int turnTime = 40000; //40 sek i millisek 
 
 	public Game(long id, int numberOfPlayers) {
 		this.players = new ArrayList<Player>();// Skapa arraylist med storleken satt till antal spelare
@@ -37,7 +38,7 @@ public class Game implements ActionListener {
 		// skapar en deck som fylls med kort i Decks konstruktor
 		this.deck = new Deck();
 		this.id = id;
-		timer = new Timer(40000, this);
+		timer = new Timer(turnTime, this);
 
 	}
 
@@ -173,10 +174,10 @@ public class Game implements ActionListener {
 	}
 
 	public Boolean confirmReplay() {
-		counter++;
-		if (counter == players.size()) {
+		replayCounter++;
+		if (replayCounter == players.size()) {
 			startNewGame();
-			counter = 0;
+			replayCounter = 0;
 			return true;
 		}
 		return false;
@@ -200,11 +201,11 @@ public class Game implements ActionListener {
 	}
 
 	public void setCounter(int counter) {
-		this.counter = counter;
+		this.replayCounter = counter;
 	}
 
 	public int getCounter() {
-		return counter;
+		return replayCounter;
 	}
 
 	public String startGame() {
@@ -234,7 +235,7 @@ public class Game implements ActionListener {
 		return nGames;
 	}
 
-	public void addGameIsDrawListener(KlimatkollListener listener) {
+	public void addGameListener(KlimatkollListener listener) {
 		gameListener.add(listener);
 	}
 
@@ -255,13 +256,12 @@ public class Game implements ActionListener {
 		System.out.println("Game id: " + Game.this.id);
 		Player currentPlayer = getCurrentPlayer();
 		currentPlayer.addMissedTurn();
-		if (currentPlayer.getMissedTurns() >= 3) {// Spelare har missat sin tur 3 ggr i rad?
+		if (currentPlayer.getMissedTurns() >= 3) {// Har spelaren har missat sin tur 3 ggr i rad?
 			timer.stop();
 			currentPlayer.resetMissedTurns();
 			Player p = players.stream().filter(pl -> !pl.equals(currentPlayer)).findFirst().get();
 			for (KlimatkollListener listener : gameListener) {
 				listener.walkover(this, p);
-				;
 			}
 		}
 		changeTurnForPlayers();

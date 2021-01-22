@@ -2,7 +2,10 @@
   <div>
     <div class="center-text">
       <div class="flex">
-        <div id="gamecontroller">
+        <div
+          id="gamecontroller"
+          class="game-gui"
+        >
           <input
             type="text"
             v-model="playerName"
@@ -30,7 +33,10 @@
           <!--<button @click="playerMove">TEST</button>-->
         </div>
 
-        <div id="scoreboard">
+        <div
+          id="scoreboard"
+          class="game-gui"
+        >
           <div v-if="this.connected">
             <h3>Connected to game: {{ this.gameId }}</h3>
             <div v-if="this.gameInfo">
@@ -52,20 +58,38 @@
             <h1>DISCONNECTED</h1>
           </div>
         </div>
+        <div
+          class="game-gui"
+          v-if="this.player"
+        >
+          <Timer  />
+          Missade rundor: {{this.player.missedTurns}}<br />
+          Tre missade rundor i rad resulterar i förlust!
+        </div>
       </div>
 
-     <div id="chat-icon-container" @click="chatIconClicked" v-bind:class="{ invisible: hideChatSymbol}">
-       <img src="../assets/chat-icon.png" id="chat-icon">
-      <div id="chat-alert"  v-bind:class="{ invisible: hideAlert }">{{unreadMessages}}</div>
-    
-    </div>
+      <div
+        id="chat-icon-container"
+        @click="chatIconClicked"
+        v-bind:class="{ invisible: hideChatSymbol}"
+      >
+        <img
+          src="../assets/chat-icon.png"
+          id="chat-icon"
+        >
+        <div
+          id="chat-alert"
+          v-bind:class="{ invisible: hideAlert }"
+        >{{unreadMessages}}</div>
+
+      </div>
 
     </div>
     <div v-if="this.connected">
       <span v-if="this.$refs.gb.playerTurn">Your turn</span>
       <span v-else>Other player's turn</span>
     </div>
-    
+
     <GameBoard
       @moved="playerMove"
       :playedCards="playedCards"
@@ -73,8 +97,8 @@
       :muck="muck"
       ref="gb"
     />
-    <Chat id="chat" 
-      
+    <Chat
+      id="chat"
       v-on:minimize="hideChat = !hideChat"
       v-bind:class="{ invisible: hideChat }"
       v-on:messageSent="sendChatMessage"
@@ -92,53 +116,59 @@ import Stomp from "webstomp-client";
 import "../services/auth-header";
 
 import GameBoard from "../components/GameBoard.vue";
+import Timer from "../components/Timer.vue";
 import authHeader from "../services/auth-header";
 import Chat from "../components/Chat.vue";
 import { mapGetters } from "vuex";
 
-
 export default {
-  
-  computed: mapGetters(["user"]),
-
   components: {
     GameBoard,
     Chat,
+    Timer
   },
-
-  mounted() {
-    this.playerName = this.user.username
-  },
-  
   data() {
     return {
       connected: "",
-      twoPlayers: false,
-      started: false,
       gameId: this.$route.params.id,
-
-      whoWon: "",
       linkToGame: "",
       playerName: "",
       gameInfo: null,
-      numberOfGames: 0,
+      player: null,
+      //Timer
+      
+
+      //Kortlistor
       playerHand: [],
       playedCards: [],
+      muck: [], // lista med slängda kort
+
+      //Chat-variabler
       chatMessages: [],
       chatMessageColor: "",
-      muck: [], // lista med slängda kort
       hideChat: true,
       hideAlert: true,
       hideChatSymbol: true,
       unreadMessages: 0
     };
   },
-  methods: {
+  computed: {
+    ...mapGetters(["user"]),
 
+    
+    
+  },
+
+  mounted() {
+    this.playerName = this.user.username;
+  },
+
+  methods: {
+    
     chatIconClicked() {
-      this.hideChat = !this.hideChat
-      this.unreadMessages = 0
-      this.hideAlert = true
+      this.hideChat = !this.hideChat;
+      this.unreadMessages = 0;
+      this.hideAlert = true;
     },
 
     playerMove(value) {
@@ -148,12 +178,11 @@ export default {
           JSON.stringify({
             playerName: this.playerName,
             cardPosition: value.index,
-            cardId: value.card,
+            cardId: value.card
           })
         );
       }
     },
-    drawCard() {},
 
     sendChatMessage(message) {
       this.stompClient.send(
@@ -175,31 +204,33 @@ export default {
       this.$refs.gb.setPlayerTurn(bool);
     },
 
-    
-
     subscriptions() {
-      this.stompClient.subscribe(`/cardgame/gameInfo/${this.gameId}`, (msg) => {
+      this.stompClient.subscribe(`/cardgame/gameInfo/${this.gameId}`, msg => {
         this.gameInfo = JSON.parse(msg.body);
       });
       this.stompClient.subscribe(
-        
         `/cardgame/startCard/${this.gameId}/${this.playerName}`,
-        (tick) => {
-          this.hideChatSymbol = false
+        tick => {
+          
+          this.hideChatSymbol = false;
           this.playedCards = JSON.parse(tick.body).table;
           this.playerHand = JSON.parse(tick.body).player.hand;
+          this.player = JSON.parse(tick.body).player;
           this.muck = JSON.parse(tick.body).muck;
           if (JSON.parse(tick.body).winner != null) {
             this.gameEnd = true;
             this.winner = JSON.parse(tick.body).winner;
-            this.$alert("Vill du spela en gång till?", "Vinnare är: " + this.winner + "!");
+            /*this.$alert(
+              "Vill du spela en gång till?",
+              "Vinnare är: " + this.winner + "!"
+            );*/
             this.$refs.gb.setPlayerTurn(false);
             this.$confirm(
               "Vill du spela en gång till?",
               "Vinnare är: " + this.winner + "!"
             ).then(() => {
               axios.get(`http://localhost:8080/game/${this.gameId}/confirm`, {
-                headers: authHeader(),
+                headers: authHeader()
               });
             });
           } else {
@@ -212,29 +243,26 @@ export default {
       this.stompClient.subscribe(
         `/cardgame/updateGameBoard/${this.gameId}`,
         tick => {
-          this.playedCards = JSON.parse(tick.body);  
+          this.playedCards = JSON.parse(tick.body);
         }
       );
-      this.stompClient.subscribe(
-        `/cardgame/chat/${this.gameId}`,
-        (tick) => {
-          this.chatMessages.unshift(JSON.parse(tick.body))
-          if((JSON.parse(tick.body)).name !== this.playerName) {
-            this.unreadMessages++
-            if(this.hideChat) {
+      this.stompClient.subscribe(`/cardgame/chat/${this.gameId}`, tick => {
+        this.chatMessages.unshift(JSON.parse(tick.body));
+        if (JSON.parse(tick.body).name !== this.playerName) {
+          this.unreadMessages++;
+          if (this.hideChat) {
             this.hideAlert = false;
-            }
           }
         }
-        )
-    }, 
+      });
+    },
 
     startGame() {
       this.gameId = this.$route.params.id;
       this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
       this.stompClient = Stomp.over(this.socket);
       if (this.gameId) {
-        this.chatMessageColor = "blue"
+        this.chatMessageColor = "blue";
         this.stompClient.connect(
           {},
           () => {
@@ -242,7 +270,7 @@ export default {
             this.subscriptions();
             this.confirmSecondPlayer();
           },
-          (error) => {
+          error => {
             console.log(error);
             this.connected = false;
           }
@@ -250,33 +278,29 @@ export default {
       } else {
         axios
           .get(`http://localhost:8080/game/${this.playerName}`, {
-            headers: authHeader(),
+            headers: authHeader()
           })
-          .then((response) => (this.gameId = response.data.id))
+          .then(response => (this.gameId = response.data.id))
           .then(
             this.stompClient.connect(
               {},
-              (frame) => {
-                console.log("HÄR ÄR JAG!");
-                console.log(this.gameId)
-                console.log(frame);
+              () => {
                 this.connected = true;
                 this.$router.push(`/game/${this.gameId}`);
                 this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
-                this.chatMessageColor = "green"
+                this.chatMessageColor = "green";
                 this.subscriptions();
               },
-              (error) => {
+              error => {
                 console.log(error);
                 this.connected = false;
               }
             )
-          ) 
-          
+          );
       }
-    },
+    }
 
-/*
+    /*
    start() {
       axios
         .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`, {
@@ -300,13 +324,12 @@ export default {
         }
 
         */
-  },
+  }
 };
 </script>
 
 <style scoped>
-#gamecontroller,
-#scoreboard {
+.game-gui {
   border: 1px solid;
   margin: 10px;
   padding: 10px;
@@ -327,7 +350,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative
+  position: relative;
 }
 
 #chat-icon {
@@ -340,15 +363,13 @@ export default {
   width: 2rem;
   background-color: red;
   border-radius: 50%;
-  position:absolute;
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
   right: 1%;
   top: 1%;
   color: white;
-  
-
 }
 
 .flex {
@@ -372,23 +393,20 @@ h3 {
   border-radius: 50%;
   background-color: green;
   font-weight: bold;
-  color: white
+  color: white;
 }
 
 #btn-start:hover {
-  background-color:rgb(4, 82, 4)
+  background-color: rgb(4, 82, 4);
 }
 
-
 #chat {
-  position:fixed;
+  position: fixed;
   bottom: 0%;
-  left: 1%
+  left: 1%;
 }
 
 .invisible {
   opacity: 0%;
- 
-    }
-
+}
 </style>
