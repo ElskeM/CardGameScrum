@@ -19,12 +19,11 @@
             autocomplete="current-password"
           />
           <button type="submit">Login</button>
-          <button
-            type="button"
-            onclick="window.location.href='/ForgotPassword'"
-          >
-            Forgot Password?
-          </button>
+          <router-link to="/forgot-password">
+            <button type="button">
+              Forgot Password?
+            </button>
+          </router-link>
         </fieldset>
       </form>
     </div>
@@ -43,16 +42,17 @@ export default {
     };
   },
   methods: {
-    login: function (e) {
-        AuthService.login(this.user).then((res) => {
-        this.$store.commit('addUser', res.user
-        //{username: res.user.username, email: res.user.email}
-        )
-        this.$router.push("/")
-          });
+    login: function(e) {
+      AuthService.login(this.user).then((res) => {
+        this.$store.commit(
+          "addUser",
+          res.user
+          //{username: res.user.username, email: res.user.email}
+        );
+        this.$router.push("/");
+      });
       e.preventDefault();
-          
-    }
+    },
   },
 };
 </script>
