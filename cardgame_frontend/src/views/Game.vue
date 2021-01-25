@@ -209,17 +209,17 @@ export default {
           }
           this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
           this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
+    
         }
       );
       this.stompClient.subscribe(
-        `/cardgame/updateGameBoard/${this.gameId}`,
+        `/cardgame/madeMove/${this.gameId}/${this.playerName}`,
         (tick) => {
-          this.playedCards = JSON.parse(tick.body);
-          //ifrån bodyn USERNAME (för att kunna villkora att animationen bara körs för den aktuella spelare)
-          // det behövs också informationom movet var correkt eller inte
-          //this.$refs.gb.setCorrectMove(true) 
-        }
-      );
+          console.log(tick.body)
+          this.$refs.gb.setCorrectMove(JSON.parse(tick.body))      
+
+        })
+      
       this.stompClient.subscribe(`/cardgame/chat/${this.gameId}`, (tick) => {
         this.chatMessages.unshift(JSON.parse(tick.body));
         if (JSON.parse(tick.body).name !== this.playerName) {

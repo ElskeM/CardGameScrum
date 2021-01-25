@@ -65,7 +65,7 @@ public class GameWSController implements GameIsDrawListener {
 	}
 
 	@MessageMapping("/connected/playerMove/{id}/{playerName}")
-	@SendTo("/madeMove/{id}/{playerName}")
+	@SendTo("/cardgame/madeMove/{id}/{playerName}")
 	public boolean cardPlayed(PlayerMove move, @DestinationVariable long id,
 			@DestinationVariable String playerName) {
 		System.out.println("PLAYER MOVE");
