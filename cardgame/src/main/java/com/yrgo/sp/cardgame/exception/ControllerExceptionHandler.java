@@ -1,4 +1,4 @@
-package com.yrgo.sp.exception;
+package com.yrgo.sp.cardgame.exception;
 
 import java.util.Date;
 

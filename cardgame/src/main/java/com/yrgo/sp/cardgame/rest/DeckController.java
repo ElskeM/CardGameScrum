@@ -24,7 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.yrgo.sp.cardgame.data.CardRepository;
 import com.yrgo.sp.cardgame.data.DeckRepository;
 import com.yrgo.sp.cardgame.domain.Deck;
-import com.yrgo.sp.exception.DeckNotFoundException;
+import com.yrgo.sp.cardgame.exception.DeckNotFoundException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")

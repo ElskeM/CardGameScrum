@@ -1,38 +1,33 @@
-import axios from 'axios'
-
+import cardService from "../../services/card.service";
 
 const state = {
-    fullDeck: [] 
-    
-}
+  fullDeck: [],
+};
 
 const getters = {
-    wholeCollection: (state) => state.fullDeck,   
-    
-}
+  wholeCollection: (state) => state.fullDeck,
+};
 
 const actions = {
-
-
-    async fetchFullDeck({commit}) {
-        const response = await axios.get('http://localhost:8080/allCards')
-       commit('fillFullDeck', response.data.cards)
-         console.log(response.data) 
-    },
-
-
-}
+  async fetchFullDeck({ commit }) {
+    return await cardService.fetchFullDeck().then((fullDeck) => {
+      if (fullDeck.length != 0) {
+        commit("fillFullDeck", fullDeck);
+      }
+      return fullDeck;
+    });
+  },
+};
 
 const mutations = {
-    fillFullDeck(state, deck) {
-        state.fullDeck = deck
-    },
-
-}
+  fillFullDeck(state, deck) {
+    state.fullDeck = deck;
+  },
+};
 
 export default {
-    state,
-    getters,
-    actions,
-    mutations
-}
+  state,
+  getters,
+  actions,
+  mutations,
+};

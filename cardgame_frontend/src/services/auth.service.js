@@ -1,9 +1,10 @@
 //https://bezkoder.com/jwt-vue-vuex-authentication/#Flow_for_User_Registration_and_User_Login
 
 import axios from "axios";
+import backend from "./backend";
 
-const LOGIN_URL = "http://localhost:8080/authenticate";
-const REGISTER_URL = "http://localhost:8080/newPlayer";
+const LOGIN_URL = backend.ROOT_URL + "/authenticate";
+const REGISTER_URL = backend.ROOT_URL + "/newPlayer";
 
 class AuthService {
   isLoggedIn() {

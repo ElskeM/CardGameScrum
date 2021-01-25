@@ -2,32 +2,21 @@
   <div>
     <div class="center-text">
       <div class="flex">
-        <div
-          id="gamecontroller"
-          class="game-gui"
-        >
-          <input
-            type="text"
-            v-model="playerName"
-            placeholder="Ditt namn"
-          />
-          <button
-            id="btn-start"
-            @click="startGame"
-            v-if="!this.gameId"
-          >Starta Spel</button>
-          <button
-            id="btn-start"
-            @click="startGame"
-            v-else-if="!this.connected"
-          >Gå med</button>
+        <div id="gamecontroller">
+          <input type="text" v-model="playerName" placeholder="Ditt namn" />
+          <button id="btn-start" @click="startGame" v-if="!this.gameId">
+            Starta Spel
+          </button>
+          <button id="btn-start" @click="startGame" v-else-if="!this.connected">
+            Gå med
+          </button>
           <div>
             <span v-if="this.linkToGame">
               Länk till spelet:
-              <a
-                :href="this.linkToGame"
-                target="_blank"
-              > {{ this.linkToGame }}</a></span>
+              <a :href="this.linkToGame" target="_blank">
+                {{ this.linkToGame }}</a
+              ></span
+            >
           </div>
 
           <!--<button @click="playerMove">TEST</button>-->
@@ -40,7 +29,8 @@
           <div v-if="this.connected">
             <h3>Connected to game: {{ this.gameId }}</h3>
             <div v-if="this.gameInfo">
-              <span id="matches">Matches: {{ this.gameInfo.matches }}</span><br />
+              <span id="matches">Matches: {{ this.gameInfo.matches }}</span
+              ><br />
               <b>Wins</b>
               <div>
                 <span
@@ -73,19 +63,13 @@
       <div
         id="chat-icon-container"
         @click="chatIconClicked"
-        v-bind:class="{ invisible: hideChatSymbol}"
+        v-bind:class="{ invisible: hideChatSymbol }"
       >
-        <img
-          src="../assets/chat-icon.png"
-          id="chat-icon"
-        >
-        <div
-          id="chat-alert"
-          v-bind:class="{ invisible: hideAlert }"
-        >{{unreadMessages}}</div>
-
+        <img src="../assets/chat-icon.png" id="chat-icon" />
+        <div id="chat-alert" v-bind:class="{ invisible: hideAlert }">
+          {{ unreadMessages }}
+        </div>
       </div>
-
     </div>
     <div v-if="this.connected">
       <span v-if="this.$refs.gb.playerTurn">Your turn</span>
@@ -99,9 +83,9 @@
       :muck="muck"
       ref="gb"
     />
-    <Chat
-      id="chat"
-      v-on:minimize="hideChat = !hideChat"
+    <Chat id="chat" 
+      
+      v-on:minimize="chatIconClicked"
       v-bind:class="{ invisible: hideChat }"
       v-on:messageSent="sendChatMessage"
       :playerName="playerName"
@@ -124,11 +108,24 @@ import Chat from "../components/Chat.vue";
 import { mapGetters } from "vuex";
 
 export default {
+  computed: mapGetters(["user"]),
+
   components: {
     GameBoard,
     Chat,
     Timer
   },
+
+  mounted() {
+    this.playerName = this.user.username;
+
+    if (this.gameId && Number.isNaN(this.gameId)) {
+      this.$toasted.error("invalid game id: " + this.gameId, {
+        duration: null,
+      });
+    }
+  },
+
   data() {
     return {
       connected: "",
@@ -150,17 +147,9 @@ export default {
       hideChat: true,
       hideAlert: true,
       hideChatSymbol: true,
-      unreadMessages: 0
+      unreadMessages: 0,
     };
   },
-  computed: {
-    ...mapGetters(["user"])
-  },
-
-  mounted() {
-    this.playerName = this.user.username;
-  },
-
   methods: {
     chatIconClicked() {
       this.hideChat = !this.hideChat;
@@ -242,11 +231,11 @@ export default {
       );
       this.stompClient.subscribe(
         `/cardgame/updateGameBoard/${this.gameId}`,
-        tick => {
+        (tick) => {
           this.playedCards = JSON.parse(tick.body);
         }
       );
-      this.stompClient.subscribe(`/cardgame/chat/${this.gameId}`, tick => {
+      this.stompClient.subscribe(`/cardgame/chat/${this.gameId}`, (tick) => {
         this.chatMessages.unshift(JSON.parse(tick.body));
         if (JSON.parse(tick.body).name !== this.playerName) {
           this.unreadMessages++;
@@ -257,11 +246,14 @@ export default {
       });
     },
 
-    startGame() {
-      this.gameId = this.$route.params.id;
+    initializeWebstomp() {
       this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
       this.stompClient = Stomp.over(this.socket);
+    },
+
+    startGame() {
       if (this.gameId) {
+        this.initializeWebstomp();
         this.chatMessageColor = "blue";
         this.stompClient.connect(
           {},
@@ -280,11 +272,15 @@ export default {
           .get(`http://localhost:8080/game/${this.playerName}`, {
             headers: authHeader()
           })
-          .then(response => (this.gameId = response.data.id))
-          .then(
+          .then((response) => (this.gameId = response.data.id))
+          .then(() => {
+            this.initializeWebstomp();
             this.stompClient.connect(
               {},
-              () => {
+              (frame) => {
+                console.log("HÄR ÄR JAG!");
+                console.log(this.gameId);
+                console.log(frame);
                 this.connected = true;
                 this.$router.push(`/game/${this.gameId}`);
                 this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
@@ -295,8 +291,8 @@ export default {
                 console.log(error);
                 this.connected = false;
               }
-            )
-          );
+            );
+          });
       }
     }
 

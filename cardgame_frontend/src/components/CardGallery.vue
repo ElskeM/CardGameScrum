@@ -26,10 +26,15 @@ import BigCardInfo from "./BigCardInfo.vue";
 
 export default {
   name: "CardGallery",
-  computed: mapGetters(["wholeCollection"]),
+  computed: { ...mapGetters(["wholeCollection", "numberOfCards"]) },
   created() {
-    this.fetchFullDeck();
+    this.fetchFullDeck().then((fulldeck) => {
+      if (fulldeck.length === 0) {
+        this.showError();
+      }
+    });
   },
+
   components: {
     DisplayCard,
     BigCardInfo,
@@ -45,6 +50,18 @@ export default {
   },
   methods: {
     ...mapActions(["fetchFullDeck"]),
+
+    showError() {
+      this.$toasted.show(
+        "Warning: No cards in database<br>Is the backend set-up correctly?",
+        {
+          position: "bottom-center",
+          type: "error",
+          singleton: true,
+          duration: 5000,
+        }
+      );
+    },
 
     setBigCard(card) {
       this.bigCard = card;
@@ -67,7 +84,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .gallery {
