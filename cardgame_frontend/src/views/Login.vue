@@ -1,48 +1,56 @@
 <template>
   <div class="overall">
     <div id="login">
-      <ValidationObserver v-slot="{invalid}">
-      <form @submit="login">
-        <fieldset>
-          <legend>Login</legend>
-          <div class="flex">
-            <span>
-              <ValidationProvider v-slot="{classes, errors}" rules="required">
-                <input
-                  type="text"
-                  :class="classes"
-                  name="username"
-                  v-model="user.username"
-                  placeholder="Username"
-                  autocomplete="username"
-                />
-                <div class="error">{{ errors[0] }}</div>
-              </ValidationProvider>
-            </span>
-            <span>
-              <ValidationProvider v-slot="{classes, errors}" rules="required">
-                <input
-                  type="password"
-                  :class="classes"
-                  name="password"
-                  v-model="user.password"
-                  placeholder="Password"
-                  autocomplete="current-password"
-                />
-                <div class="error">{{ errors[0] }}</div>
-              </ValidationProvider>
-            </span>
-            <span>
-              <button type="submit" :disabled="invalid">Login</button>
-            </span>
-            <router-link to="/forgot-password">
-              <button type="button">
-                Forgot Password?
-              </button>
-            </router-link>
-          </div>
-        </fieldset>
-      </form>
+      <ValidationObserver v-slot="{ invalid }">
+        <form @submit="login">
+          <fieldset>
+            <legend>Login</legend>
+            <div class="flex">
+              <span>
+                <ValidationProvider
+                  v-slot="{ classes, errors }"
+                  rules="required"
+                  :customMessages="messages"
+                >
+                  <input
+                    type="text"
+                    :class="classes"
+                    name="username"
+                    v-model="user.username"
+                    placeholder="Username"
+                    autocomplete="username"
+                  />
+                  <div class="error">{{ errors[0] }}</div>
+                </ValidationProvider>
+              </span>
+              <span>
+                <ValidationProvider
+                  v-slot="{ classes, errors }"
+                  rules="required"
+                  :customMessages="messages"
+                >
+                  <input
+                    type="password"
+                    :class="classes"
+                    name="password"
+                    v-model="user.password"
+                    placeholder="Password"
+                    autocomplete="current-password"
+                  />
+                  <div class="error">{{ errors[0] }}</div>
+                </ValidationProvider>
+              </span>
+              <span>
+                <button type="submit" :disabled="invalid">Login</button>
+              </span>
+              <router-link to="/forgot-password">
+                <button type="button">
+                  Forgot Password?
+                </button>
+              </router-link>
+            </div>
+          </fieldset>
+        </form>
       </ValidationObserver>
     </div>
   </div>
@@ -61,11 +69,12 @@ export default {
   name: "Login",
   components: {
     ValidationProvider,
-    ValidationObserver
+    ValidationObserver,
   },
   data() {
     return {
       user: new User("", ""),
+      messages: { required: "fältet är obligatoriskt" },
     };
   },
   methods: {
@@ -77,7 +86,7 @@ export default {
             res.user
             //{username: res.user.username, email: res.user.email}
           );
-          if(this.$route.query.from){
+          if (this.$route.query.from) {
             this.$router.replace(this.$route.query.from);
           } else {
             this.$router.replace("/");
@@ -128,7 +137,7 @@ input.valid {
   border: 1px solid #045929;
 }
 input.invalid {
-  color: #EB0600;
-  border: 1px solid #EB0600;
+  color: #eb0600;
+  border: 1px solid #eb0600;
 }
 </style>

@@ -4,45 +4,76 @@
       <div class="status">
         <span v-if="showStatus">{{ status }}</span>
       </div>
-      <ValidationObserver v-slot="{invalid}">
-      <form @submit.prevent="register">
-        <fieldset>
-          <legend>Register</legend>
-          <div>
-            <ValidationProvider v-slot="{classes, errors}" rules="required">
-            <label>Username</label><br />
-            <input name="username" type="text" v-model="user.userName" :class="classes" />
-            <div class="error">{{ errors[0] }}</div>
-            </ValidationProvider>
-          </div>
-          <div>
-            <ValidationProvider mode="eager" v-slot="{classes, errors}" rules="required|email">
-            <label>Email address</label><br />
-            <input name="email" type="email" v-model="user.email" :class="classes" />
-            <div class="error">{{ errors[0] }}</div>
-            </ValidationProvider>
-          </div>
-          <div>
-            <ValidationProvider mode="eager" v-slot="{classes, errors}" rules="required|min:8">
-            <label>Password</label><br />
-            <input name="password" type="password" v-model="user.password" :class="classes" />
-            <div class="error">{{ errors[0] }}</div>
-            </ValidationProvider>
-          </div>
-          <br />
-          <button type="submit" :disabled="invalid || isProcessing">Sign Up</button>
+      <ValidationObserver v-slot="{ invalid }">
+        <form @submit.prevent="register">
+          <fieldset>
+            <legend>Register</legend>
+            <div>
+              <ValidationProvider
+                v-slot="{ classes, errors }"
+                rules="required"
+                :customMessages="messages"
+              >
+                <label>Username</label><br />
+                <input
+                  name="username"
+                  type="text"
+                  v-model="user.userName"
+                  :class="classes"
+                />
+                <div class="error">{{ errors[0] }}</div>
+              </ValidationProvider>
+            </div>
+            <div>
+              <ValidationProvider
+                mode="eager"
+                v-slot="{ classes, errors }"
+                rules="required|email"
+                :customMessages="messages"
+              >
+                <label>Email address</label><br />
+                <input
+                  name="email"
+                  type="email"
+                  v-model="user.email"
+                  :class="classes"
+                />
+                <div class="error">{{ errors[0] }}</div>
+              </ValidationProvider>
+            </div>
+            <div>
+              <ValidationProvider
+                mode="eager"
+                v-slot="{ classes, errors }"
+                rules="required|min:8"
+                :customMessages="messages"
+              >
+                <label>Password</label><br />
+                <input
+                  name="password"
+                  type="password"
+                  v-model="user.password"
+                  :class="classes"
+                />
+                <div class="error">{{ errors[0] }}</div>
+              </ValidationProvider>
+            </div>
+            <br />
+            <button type="submit" :disabled="invalid || isProcessing">
+              Sign Up
+            </button>
 
-          <p class="forgot-password text-right">
-            Already registered
-            <router-link to="/login">sign in?</router-link>
-          </p>
-        </fieldset>
-      </form>
+            <p class="forgot-password text-right">
+              Already registered
+              <router-link to="/login">sign in?</router-link>
+            </p>
+          </fieldset>
+        </form>
       </ValidationObserver>
     </div>
   </div>
 </template>
- 
+
 <script>
 import User from "../models/User";
 import AuthService from "../services/auth.service";
@@ -65,8 +96,11 @@ export default {
       user: new User("", ""),
       showStatus: false,
       status: "",
-      isProcessing: false
-    };
+      isProcessing: false,
+      messages: {required: "fältet är obligatoriskt",
+                 email: "ogiltig mejladress", 
+                 min: "lösenordet måste bestå av minst 8 tecken"},
+    }
   },
   methods: {
     register() {
@@ -146,8 +180,8 @@ input.valid {
   border: 1px solid #045929;
 }
 input.invalid {
-  color: #EB0600;
-  border: 1px solid #EB0600;
+  color: #eb0600;
+  border: 1px solid #eb0600;
 }
 .error {
   display: block;
