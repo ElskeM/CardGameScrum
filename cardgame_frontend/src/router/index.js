@@ -1,7 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import NewCard from "../views/NewCard.vue";
 import AuthService from "../services/auth.service";
 import axios from "axios";
 import authHeader from "../services/auth-header";
@@ -16,7 +14,7 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: () => import(/* webpackChunkName: "card" */ "../views/Home.vue"),
   },
   {
     path: "/about",
@@ -30,52 +28,42 @@ const routes = [
   {
     path: "/newcard",
     name: "New card",
-    component: NewCard,
+    component: () =>
+      import(/* webpackChunkName: "admin" */ "../views/NewCard.vue"),
   },
   {
     path: "/game",
     name: "Game",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Game.vue"),
+    component: () => import(/* webpackChunkName: "game" */ "../views/Game.vue"),
+    beforeEnter: (to, from, next) => authenticate(to,from,next),
   },
   {
     path: "/game/:id",
     name: "GameId",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Game.vue"),
+    component: () => import(/* webpackChunkName: "game" */ "../views/Game.vue"),
+    beforeEnter: (to, from, next) => authenticate(to,from,next),
   },
   {
     path: "/singlecard/:url",
     name: "SingleCard",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/SingleCardView.vue"),
+      import(/* webpackChunkName: "card" */ "../views/SingleCardView.vue"),
   },
   {
     path: "/register",
     name: "Register",
-    component: () => import("../views/Register.vue"),
-  },
-  {
-    path: "/ForgotPassword",
-    name: "Forgot Password",
-    component: () => import("../views/ForgotPassword.vue"),
+    component: () =>
+      import(/* webpackChunkName: "register" */ "../views/Register.vue"),
   },
   {
     path: "/login",
     name: "Login",
-    component: () => import("../views/Login.vue"),
+    component: () =>
+      import(/* webpackChunkName: "login" */ "../views/Login.vue"),
     beforeEnter: (to, from, next) => {
       if (from.name != "Login" && AuthService.isLoggedIn()) {
         AuthService.logout();
+        Vue.toasted.success("You have been logged out!");
       }
       next();
     },
@@ -83,12 +71,14 @@ const routes = [
   {
     path: "/forgot-password",
     name: "forgot-password",
-    component: () => import("../views/ForgotPassword.vue"),
+    component: () =>
+      import(/* webpackChunkName: "login" */ "../views/ForgotPassword.vue"),
   },
   {
     path: "/server-down",
     name: "server-down",
-    component: () => import("../views/ServerDown.vue"),
+    component: () =>
+      import(/* webpackChunkName: "error" */ "../views/ServerDown.vue"),
   },
   {
     path: "*",
@@ -104,19 +94,8 @@ const router = new VueRouter({
   routes,
 });
 
-/*
-router.beforeEach((to,from,next) => {
-  fetch('http://localhost:8080/status')
-  .then(
-      next()
-    )
-  .catch(() => {
-    next({path: '/server-down'})
-})
-})
-*/
-
 router.beforeEach((to, from, next) => {
+  Vue.toasted.clear();
   isServerUp(to, from, next)
   .then(
     setUserName
@@ -132,7 +111,16 @@ async function isServerUp(to, from, next) {
       });
   }
 
-  next()
+  next();
+}
+
+function authenticate(to,from,next) {
+  if (!AuthService.isLoggedIn()) {
+    next({ name: "Login", query: {from:to.path}});
+    Vue.toasted.info("Please log in");
+  } else {
+    next();
+  }
 }
 
 //hämtar username ifrån vårt api och sätter detta i vuex store

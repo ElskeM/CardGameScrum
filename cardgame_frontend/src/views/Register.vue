@@ -4,47 +4,103 @@
       <div class="status">
         <span v-if="showStatus">{{ status }}</span>
       </div>
-      <form @submit.prevent="register">
-        <fieldset>
-          <legend>Register</legend>
-          <div class="form">
-            <label>Username</label><br />
-            <input type="text" v-model="user.userName" />
-          </div>
-          <div class="form">
-            <label>Email address</label><br />
-            <input type="email" v-model="user.email" />
-          </div>
-          <div class="form">
-            <label>Password</label><br />
-            <input type="password" v-model="user.password" />
-          </div>
-          <br />
-          <button :disabled="isProcessing" type="submit">Sign Up</button>
+      <ValidationObserver v-slot="{ invalid }">
+        <form @submit.prevent="register">
+          <fieldset>
+            <legend>Register</legend>
+            <div>
+              <ValidationProvider
+                v-slot="{ classes, errors }"
+                rules="required"
+                :customMessages="messages"
+              >
+                <label>Username</label><br />
+                <input
+                  name="username"
+                  type="text"
+                  v-model="user.userName"
+                  :class="classes"
+                />
+                <div class="error">{{ errors[0] }}</div>
+              </ValidationProvider>
+            </div>
+            <div>
+              <ValidationProvider
+                mode="eager"
+                v-slot="{ classes, errors }"
+                rules="required|email"
+                :customMessages="messages"
+              >
+                <label>Email address</label><br />
+                <input
+                  name="email"
+                  type="email"
+                  v-model="user.email"
+                  :class="classes"
+                />
+                <div class="error">{{ errors[0] }}</div>
+              </ValidationProvider>
+            </div>
+            <div>
+              <ValidationProvider
+                mode="eager"
+                v-slot="{ classes, errors }"
+                rules="required|min:8"
+                :customMessages="messages"
+              >
+                <label>Password</label><br />
+                <input
+                  name="password"
+                  type="password"
+                  v-model="user.password"
+                  :class="classes"
+                />
+                <div class="error">{{ errors[0] }}</div>
+              </ValidationProvider>
+            </div>
+            <br />
+            <button type="submit" :disabled="invalid || isProcessing">
+              Sign Up
+            </button>
 
-          <p class="forgot-password text-right">
-            Already registered
-            <router-link to="/login">sign in?</router-link>
-          </p>
-        </fieldset>
-      </form>
+            <p class="forgot-password text-right">
+              Already registered
+              <router-link to="/login">sign in?</router-link>
+            </p>
+          </fieldset>
+        </form>
+      </ValidationObserver>
     </div>
   </div>
 </template>
- 
+
 <script>
 import User from "../models/User";
 import AuthService from "../services/auth.service";
+import {ValidationObserver, ValidationProvider} from 'vee-validate';
+import { extend } from "vee-validate";
+import { required, email,min } from "vee-validate/dist/rules";
+
+extend('required', required);
+extend('email', email);
+extend('min', min);
 
 export default {
   name: "register",
+  components: {
+    ValidationObserver,
+    ValidationProvider
+  },
   data() {
     return {
       user: new User("", ""),
       showStatus: false,
       status: "",
-      isProcessing: false
-    };
+      isProcessing: false,
+      messages: {required: "fältet är obligatoriskt",
+                 email: "ogiltig mejladress", 
+                 min: "lösenordet måste bestå av minst 8 tecken"},
+    }
   },
   methods: {
     register() {
@@ -117,5 +173,19 @@ button {
   box-sizing: border-box;
   width: 100%;
   height: 1rem;
+}
+
+input.valid {
+  color: #045929;
+  border: 1px solid #045929;
+}
+input.invalid {
+  color: #eb0600;
+  border: 1px solid #eb0600;
+}
+.error {
+  display: block;
+  height: 1rem;
+  color: crimson;
 }
 </style>
