@@ -1,4 +1,4 @@
-<template>
+<template><!--https://medium.com/js-dojo/how-to-create-an-animated-countdown-timer-with-vue-89738903823f-->
   <div class="base-timer">
     <svg
       class="base-timer__svg"
@@ -91,10 +91,17 @@ export default {
   methods: {
     startTimer() {
       this.timerInterval = setInterval(() => (this.timePassed += 1), 1000);
+    },
+    resetAndStartTimer(){
+      this.timePassed = 0;
+      if(!this.timerInterval){
+        this.startTimer();
+      }
+    },
+    stopTimer(){
+      clearInterval(this.timerInterval);
+      this.timerInterval=null;
     }
-  },
-  mounted() {
-    this.startTimer();
   }
 };
 </script>

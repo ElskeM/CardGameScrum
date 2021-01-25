@@ -60,11 +60,13 @@
         </div>
         <div
           class="game-gui"
-          v-if="this.player"
+          
         >
-          <Timer  />
+          <Timer ref="timer" />
+          <span v-if="this.player">
           Missade rundor: {{this.player.missedTurns}}<br />
           Tre missade rundor i rad resulterar i förlust!
+          </span>
         </div>
       </div>
 
@@ -136,7 +138,6 @@ export default {
       gameInfo: null,
       player: null,
       //Timer
-      
 
       //Kortlistor
       playerHand: [],
@@ -153,10 +154,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["user"]),
-
-    
-    
+    ...mapGetters(["user"])
   },
 
   mounted() {
@@ -164,7 +162,6 @@ export default {
   },
 
   methods: {
-    
     chatIconClicked() {
       this.hideChat = !this.hideChat;
       this.unreadMessages = 0;
@@ -211,13 +208,16 @@ export default {
       this.stompClient.subscribe(
         `/cardgame/startCard/${this.gameId}/${this.playerName}`,
         tick => {
-          
+          if(this.player){
+            this.$refs.timer.resetAndStartTimer(); //Behöver ny sub? Eller boolean för första rundan?
+          }
           this.hideChatSymbol = false;
           this.playedCards = JSON.parse(tick.body).table;
           this.playerHand = JSON.parse(tick.body).player.hand;
           this.player = JSON.parse(tick.body).player;
           this.muck = JSON.parse(tick.body).muck;
           if (JSON.parse(tick.body).winner != null) {
+            this.$refs.timer.stopTimer();
             this.gameEnd = true;
             this.winner = JSON.parse(tick.body).winner;
             /*this.$alert(
