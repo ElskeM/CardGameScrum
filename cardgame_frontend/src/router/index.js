@@ -63,7 +63,7 @@ const routes = [
     beforeEnter: (to, from, next) => {
       if (from.name != "Login" && AuthService.isLoggedIn()) {
         AuthService.logout();
-        Vue.toasted.success("You have been logged out!");
+        Vue.toasted.success("Du är utloggad!");
       }
       next();
     },
@@ -117,7 +117,7 @@ async function isServerUp(to, from, next) {
 function authenticate(to,from,next) {
   if (!AuthService.isLoggedIn()) {
     next({ name: "Login", query: {from:to.path}});
-    Vue.toasted.info("Please log in");
+    Vue.toasted.info("Var god logga in först");
   } else {
     next();
   }

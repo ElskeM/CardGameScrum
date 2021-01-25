@@ -2,7 +2,7 @@
     <div>
         <div id="container">
             <p id="message">
-                STATUS 404 PAGE NOT FOUND
+                STATUS 404 SIDAN KUNDE INTE HITTAS
             </p>
         </div>
     </div>

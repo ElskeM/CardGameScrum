@@ -91,10 +91,10 @@ export default {
           } else {
             this.$router.replace("/");
           }
-          this.$toasted.success("You have been logged in!");
+          this.$toasted.success("Du är inloggad!");
         })
         .catch(() =>
-          this.$toasted.error("Login failed. Are your credentails correct?")
+          this.$toasted.error("Någonting gick fel. Stämmer dina inlogningsuppgifter?")
         );
       e.preventDefault();
     },
