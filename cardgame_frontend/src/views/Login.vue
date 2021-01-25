@@ -4,7 +4,7 @@
       <ValidationObserver v-slot="{ invalid }">
         <form @submit="login">
           <fieldset>
-            <legend>Login</legend>
+            <legend>Logga in</legend>
             <div class="flex">
               <span>
                 <ValidationProvider
@@ -17,7 +17,7 @@
                     :class="classes"
                     name="username"
                     v-model="user.username"
-                    placeholder="Username"
+                    placeholder="Användarnamn"
                     autocomplete="username"
                   />
                   <div class="error">{{ errors[0] }}</div>
@@ -34,18 +34,18 @@
                     :class="classes"
                     name="password"
                     v-model="user.password"
-                    placeholder="Password"
+                    placeholder="Lösenord"
                     autocomplete="current-password"
                   />
                   <div class="error">{{ errors[0] }}</div>
                 </ValidationProvider>
               </span>
               <span>
-                <button type="submit" :disabled="invalid">Login</button>
+                <button type="submit" :disabled="invalid">Logga in</button>
               </span>
               <router-link to="/forgot-password">
                 <button type="button">
-                  Forgot Password?
+                  Glömt lösenord?
                 </button>
               </router-link>
             </div>

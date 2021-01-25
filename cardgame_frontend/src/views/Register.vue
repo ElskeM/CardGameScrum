@@ -7,14 +7,14 @@
       <ValidationObserver v-slot="{ invalid }">
         <form @submit.prevent="register">
           <fieldset>
-            <legend>Register</legend>
+            <legend>Registera</legend>
             <div>
               <ValidationProvider
                 v-slot="{ classes, errors }"
                 rules="required"
                 :customMessages="messages"
               >
-                <label>Username</label><br />
+                <label>Användarnamn</label><br />
                 <input
                   name="username"
                   type="text"
@@ -31,7 +31,7 @@
                 rules="required|email"
                 :customMessages="messages"
               >
-                <label>Email address</label><br />
+                <label>mejladress</label><br />
                 <input
                   name="email"
                   type="email"
@@ -48,7 +48,7 @@
                 rules="required|min:8"
                 :customMessages="messages"
               >
-                <label>Password</label><br />
+                <label>Lösenord</label><br />
                 <input
                   name="password"
                   type="password"
@@ -60,12 +60,12 @@
             </div>
             <br />
             <button type="submit" :disabled="invalid || isProcessing">
-              Sign Up
+              Registrera
             </button>
 
             <p class="forgot-password text-right">
-              Already registered
-              <router-link to="/login">sign in?</router-link>
+              Redan registrerad - 
+              <router-link to="/login">logga in?</router-link>
             </p>
           </fieldset>
         </form>

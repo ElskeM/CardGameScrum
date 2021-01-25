@@ -12,6 +12,10 @@ import javax.persistence.OneToOne;
 
 import com.yrgo.sp.cardgame.domain.Card;
 
+/**
+ * @author elske
+ *
+ */
 @Entity
 public class Player {
 
@@ -19,9 +23,15 @@ public class Player {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+
 	@OneToOne
 	private User user;
 	
+	
+	
+	/**
+	 * 
+	 */
 	@OneToMany//(mappedBy = "player")
 	private Set<Card> favoriteCards;
 	
