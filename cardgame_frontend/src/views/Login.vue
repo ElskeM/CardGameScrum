@@ -1,41 +1,49 @@
 <template>
   <div class="overall">
     <div id="login">
+      <ValidationObserver v-slot="{invalid}">
       <form @submit="login">
         <fieldset>
           <legend>Login</legend>
-          <span>
-            <ValidationProvider v-slot="v" rules="required">
-              <input
-                type="text"
-                name="username"
-                v-model="user.username"
-                placeholder="Username"
-                autocomplete="username"
-              />
-              <div class="error">{{ v.errors[0] }}</div>
-            </ValidationProvider>
-          </span>
-          <span>
-            <ValidationProvider v-slot="v" rules="required">
-              <input
-                type="password"
-                name="password"
-                v-model="user.password"
-                placeholder="Password"
-                autocomplete="current-password"
-              />
-              <div class="error">{{ v.errors[0] }}</div>
-            </ValidationProvider>
-          </span>
-          <button type="submit">Login</button>
-          <router-link to="/forgot-password">
-            <button type="button">
-              Forgot Password?
-            </button>
-          </router-link>
+          <div class="flex">
+            <span>
+              <ValidationProvider v-slot="{classes, errors}" rules="required">
+                <input
+                  type="text"
+                  :class="classes"
+                  name="username"
+                  v-model="user.username"
+                  placeholder="Username"
+                  autocomplete="username"
+                />
+                <div class="error">{{ errors[0] }}</div>
+              </ValidationProvider>
+            </span>
+            <span>
+              <ValidationProvider v-slot="{classes, errors}" rules="required">
+                <input
+                  type="password"
+                  :class="classes"
+                  name="password"
+                  v-model="user.password"
+                  placeholder="Password"
+                  autocomplete="current-password"
+                />
+                <div class="error">{{ errors[0] }}</div>
+              </ValidationProvider>
+            </span>
+            <span>
+              <button type="submit" :disabled="invalid">Login</button>
+            </span>
+            <router-link to="/forgot-password">
+              <button type="button">
+                Forgot Password?
+              </button>
+            </router-link>
+          </div>
         </fieldset>
       </form>
+      </ValidationObserver>
     </div>
   </div>
 </template>
@@ -43,7 +51,7 @@
 <script>
 import AuthService from "../services/auth.service";
 import User from "../models/User";
-import { ValidationProvider } from "vee-validate";
+import { ValidationProvider, ValidationObserver } from "vee-validate";
 import { extend } from "vee-validate";
 import { required } from "vee-validate/dist/rules";
 
@@ -53,6 +61,7 @@ export default {
   name: "Login",
   components: {
     ValidationProvider,
+    ValidationObserver
   },
   data() {
     return {
@@ -88,10 +97,13 @@ legend {
   font-size: 18px;
 }
 form {
-  display: flex;
-  align-items: center;
+  margin: auto;
+  width: fit-content;
   justify-content: center;
   padding: 30px;
+}
+.flex {
+  display: flex;
 }
 .error {
   display: block;
@@ -103,8 +115,16 @@ button {
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin: 2px;
+  margin: 5px;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+input.valid {
+  color: #045929;
+  border: 1px solid #045929;
+}
+input.invalid {
+  color: #EB0600;
+  border: 1px solid #EB0600;
 }
 </style>
