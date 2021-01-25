@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div v-if="wholeCollection.length === 0">
+      {{ showError() }}
+    </div>
     <div class="gallery" v-bind:class="{ blurred: isBlurred }">
       <div
         @click="showBigCard"
@@ -26,7 +29,7 @@ import BigCardInfo from "./BigCardInfo.vue";
 
 export default {
   name: "CardGallery",
-  computed: mapGetters(["wholeCollection"]),
+  computed: { ...mapGetters(["wholeCollection", "numberOfCards"]) },
   created() {
     this.fetchFullDeck();
   },
@@ -45,6 +48,18 @@ export default {
   },
   methods: {
     ...mapActions(["fetchFullDeck"]),
+
+    showError() {
+      this.$toasted.show(
+        "Warning: No cards in database<br>Is the backend set-up correctly?",
+        {
+          position: "bottom-center",
+          type: "error",
+          singleton: true,
+          duration: 5000,
+        }
+      );
+    },
 
     setBigCard(card) {
       this.bigCard = card;
@@ -67,7 +82,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .gallery {
