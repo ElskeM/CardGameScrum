@@ -96,12 +96,14 @@ public class Game {
 			try {
 
 				player.addCardToHand(deck.draw());
+				return false;
 			} catch (IllegalArgumentException e) {
 				// Deck is empty
 				// DRAW
 				for (GameIsDrawListener listener : drawListeners) {
 					listener.gameIsDraw(id);
 				}
+				return false;
 			}
 		}
 		return true;

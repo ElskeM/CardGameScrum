@@ -65,20 +65,19 @@ public class GameWSController implements GameIsDrawListener {
 	}
 
 	@MessageMapping("/connected/playerMove/{id}/{playerName}")
-	@SendTo("/cardgame/updateGameBoard/{id}")
-	public List<MappedCard> cardPlayed(PlayerMove move, @DestinationVariable long id,
+	@SendTo("/madeMove/{id}/{playerName}")
+	public boolean cardPlayed(PlayerMove move, @DestinationVariable long id,
 			@DestinationVariable String playerName) {
 		System.out.println("PLAYER MOVE");
 		System.out.println(move.getCardId());
 		System.out.println(move.getPlayerName());
 		System.out.println(move.getCardPosition());
-		boolean correctMove = true;// Tanke att returnera om draget var rätt eller ej
 		Game g = game.getGameById(id);
 
 		Optional<Player> p = g.getPlayers().stream().filter(pl -> pl.getName().equals(playerName)).findFirst();
 		Player currentPlayer = p.get();
 
-		g.makeMove(currentPlayer, move.getCardId(), move.getCardPosition());
+		boolean correctMove=g.makeMove(currentPlayer, move.getCardId(), move.getCardPosition());
 
 		g.changeTurnForPlayers(currentPlayer);
 
@@ -95,7 +94,7 @@ public class GameWSController implements GameIsDrawListener {
 			map.replace("player", player);
 			this.template.convertAndSend(("/cardgame/startCard/" + g.getId() + "/" + player.getName()), map);
 		}
-		return g.getTable();// Kanske inte behövs då alla spelare redan fått uppdaterat bord
+		return correctMove;// Kanske inte behövs då alla spelare redan fått uppdaterat bord
 
 	}
 
