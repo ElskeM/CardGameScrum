@@ -2,6 +2,11 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import AuthService from "../services/auth.service";
 import axios from "axios";
+import authHeader from "../services/auth-header";
+import store from '../store/index'
+
+
+
 
 Vue.use(VueRouter);
 
@@ -75,6 +80,13 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "error" */ "../views/ServerDown.vue"),
   },
+  {
+    path: "*",
+    name: "not found",
+    component: () => import("../views/PageNotFound.vue"),
+  }
+
+
 ];
 
 const router = new VueRouter({
@@ -84,10 +96,13 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   Vue.toasted.clear();
-  hej(to, from, next);
+  isServerUp(to, from, next)
+  .then(
+    setUserName
+  );
 });
 
-async function hej(to, from, next) {
+async function isServerUp(to, from, next) {
   if (to.name != "server-down") {
     await axios
       .get("http://localhost:8080/status", { timeout: 1000 })
@@ -106,6 +121,16 @@ function authenticate(to,from,next) {
   } else {
     next();
   }
+}
+
+//hämtar username ifrån vårt api och sätter detta i vuex store
+async function setUserName() {
+  await axios.get("http://localhost:8080/user", {
+    headers: authHeader(),
+  })
+  .then(res => {
+    store.commit('addUser', {username: res.data.username})
+  })
 }
 
 export default router;

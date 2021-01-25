@@ -70,9 +70,9 @@
       :muck="muck"
       ref="gb"
     />
-    <Chat
-      id="chat"
-      v-on:minimize="hideChat = !hideChat"
+    <Chat id="chat" 
+      
+      v-on:minimize="chatIconClicked"
       v-bind:class="{ invisible: hideChat }"
       v-on:messageSent="sendChatMessage"
       :playerName="playerName"
