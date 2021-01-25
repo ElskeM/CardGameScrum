@@ -43,14 +43,19 @@ export default {
   },
   methods: {
     login: function(e) {
-      AuthService.login(this.user).then((res) => {
-        this.$store.commit(
-          "addUser",
-          res.user
-          //{username: res.user.username, email: res.user.email}
+      AuthService.login(this.user)
+        .then((res) => {
+          this.$store.commit(
+            "addUser",
+            res.user
+            //{username: res.user.username, email: res.user.email}
+          );
+          this.$router.push("/");
+          this.$toasted.success("You have been logged in!");
+        })
+        .catch(() =>
+          this.$toasted.error("Login failed. Are your credentails correct?")
         );
-        this.$router.push("/");
-      });
       e.preventDefault();
     },
   },
