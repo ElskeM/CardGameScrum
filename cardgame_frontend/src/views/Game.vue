@@ -143,7 +143,7 @@ export default {
 
     playerMove(value) {
       if (this.stompClient && this.stompClient.connected) {
-        this.stompClient.send(
+            this.stompClient.send(
           `/app/connected/playerMove/${this.gameId}/${this.playerName}`,
           JSON.stringify({
             playerName: this.playerName,
@@ -151,6 +151,7 @@ export default {
             cardId: value.card,
           })
         );
+       
       }
     },
     drawCard() {},
@@ -159,6 +160,7 @@ export default {
       this.stompClient.send(
         `/app/chatmessage/${this.gameId}`,
         JSON.stringify(message)
+        
       );
     },
 
@@ -213,7 +215,9 @@ export default {
         `/cardgame/updateGameBoard/${this.gameId}`,
         (tick) => {
           this.playedCards = JSON.parse(tick.body);
-          this.$refs.gb.correctMove()
+          //ifrån bodyn USERNAME (för att kunna villkora att animationen bara körs för den aktuella spelare)
+          // det behövs också informationom movet var correkt eller inte
+          //this.$refs.gb.setCorrectMove(true) 
         }
       );
       this.stompClient.subscribe(`/cardgame/chat/${this.gameId}`, (tick) => {

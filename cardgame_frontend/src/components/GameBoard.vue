@@ -73,6 +73,11 @@ export default {
     };
   },
   methods: {
+
+    setCorrectMove(bool) {
+      this.correctMove = bool
+    },
+
     allowPlay() {
       if (this.dragging && this.playerTurn) {
         return false;
