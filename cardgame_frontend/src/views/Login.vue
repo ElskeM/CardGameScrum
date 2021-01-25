@@ -4,20 +4,30 @@
       <form @submit="login">
         <fieldset>
           <legend>Login</legend>
-          <input
-            type="text"
-            name="username"
-            v-model="user.username"
-            placeholder="Username"
-            autocomplete="username"
-          />
-          <input
-            type="password"
-            name="password"
-            v-model="user.password"
-            placeholder="Password"
-            autocomplete="current-password"
-          />
+          <span>
+            <ValidationProvider v-slot="v" rules="required">
+              <input
+                type="text"
+                name="username"
+                v-model="user.username"
+                placeholder="Username"
+                autocomplete="username"
+              />
+              <div class="error">{{ v.errors[0] }}</div>
+            </ValidationProvider>
+          </span>
+          <span>
+            <ValidationProvider v-slot="v" rules="required">
+              <input
+                type="password"
+                name="password"
+                v-model="user.password"
+                placeholder="Password"
+                autocomplete="current-password"
+              />
+              <div class="error">{{ v.errors[0] }}</div>
+            </ValidationProvider>
+          </span>
           <button type="submit">Login</button>
           <router-link to="/forgot-password">
             <button type="button">
@@ -33,9 +43,17 @@
 <script>
 import AuthService from "../services/auth.service";
 import User from "../models/User";
+import { ValidationProvider } from "vee-validate";
+import { extend } from "vee-validate";
+import { required } from "vee-validate/dist/rules";
+
+extend("required", required);
 
 export default {
   name: "Login",
+  components: {
+    ValidationProvider,
+  },
   data() {
     return {
       user: new User("", ""),
@@ -74,6 +92,11 @@ form {
   align-items: center;
   justify-content: center;
   padding: 30px;
+}
+.error {
+  display: block;
+  height: 1rem;
+  color: crimson;
 }
 input,
 button {
