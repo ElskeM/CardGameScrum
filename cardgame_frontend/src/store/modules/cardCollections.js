@@ -9,11 +9,12 @@ const getters = {
 };
 
 const actions = {
-  fetchFullDeck({ commit }) {
-    cardService.fetchFullDeck().then((fullDeck) => {
+  async fetchFullDeck({ commit }) {
+    return await cardService.fetchFullDeck().then((fullDeck) => {
       if (fullDeck.length != 0) {
         commit("fillFullDeck", fullDeck);
       }
+      return fullDeck;
     });
   },
 };

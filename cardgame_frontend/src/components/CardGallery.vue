@@ -28,13 +28,13 @@ export default {
   name: "CardGallery",
   computed: { ...mapGetters(["wholeCollection", "numberOfCards"]) },
   created() {
-    this.fetchFullDeck();
+    this.fetchFullDeck().then((fulldeck) => {
+      if (fulldeck.length === 0) {
+        this.showError();
+      }
+    });
   },
-  mounted() {
-    if(this.wholeCollection.length === 0){
-      this.showError();
-    }
-  },
+
   components: {
     DisplayCard,
     BigCardInfo,
