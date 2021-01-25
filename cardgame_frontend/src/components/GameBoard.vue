@@ -8,6 +8,7 @@
         :disabled="allowPlay()"
         @end="onDrop"
         id="played-cards"
+        v-bind:class="{ correct: correctMove }"
       >
       <!-- Här hamnar de spelade korten. Är även en drag and drop-yta som bara blir aktiv om spelaren drar ett kort från handen. -->
         <div
@@ -68,6 +69,7 @@ export default {
     return {
       dragging: false, // Boolean som aktiverar funktionen att dra och släppa kort i playedCards
       playerTurn: false, // Indikerar on det är denna spelarens tur
+      correctMove: false
     };
   },
   methods: {
@@ -141,6 +143,18 @@ export default {
 }
 #played-cards {
   background-color: grey;
+}
+
+.correct {
+  animation-name: correctmove;
+  animation-duration: 1s;
+
+}
+
+@keyframes correctmove {
+  0% {background-color:grey}
+  50% {background-color: green}
+  0% {background-color: grey}
 }
 
 #player-board {

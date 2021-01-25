@@ -16,7 +16,7 @@
 
             <div class="chat-window">
                 <div v-for="message in chatMessages" :key="message.id">
-                    <ChatMessage v-bind:message="message" class="chat-message"/>
+                    <ChatMessage v-bind:message="message" class="chat-message" v-bind:class="{right: message.color=='blue'}"/>
                 </div>
             </div>     
             <div class="text-input-container">
@@ -51,9 +51,7 @@ export default {
     },
     methods: {
         sendMessage() {
-            console.log("DENNA SPELARES NAMN")
-            console.log(this.playerName)
-            console.log("SLUT P ÅDENNA SPELARES NAMN")
+            console.log(this.message)
             this.$emit('messageSent', {name: this.playerName, message:this.message, color:this.chatMessageColor})
             this.message = ""
 
@@ -107,9 +105,6 @@ export default {
         flex-direction: column;
         width: 300px;
         height: 400px;
-       
-        
-        /*border: solid red 3px;*/
     }
 
     .chat-window {
@@ -127,11 +122,16 @@ export default {
 
 
     .chat-message {
-        
-        max-width: auto;
+        width: max-content;
+        max-width: 200px;
+        min-width: 100px;
         border-radius: 5px;
         margin: 3px;
 
+    }
+
+    .right {
+        margin-left: auto;
     }
 
     .text-input-container {
@@ -141,7 +141,8 @@ export default {
 
     .text-area {
         height: 40px;
-        width: 100%;
+       width: 100%; 
+      
         border-radius: 4px;
         resize: none;
         font-family: Arial, Helvetica, sans-serif;

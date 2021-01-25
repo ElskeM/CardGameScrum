@@ -35,7 +35,7 @@ export default {
 }
 
 .message {
-    margin: 5px;
+    margin: .4rem .7rem .7rem .4rem;
     font-family: Arial, Helvetica, sans-serif;
     color:white;
     font-size: 18px;
@@ -45,7 +45,6 @@ export default {
 .msg-container {
     display: flex;
     flex-direction: column;
-    width: 60%;
     
 }
 
