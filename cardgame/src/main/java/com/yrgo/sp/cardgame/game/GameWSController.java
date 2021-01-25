@@ -59,19 +59,20 @@ public class GameWSController implements KlimatkollListener {
 	}
 
 	@MessageMapping("/connected/playerMove/{id}/{playerName}")
-	public void cardPlayed(PlayerMove move, @DestinationVariable long id,
+	@SendTo("/cardgame/madeMove/{id}/{playerName}")
+	public boolean cardPlayed(PlayerMove move, @DestinationVariable long id,
 			@DestinationVariable String playerName) {
-		boolean correctMove = true;// Tanke att returnera om draget var rätt eller ej
 		Game g = game.getGameById(id);
 
 		Optional<Player> p = g.getPlayers().stream().filter(pl -> pl.getName().equals(playerName)).findFirst();
 		Player currentPlayer = p.get();
 
-		g.makeMove(currentPlayer, move.getCardId(), move.getCardPosition());
+		boolean correctMove = g.makeMove(currentPlayer, move.getCardId(), move.getCardPosition());
 
 		g.changeTurnForPlayers();
 
 		sendGameUpdate(g);
+		return correctMove;
 	}
 
 	@Override
