@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div v-if="wholeCollection.length === 0">
-      {{ showError() }}
-    </div>
     <div class="gallery" v-bind:class="{ blurred: isBlurred }">
       <div
         @click="showBigCard"
@@ -32,6 +29,11 @@ export default {
   computed: { ...mapGetters(["wholeCollection", "numberOfCards"]) },
   created() {
     this.fetchFullDeck();
+  },
+  mounted() {
+    if(this.wholeCollection.length === 0){
+      this.showError();
+    }
   },
   components: {
     DisplayCard,
