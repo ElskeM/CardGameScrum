@@ -116,7 +116,7 @@ async function isServerUp(to, from, next) {
 
 function authenticate(to,from,next) {
   if (!AuthService.isLoggedIn()) {
-    next("/login");
+    next({ name: "Login", query: {from:to.path}});
     Vue.toasted.info("Please log in");
   } else {
     next();

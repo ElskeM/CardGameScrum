@@ -77,7 +77,11 @@ export default {
             res.user
             //{username: res.user.username, email: res.user.email}
           );
-          this.$router.push("/");
+          if(this.$route.query.from){
+            this.$router.replace(this.$route.query.from);
+          } else {
+            this.$router.replace("/");
+          }
           this.$toasted.success("You have been logged in!");
         })
         .catch(() =>
