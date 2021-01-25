@@ -30,18 +30,13 @@ const routes = [
     path: "/game",
     name: "Game",
     component: () => import(/* webpackChunkName: "game" */ "../views/Game.vue"),
-    beforeEnter: (to, from, next) => {
-      if (!AuthService.isLoggedIn()) {
-        next("/login");
-        Vue.toasted.info("Please log in");
-      }
-      next();
-    },
+    beforeEnter: (to, from, next) => authenticate(to,from,next),
   },
   {
     path: "/game/:id",
     name: "GameId",
     component: () => import(/* webpackChunkName: "game" */ "../views/Game.vue"),
+    beforeEnter: (to, from, next) => authenticate(to,from,next),
   },
   {
     path: "/singlecard/:url",
@@ -52,15 +47,18 @@ const routes = [
   {
     path: "/register",
     name: "Register",
-    component: () => import(/* webpackChunkName: "register" */ "../views/Register.vue"),
+    component: () =>
+      import(/* webpackChunkName: "register" */ "../views/Register.vue"),
   },
   {
     path: "/login",
     name: "Login",
-    component: () => import(/* webpackChunkName: "login" */ "../views/Login.vue"),
+    component: () =>
+      import(/* webpackChunkName: "login" */ "../views/Login.vue"),
     beforeEnter: (to, from, next) => {
       if (from.name != "Login" && AuthService.isLoggedIn()) {
         AuthService.logout();
+        Vue.toasted.success("You have been logged out!");
       }
       next();
     },
@@ -68,12 +66,14 @@ const routes = [
   {
     path: "/forgot-password",
     name: "forgot-password",
-    component: () => import(/* webpackChunkName: "login" */ "../views/ForgotPassword.vue"),
+    component: () =>
+      import(/* webpackChunkName: "login" */ "../views/ForgotPassword.vue"),
   },
   {
     path: "/server-down",
     name: "server-down",
-    component: () => import(/* webpackChunkName: "error" */"../views/ServerDown.vue"),
+    component: () =>
+      import(/* webpackChunkName: "error" */ "../views/ServerDown.vue"),
   },
 ];
 
@@ -97,6 +97,15 @@ async function hej(to, from, next) {
   }
 
   next();
+}
+
+function authenticate(to,from,next) {
+  if (!AuthService.isLoggedIn()) {
+    next("/login");
+    Vue.toasted.info("Please log in");
+  } else {
+    next();
+  }
 }
 
 export default router;
