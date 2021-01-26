@@ -107,8 +107,8 @@ export default {
       console.log(turn);
       this.playerTurn = turn;
       if(turn) {
-        this.setCorrectMove(false)
-        this.setWrongMove(false)
+        this.correctMove = false
+        this.wrongMove = false
       }
     },
   },
@@ -166,7 +166,7 @@ export default {
 @keyframes correctmove {
   0% {background-color:grey}
   50% {background-color: green}
-  0% {background-color: grey}
+  100% {background-color: grey}
 }
 
 .wrong {
@@ -177,7 +177,7 @@ export default {
 @keyframes wrongmove {
   0% {background-color:grey}
   50% {background-color: red}
-  0% {background-color: grey}
+  100% {background-color: grey}
 }
 
 
