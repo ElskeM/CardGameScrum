@@ -22,7 +22,10 @@
           <!--<button @click="playerMove">TEST</button>-->
         </div>
 
-        <div id="scoreboard">
+        <div
+          id="scoreboard"
+          class="game-gui"
+        >
           <div v-if="this.connected">
             <h3>Ansluten till spel: {{ this.gameId }}</h3>
             <div v-if="this.gameInfo">
@@ -44,6 +47,16 @@
           <div v-else>
             <h1>DISCONNECTED</h1>
           </div>
+        </div>
+        <div
+          class="game-gui"
+          
+        >
+          <Timer ref="timer" />
+          <span v-if="this.player">
+          Missade rundor: {{this.player.missedTurns}}<br />
+          Tre missade rundor i rad resulterar i förlust!
+          </span>
         </div>
       </div>
 
@@ -89,6 +102,7 @@ import Stomp from "webstomp-client";
 import "../services/auth-header";
 
 import GameBoard from "../components/GameBoard.vue";
+import Timer from "../components/Timer.vue";
 import authHeader from "../services/auth-header";
 import Chat from "../components/Chat.vue";
 import { mapGetters } from "vuex";
@@ -99,6 +113,7 @@ export default {
   components: {
     GameBoard,
     Chat,
+    Timer
   },
 
   mounted() {
@@ -114,20 +129,21 @@ export default {
   data() {
     return {
       connected: "",
-      twoPlayers: false,
-      started: false,
       gameId: this.$route.params.id,
-
-      whoWon: "",
       linkToGame: "",
       playerName: "",
       gameInfo: null,
-      numberOfGames: 0,
+      player: null,
+      //Timer
+
+      //Kortlistor
       playerHand: [],
       playedCards: [],
+      muck: [], // lista med slängda kort
+
+      //Chat-variabler
       chatMessages: [],
       chatMessageColor: "",
-      muck: [], // lista med slängda kort
       hideChat: true,
       hideAlert: true,
       hideChatSymbol: true,
@@ -148,13 +164,12 @@ export default {
           JSON.stringify({
             playerName: this.playerName,
             cardPosition: value.index,
-            cardId: value.card,
+            cardId: value.card
           })
         );
        
       }
     },
-    drawCard() {},
 
     sendChatMessage(message) {
       this.stompClient.send(
@@ -178,30 +193,35 @@ export default {
     },
 
     subscriptions() {
-      this.stompClient.subscribe(`/cardgame/gameInfo/${this.gameId}`, (msg) => {
+      this.stompClient.subscribe(`/cardgame/gameInfo/${this.gameId}`, msg => {
         this.gameInfo = JSON.parse(msg.body);
       });
       this.stompClient.subscribe(
         `/cardgame/startCard/${this.gameId}/${this.playerName}`,
-        (tick) => {
+        tick => {
+          if(this.player){
+            this.$refs.timer.resetAndStartTimer(); //Behöver ny sub? Eller boolean för första rundan?
+          }
           this.hideChatSymbol = false;
           this.playedCards = JSON.parse(tick.body).table;
           this.playerHand = JSON.parse(tick.body).player.hand;
+          this.player = JSON.parse(tick.body).player;
           this.muck = JSON.parse(tick.body).muck;
           if (JSON.parse(tick.body).winner != null) {
+            this.$refs.timer.stopTimer();
             this.gameEnd = true;
             this.winner = JSON.parse(tick.body).winner;
-            this.$alert(
+            /*this.$alert(
               "Vill du spela en gång till?",
               "Vinnare är: " + this.winner + "!"
-            );
+            );*/
             this.$refs.gb.setPlayerTurn(false);
             this.$confirm(
               "Vill du spela en gång till?",
               "Vinnare är: " + this.winner + "!"
             ).then(() => {
               axios.get(`http://localhost:8080/game/${this.gameId}/confirm`, {
-                headers: authHeader(),
+                headers: authHeader()
               });
             });
           } else {
@@ -247,7 +267,7 @@ export default {
             this.subscriptions();
             this.confirmSecondPlayer();
           },
-          (error) => {
+          error => {
             console.log(error);
             this.connected = false;
           }
@@ -255,7 +275,7 @@ export default {
       } else {
         axios
           .get(`http://localhost:8080/game/${this.playerName}`, {
-            headers: authHeader(),
+            headers: authHeader()
           })
           .then((response) => (this.gameId = response.data.id))
           .then(() => {
@@ -272,14 +292,14 @@ export default {
                 this.chatMessageColor = "green";
                 this.subscriptions();
               },
-              (error) => {
+              error => {
                 console.log(error);
                 this.connected = false;
               }
             );
           });
       }
-    },
+    }
 
     /*
    start() {
@@ -305,13 +325,12 @@ export default {
         }
 
         */
-  },
+  }
 };
 </script>
 
 <style scoped>
-#gamecontroller,
-#scoreboard {
+.game-gui {
   border: 1px solid;
   margin: 10px;
   padding: 10px;
