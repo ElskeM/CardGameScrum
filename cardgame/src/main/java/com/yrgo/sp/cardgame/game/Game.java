@@ -107,10 +107,11 @@ public class Game implements ActionListener {
 			try {
 
 				player.addCardToHand(deck.draw());
+				timer.restart();
 				return false;
 			} catch (IllegalArgumentException e) {
 				// Deck is empty
-				// DRAW
+				// Game is a DRAW
 				for (KlimatkollListener listener : gameListener) {
 					listener.gameIsDraw(this);
 				}
