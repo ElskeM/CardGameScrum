@@ -50,7 +50,7 @@
         </div>
         <div
           class="game-gui"
-          
+          v-if="this.gameInfo"
         >
           <Timer ref="timer" />
           <span v-if="this.player">
