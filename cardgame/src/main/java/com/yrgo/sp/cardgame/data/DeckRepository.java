@@ -7,7 +7,18 @@ import org.springframework.data.repository.query.Param;
 
 import com.yrgo.sp.cardgame.domain.Deck;
 
+/**
+ * @author 
+ * Repository interface for Deck
+ * Extends JpaRepository
+ */
 public interface DeckRepository extends JpaRepository<Deck, Long>{
-	public List<Deck> findByName(@Param("name") String name);
+	
+	/**
+	 * Method to find Deck by name
+	 * @param name
+	 * @return List of found Decks
+	 */
+	public List<Deck> findByName(String name);
 }
 

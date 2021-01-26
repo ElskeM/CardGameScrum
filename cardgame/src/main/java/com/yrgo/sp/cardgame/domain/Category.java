@@ -7,7 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * @author elske Entity that saves the different categories in the database
+ * @author elske 
+ * Entity that saves the different categories in the database
  */
 @Entity
 public class Category {
@@ -19,18 +20,32 @@ public class Category {
 	@Column(unique = true, nullable = false)
 	private String category;
 
+	
+	/**
+	 * Empty contructor to create a category object
+	 */
 	public Category() {
 	}
 
+	
+	/**
+	 * Constructor that takes a category name as parameter.
+	 * @param category
+	 */
 	public Category(String category) {
 		this.category = category;
 	}
 
+	/**
+	 * ToString method
+	 */
 	@Override
 	public String toString() {
 		return "Category [category=" + category + "]";
 	}
 
+	// Getter and Setter methods
+	
 	public String getCategory() {
 		return category;
 	}
