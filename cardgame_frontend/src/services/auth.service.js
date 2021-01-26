@@ -33,7 +33,7 @@ class AuthService {
 
   logout() {
     localStorage.removeItem("user");
-    Vue.toasted.success("You have been logged out!");
+    Vue.toasted.success("Du är utloggad!");
   }
 
   register(user) {
