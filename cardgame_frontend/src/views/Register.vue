@@ -100,9 +100,9 @@ export default {
       showStatus: false,
       status: "",
       isProcessing: false,
-      messages: {required: "fältet är obligatoriskt",
-                 email: "ogiltig mejladress", 
-                 min: "lösenordet måste bestå av minst 8 tecken"},
+      messages: {required: "Fältet är obligatoriskt",
+                 email: "Ogiltig mejladress", 
+                 min: "Lösenordet måste bestå av minst 8 tecken"},
     }
   },
   methods: {

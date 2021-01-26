@@ -26,9 +26,9 @@
           <div v-if="this.connected">
             <h3>Ansluten till spel: {{ this.gameId }}</h3>
             <div v-if="this.gameInfo">
-              <span id="matches">Matches: {{ this.gameInfo.matches }}</span
+              <span id="matches">Spelade matcher: {{ this.gameInfo.matches }}</span
               ><br />
-              <b>Winster</b>
+              <b>Vinster</b>
               <div>
                 <span
                   v-for="player in this.gameInfo.players"
