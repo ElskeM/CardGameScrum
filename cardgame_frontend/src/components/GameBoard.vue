@@ -161,30 +161,18 @@ export default {
 .card {
   display: inline-block;
   margin: 10px;
-/*  transition: transform 0.5s; */
- /* cursor: move  */
+
 }
 .card-image{
   border-radius: 1rem;
 }
-/*.card-image {
-  transition: transform 0.5s;
-}
-.drag-el {
-  background-color: #fff;
-  margin-bottom: 10px;
-  padding: 5px;
-}*/
+
 .board {
   display: grid;
 }
 .card-holder {
   text-align: center;
-  /*width: 100%;
-  height: auto;
-  overflow: auto;*/
   white-space: nowrap;
-
 }
 
 #played-cards {
