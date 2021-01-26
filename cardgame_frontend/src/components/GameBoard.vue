@@ -152,6 +152,7 @@ export default {
   height: auto;
   overflow: auto;*/
   white-space: nowrap;
+  transition: transform 0.5s;
 }
 #played-cards {
   background-color: grey;
