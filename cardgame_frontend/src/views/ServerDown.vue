@@ -2,7 +2,7 @@
     <div>
         <div id="container">
             <p id="message">
-                STATUS 500 SERVER DOWN TRY AGAING LATER
+                SERVER NERe, FÖRSÖK IGEN SENARE
             </p>
         </div>
     </div>

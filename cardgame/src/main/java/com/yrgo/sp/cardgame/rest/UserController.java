@@ -19,18 +19,14 @@ import com.yrgo.sp.cardgame.domain.user.User;
 public class UserController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
-	
-	@Autowired
-	private UserRepository userData;
-	
 
 	@GetMapping(path = "/user")
-	public ResponseEntity<User> getCurrentUser(){
+	public ResponseEntity<User> getCurrentUser() {
 		LOG.info("getCurrentUser");
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User temp = new User();
 		temp.setUserName(auth.getName());
-		
+
 		return new ResponseEntity<>(temp, HttpStatus.OK);
 	}
 }

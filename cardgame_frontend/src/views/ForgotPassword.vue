@@ -2,10 +2,10 @@
   <div class="overall">
     <form>
       <fieldset>
-        <legend>Forgot Password</legend>
+        <legend>Glömt lösenord</legend>
         <div class="form">
-          <input type="email" placeholder="Email address" />
-          <button type="submit">Reset password</button>
+          <input type="email" placeholder="Mejladress" />
+          <button type="submit">Återställ lösenord</button>
         </div>
       </fieldset>
     </form>

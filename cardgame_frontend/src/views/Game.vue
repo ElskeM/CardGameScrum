@@ -24,11 +24,11 @@
 
         <div id="scoreboard">
           <div v-if="this.connected">
-            <h3>Connected to game: {{ this.gameId }}</h3>
+            <h3>Ansluten till spel: {{ this.gameId }}</h3>
             <div v-if="this.gameInfo">
-              <span id="matches">Matches: {{ this.gameInfo.matches }}</span
+              <span id="matches">Spelade matcher: {{ this.gameInfo.matches }}</span
               ><br />
-              <b>Wins</b>
+              <b>Vinster</b>
               <div>
                 <span
                   v-for="player in this.gameInfo.players"
@@ -39,7 +39,7 @@
                 </span>
               </div>
             </div>
-            <div v-else>Waiting for game info...</div>
+            <div v-else>Väntar på spel info...</div>
           </div>
           <div v-else>
             <h1>DISCONNECTED</h1>
@@ -59,8 +59,8 @@
       </div>
     </div>
     <div v-if="this.connected">
-      <span v-if="this.$refs.gb.playerTurn">Your turn</span>
-      <span v-else>Other player's turn</span>
+      <span v-if="this.$refs.gb.playerTurn">Din tur</span>
+      <span v-else>Andra spelares tur</span>
     </div>
 
     <GameBoard
