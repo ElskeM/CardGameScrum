@@ -73,7 +73,7 @@
     <GameBoard
       @moved="playerMove"
       :playedCards="gameState.table"
-      :playerHand="gameState.player.playerHand"
+      :playerHand="gameState.player.hand"
       :muck="gameState.muck"
       ref="gameboard"
     />
