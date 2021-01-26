@@ -14,7 +14,7 @@ class CardService {
                 return [];
             }
         })
-        .catch(()=>{throw new Error("Could not fetch full deck")});
+        .catch(()=>{throw new Error("Kunde inte hämta alla kort")});
     }
 }
 

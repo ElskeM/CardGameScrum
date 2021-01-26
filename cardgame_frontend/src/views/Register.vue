@@ -18,6 +18,7 @@
                 <input
                   name="username"
                   type="text"
+                  placeholder="Användarnamn"
                   v-model="user.userName"
                   :class="classes"
                 />
@@ -31,10 +32,11 @@
                 rules="required|email"
                 :customMessages="messages"
               >
-                <label>mejladress</label><br />
+                <label>Mejladress</label><br />
                 <input
                   name="email"
                   type="email"
+                  placeholder="Mejladress"
                   v-model="user.email"
                   :class="classes"
                 />
@@ -52,6 +54,7 @@
                 <input
                   name="password"
                   type="password"
+                  placeholder="Lösenord"
                   v-model="user.password"
                   :class="classes"
                 />
@@ -97,9 +100,9 @@ export default {
       showStatus: false,
       status: "",
       isProcessing: false,
-      messages: {required: "fältet är obligatoriskt",
-                 email: "ogiltig mejladress", 
-                 min: "lösenordet måste bestå av minst 8 tecken"},
+      messages: {required: "Fältet är obligatoriskt",
+                 email: "Ogiltig mejladress", 
+                 min: "Lösenordet måste bestå av minst 8 tecken"},
     }
   },
   methods: {

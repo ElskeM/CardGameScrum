@@ -4,7 +4,7 @@
       <fieldset>
         <legend>Glömt lösenord</legend>
         <div class="form">
-          <input type="email" placeholder="Email address" />
+          <input type="email" placeholder="Mejladress" />
           <button type="submit">Återställ lösenord</button>
         </div>
       </fieldset>

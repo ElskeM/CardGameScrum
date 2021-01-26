@@ -8,6 +8,7 @@
         :disabled="allowPlay()"
         @end="onDrop"
         id="played-cards"
+        v-bind:class="{ correct: correctMove, wrong: wrongMove }"
       >
       <!-- Här hamnar de spelade korten. Är även en drag and drop-yta som bara blir aktiv om spelaren drar ett kort från handen. -->
         <div
@@ -68,9 +69,18 @@ export default {
     return {
       dragging: false, // Boolean som aktiverar funktionen att dra och släppa kort i playedCards
       playerTurn: false, // Indikerar on det är denna spelarens tur
+      correctMove: false, // om true ger klassen correct till played-cards vilket startar en grön animation
+      wrongMove: false  // om true ger klassen correct till played-cards vilket startar en röd animation
+
     };
   },
   methods: {
+
+    async setCorrectMove(bool) {
+      this.correctMove = bool
+      this.wrongMove = !bool
+    },
+
     allowPlay() {
       if (this.dragging && this.playerTurn) {
         return false;
@@ -96,6 +106,10 @@ export default {
     setPlayerTurn(turn) {
       console.log(turn);
       this.playerTurn = turn;
+      if(turn) {
+        this.correctMove = false
+        this.wrongMove = false
+      }
     },
   },
   computed: {
@@ -142,6 +156,30 @@ export default {
 #played-cards {
   background-color: grey;
 }
+
+.correct {
+  animation-name: correctmove;
+  animation-duration: 1s;
+
+}
+
+@keyframes correctmove {
+  0% {background-color:grey}
+  50% {background-color: green}
+  100% {background-color: grey}
+}
+
+.wrong {
+  animation-name: wrongmove;
+  animation-duration: 1s;
+}
+
+@keyframes wrongmove {
+  0% {background-color:grey}
+  50% {background-color: red}
+  100% {background-color: grey}
+}
+
 
 #player-board {
   width: 80%;
