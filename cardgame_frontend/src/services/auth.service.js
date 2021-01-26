@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import backend from "./backend";
+import Vue from "vue";
 
 const LOGIN_URL = backend.ROOT_URL + "/authenticate";
 const REGISTER_URL = backend.ROOT_URL + "/newPlayer";
@@ -32,6 +33,7 @@ class AuthService {
 
   logout() {
     localStorage.removeItem("user");
+    Vue.toasted.success("You have been logged out!");
   }
 
   register(user) {
