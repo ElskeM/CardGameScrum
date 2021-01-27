@@ -1,21 +1,13 @@
 <template>
     <div>
-<!--       <div id="gallery-container" v-if="this.muck&&this.muck.length" >
-            <div id="previous_button" class="button" @click="nextCard">&lt;</div>
-            <div id="card-container">
-                <img id="card" :src="muck[index].backImage">
-            </div>
-        <div id="next-button" class="button" @click="previousCard">&gt;</div>
-        </div>  -->
-    <VueSlickCarousel @init="onInit" :settings="settings" id="carousel">
+    <!-- karusellen vill inte starta upp om den innehåller färre än två objekt, därav v-if:en  -->
+    <VueSlickCarousel v-if="muck.length>1" @init="onInit" :settings="settings" id="carousel">
         <div v-for="card in muck" :key="card.id">
            <img :src="card.backImage">
         </div>
- <!--     <div>1</div>
-      <div>2</div>
-      <div>3</div>
-      <div>4</div> -->
     </VueSlickCarousel>
+    <!-- det första kortet visas istället som en vanlig img -->
+    <img v-if="muck.length === 1" :src="muck[0].backImage">
     </div>
 </template>
 

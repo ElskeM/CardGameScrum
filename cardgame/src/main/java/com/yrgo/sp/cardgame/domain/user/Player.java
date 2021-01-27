@@ -14,7 +14,9 @@ import com.yrgo.sp.cardgame.domain.Card;
 
 /**
  * @author elske
- *
+ * This domain class was created to make it possible for a player to save certain cards as "Favorite Cards" in the database.
+ * The specific userstory was later declared 'Not viable' and this specific domain class has been replaced by the User class.
+ * This class is to be set to deprecated in a later sprint
  */
 @Entity
 public class Player {
@@ -30,15 +32,38 @@ public class Player {
 	
 	
 	/**
-	 * 
+	 * Hashset to save Favorite cards to the DB
 	 */
 	@OneToMany//(mappedBy = "player")
 	private Set<Card> favoriteCards;
 	
+	
+	/**
+	 * Empty constructor to create player object
+	 */
+	public Player() {
+		
+	}
+	/**
+	 * Constructor for the player class. After the user class was created, the constructor now takes a user object as a parameter.
+	 * FavoriteCards is initialised here
+	 * @param user
+	 */
 	public Player(User user) {
 		this.user = user;
 		this.favoriteCards = new HashSet<Card>();
 	}
+
+	
+	/**
+	 * Method to add a specific card to the hashset.
+	 * @param newCard
+	 */
+	public void addCardsToFavorites(Card newCard) {
+		this.favoriteCards.add(newCard);
+	}
+	
+	// Getter and Setter methods
 	
 	public Long getId() {
 		return id;
@@ -60,9 +85,6 @@ public class Player {
 		this.favoriteCards = favoriteCards;
 	}
 
-	public void addCardsToFavorites(Card newCard) {
-		this.favoriteCards.add(newCard);
-	}
 
 	public Set<Card> getFavoriteCards() {
 		return this.favoriteCards;

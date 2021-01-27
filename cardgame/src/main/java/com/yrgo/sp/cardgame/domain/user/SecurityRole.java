@@ -9,6 +9,10 @@ import javax.validation.constraints.NotBlank;
 
 import org.springframework.security.core.GrantedAuthority;
 
+/**
+ * @author ptemrz
+ * Securityrole entity
+ */
 @Entity(name = "ROLES")
 public class SecurityRole implements GrantedAuthority {
 
@@ -25,14 +29,24 @@ public class SecurityRole implements GrantedAuthority {
 	@Column(unique = true)
 	private String authority;
 
+	
+	/**
+	 * Empty constructor 
+	 */
 	public SecurityRole() {
 
 	}
 
+	/**
+	 * Constructor for SecurityRole
+	 * @param authority
+	 */
 	public SecurityRole(String authority) {
 		this.authority = authority;
 	}
 
+	// Getter and Setter methods
+	
 	public Long getId() {
 		return id;
 	}

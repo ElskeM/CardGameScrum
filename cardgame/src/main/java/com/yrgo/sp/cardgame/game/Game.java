@@ -26,13 +26,17 @@ public class Game implements ActionListener {
 	private List<KlimatkollListener> gameListener = new ArrayList<KlimatkollListener>();
 	private int replayCounter = 0;
 	private Timer timer;
-	private int turnTime = 40000; //40 sek i millisek 
+	private int turnTime = 40000; //40 sek i millisek
+	
+	@JsonIgnore
+	private int minCards;
 
 	public Game(long id, int numberOfPlayers) {
 		this.players = new ArrayList<Player>();// Skapa arraylist med storleken satt till antal spelare
 		for (int i = 0; i < numberOfPlayers; i++) {
 			players.add(null);
 		}
+		this.minCards = numberOfPlayers * 3 + 2;
 		this.table = new ArrayList<MappedCard>();
 		this.muck = new LinkedList<MappedCard>();
 		// skapar en deck som fylls med kort i Decks konstruktor
@@ -40,6 +44,10 @@ public class Game implements ActionListener {
 		this.id = id;
 		timer = new Timer(turnTime, this);
 
+	}
+	
+	public int getMinCards() {
+		return this.minCards;
 	}
 
 	public void startNewGame() {
