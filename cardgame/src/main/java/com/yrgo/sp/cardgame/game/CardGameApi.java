@@ -22,7 +22,7 @@ public interface CardGameApi {
 	 */
 	Optional<Game> getGameById(long id);
 	
-	/**
+	/**@ToDo: method needs to be assessed! 
 	 * Method to place a card
 	 * @param gameId
 	 */

@@ -1,11 +1,12 @@
 <template>
   <div id="app">
-    <div id="header">
+    <div id="header" v-bind:class="{ invisibility: hideNavBar }">
       <a href="/">
-        <img src="./assets/header.png" />
+        <img src="./assets/header.png"/>
       </a>
     </div>
-    <NavBar />
+    <NavBar v-bind:class="{ invisibility: hideNavBar }"/>
+     <router-view @hide="switchVisibility"/>
   </div>
 </template>
 <script>
@@ -16,6 +17,18 @@ export default {
   components: {
     NavBar,
   },
+
+  data() {
+    return {
+      hideNavBar: false
+    }
+  },
+ methods: {
+    switchVisibility() {
+      this.hideNavBar = !this.hideNavBar
+    }
+
+  }
 };
 </script>
 <style>
@@ -59,5 +72,10 @@ body {
   display: flex;
   justify-content: center;
   margin-top: 2em;
+
+}
+
+.invisibility {
+  display: none
 }
 </style>

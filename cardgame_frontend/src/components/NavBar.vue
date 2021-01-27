@@ -12,7 +12,6 @@
         Inloggad som {{ user.username }} (logga ut)
       </router-link>
     </div>
-    <router-view />
   </div>
 </template>
 
