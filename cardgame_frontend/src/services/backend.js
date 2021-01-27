@@ -10,7 +10,7 @@ let backend = {
     CHATRECEIVE: "/cardgame/chat",
     CONNECTED:"/app/connected",
     GAMESTATE_CHANGED: "/cardgame/startCard",
-    TEMP: "/cardgame/connected"
+    BOTH_PLAYERS_CONNECTED: "/cardgame/connected"
   }
 };
 

@@ -35,6 +35,10 @@ import com.yrgo.sp.cardgame.domain.user.User;
 import com.yrgo.sp.cardgame.exception.PlayerNotFoundException;
 import com.yrgo.sp.cardgame.security.annotations.IsPlayer;
 
+/**
+ * @author elske
+ * PlayerController entity that handles and maps all requests from the frontend project
+ */
 @DependsOn("SecurityRoleManager")
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")

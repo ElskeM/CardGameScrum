@@ -11,6 +11,10 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+/**
+ * @author ptemrz, pontus, simon
+ *
+ */
 @Controller
 public class GameWSController implements KlimatkollListener {
 
@@ -30,8 +34,10 @@ public class GameWSController implements KlimatkollListener {
 
 		System.out.println(g.getPlayers().get(1).getName());
 		placeInitialCard(id);
+		
 		return true;
 	}
+	
 
 	/*
 	 * Denna prenumererar båda spelarna på och får på så vis tillgång till spelets

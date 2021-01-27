@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yrgo.sp.cardgame.security.annotations.IsPlayer;
 
+/**
+ * @author elske, ptemrz, pontus, simon
+ * Restcontrolller class for game
+ */
 @RestController
 @RequestMapping(value = "game")
 @CrossOrigin(origins = "http://localhost:8081")
-//@Scope("session")
 public class GameController {
 
 	@Autowired
@@ -28,6 +31,11 @@ public class GameController {
 
 	private long lastId = 0;
 
+	/**
+	 * Method is called from the frontend project when someone clicks on the start game button
+	 * @param firstPlayerName
+	 * @return ResponseEntity with Game object
+	 */
 	@IsPlayer
 	@GetMapping(value = "/{firstPlayerName}")
 	public ResponseEntity<Game> startGame(@PathVariable String firstPlayerName) {
@@ -39,6 +47,11 @@ public class GameController {
 		return ResponseEntity.ok(game);
 	}
 
+	/**
+	 * Method is called from the frontend project when both player have confirmed they want to replay after a game
+	 * @param id
+	 * @return ResponseEntity with String
+	 */
 	@GetMapping(value = "/{id}/confirm")
 	public ResponseEntity<String> restartGame(@PathVariable Long id) {
 

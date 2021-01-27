@@ -61,16 +61,29 @@
         </div>
       </div>
 
-      <div
-        id="chat-icon-container"
-        @click="chatIconClicked"
-        v-bind:class="{ invisible: hideChatSymbol }"
-      >
-        <img src="../assets/chat-icon.png" id="chat-icon" />
-        <div id="chat-alert" v-bind:class="{ invisible: hideAlert }">
-          {{ unreadMessages }}
-        </div>
+      <div id="icon-container"> 
+          
+          <div
+            id="menu-icon-container"
+            @click="$emit('hide')"
+            v-bind:class="{ invisible: hideChatSymbol }"
+            >
+        <!-- Av VisualEditor team - https://git.wikimedia.org/summary/mediawiki%2Fextensions%2FVisualEditor.git, MIT, https://commons.wikimedia.org/w/index.php?curid=26927425 -->
+            <img src="../assets/menu-icon.svg">
+          </div>
+
+          <div
+            id="chat-icon-container"
+            @click="chatIconClicked"
+            v-bind:class="{ invisible: hideChatSymbol }"
+          >
+            <img src="../assets/chat-icon.png" id="chat-icon" />
+            <div id="chat-alert" v-bind:class="{ invisible: hideAlert }">
+              {{ unreadMessages }}
+            </div>
+          </div>
       </div>
+
     </div>
     <div v-if="this.gameInfo" id="turn-shower" class="center-text">
       
@@ -123,6 +136,8 @@ export default {
         duration: null,
       });
     }
+
+   // this.$emit("switch")
   },
 
   data() {
@@ -216,6 +231,15 @@ export default {
           this.onChatMessage();
         }
       );
+
+//När den andra spelaren går med görs en emit till APP som då gömmer nav-baren högst upp i fönstret
+      this.stompClient.subscribe(
+        backend.STOMP.BOTH_PLAYERS_CONNECTED + `/${this.gameId}`,
+        () => {
+          this.$emit("hide")
+        }
+      );
+
     },
 
     onChatMessage() {
@@ -349,6 +373,17 @@ export default {
   max-height: 80%;
 }
 
+#icon-container {
+  height: 50px;
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  left: 20px;
+  top: 15px;
+}
+
 #chat-alert {
   height: 1.3rem;
   width: 1.3rem;
@@ -364,6 +399,29 @@ export default {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 15px;
 }
+
+
+#menu-icon-container {
+  width: 2rem;
+  height: 2rem;
+  border: white solid 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background-color:  #2d2f4e
+}
+
+#menu-icon-container img {
+  width: 100%;
+  height: 100%
+}
+
+#menu-icon-container:hover {
+  cursor: pointer
+}
+
+
 
 .flex {
   display: inline-flex;
