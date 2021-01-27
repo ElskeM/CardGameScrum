@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.yrgo.sp.cardgame.domain.Deck;
 
 /**
- * @author 
+ * @author ptemrz
  * Repository interface for Deck
  * Extends JpaRepository
  */

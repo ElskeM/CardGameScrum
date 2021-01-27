@@ -52,7 +52,7 @@
         </transition-group>
       </draggable>
       <div id="muck-card">
-          <MiniCardGallery :muck="muck" id="mini-gallery" />
+          <MiniCardGallery :muck="muck" id="mini-gallery" ref="carousel"/>
       </div>  
     </div>
   </div>
@@ -69,7 +69,7 @@ export default {
   props: {
     playedCards: Array, //Spelade korten
     playerHand: Array, //Spelarens hand
-    muck: Array //Slänghögen, kort som lagts fel
+    muck: [] //Slänghögen, kort som lagts fel
   },
   data() {
     return {
@@ -109,6 +109,7 @@ export default {
         this.$emit("moved", move); //Bubblar upp att ett move har gjorts
       }
       this.dragging = false;
+   
     },
     setPlayerTurn(turn) {
       console.log(turn);

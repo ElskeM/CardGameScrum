@@ -12,6 +12,11 @@ import javax.swing.Timer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * @author elske, ptemrz, pontus, simon.
+ * Entity for Game class, which contains all methods to play a game.
+ *
+ */
 public class Game implements ActionListener {
 
 	@JsonIgnore
@@ -26,11 +31,16 @@ public class Game implements ActionListener {
 	private List<KlimatkollListener> gameListener = new ArrayList<KlimatkollListener>();
 	private int replayCounter = 0;
 	private Timer timer;
-	private int turnTime = 40000; //40 sek i millisek
-	
+	private int turnTime = 40000; // 40 sek i millisek
+
 	@JsonIgnore
 	private int minCards;
 
+	/**
+	 * Constructor for Game
+	 * @param id
+	 * @param numberOfPlayers
+	 */
 	public Game(long id, int numberOfPlayers) {
 		this.players = new ArrayList<Player>();// Skapa arraylist med storleken satt till antal spelare
 		for (int i = 0; i < numberOfPlayers; i++) {
@@ -39,21 +49,27 @@ public class Game implements ActionListener {
 		this.minCards = numberOfPlayers * 3 + 2;
 		this.table = new ArrayList<MappedCard>();
 		this.muck = new LinkedList<MappedCard>();
+
 		// skapar en deck som fylls med kort i Decks konstruktor
 		this.deck = new Deck();
 		this.id = id;
 		timer = new Timer(turnTime, this);
 
 	}
-	
-	public int getMinCards() {
-		return this.minCards;
-	}
 
+
+	/**
+	 * Method to start a new game.
+	 * When method is called it first clears the table and the muck pile (cards that weren't put in the correct position on the table).
+	 * It then draws two cards that will be laid open on the table in the correct order (scorewise).
+	 * Then it draws three cards for each player which will be added to their respective hand.
+	 */
 	public void startNewGame() {
 		this.table.clear();
 		this.muck.clear();
 		turns = 0;
+
+		// Draw two cards that will be on the table at the start of the game
 		this.table.add(this.deck.draw());
 		this.table.add(this.deck.draw());
 		Collections.sort(table);
@@ -66,22 +82,25 @@ public class Game implements ActionListener {
 		}
 	}
 
+	/**
+	 * Method to add a player to a game
+	 * @param name
+	 */
 	public void addPlayer(String name) {
 		try {
 			players.set(players.indexOf(null), new Player(name));
 		} catch (IndexOutOfBoundsException e) {
-			// Players är full
+			// Players are full
 		}
 	}
 
-	public List<MappedCard> getTable() {
-		return this.table;
-	}
 
-	public List<MappedCard> getMuck() {
-		return muck;
-	}
 
+	/**
+	 * Method to find a card on the table by its ID
+	 * @param id
+	 * @return Mapped Card
+	 */
 	public MappedCard findCardInTableById(long id) {
 		Optional<MappedCard> c = table.stream().filter(ca -> ca.getId() == id).findFirst();
 		return c.get();
@@ -90,7 +109,7 @@ public class Game implements ActionListener {
 	/**
 	 * Adds a card to the table if the card was correctly placed, otherwise it ends
 	 * up in the muck.
-	 * 
+	 *
 	 * @param player
 	 * @param cardId
 	 * @param index  of the placement of the new card.
@@ -103,12 +122,19 @@ public class Game implements ActionListener {
 
 		timer.stop();
 		player.resetMissedTurns();
-		Optional<MappedCard> pc = player.getHand().stream().filter(card -> card.getId() == cardId).findFirst();
+
+		Optional<MappedCard> pc = player.getHand()
+				.stream()
+				.filter(card -> card.getId() == cardId)
+				.findFirst();
+
 		MappedCard playedCard = pc.get();
 		player.getHand().remove(playedCard);
 		table.add(index, playedCard);
+
 		List<MappedCard> temp = new ArrayList<MappedCard>(table);
 		Collections.sort(table);
+
 		if (!(table.equals(temp))) {
 			table.remove(playedCard);
 			muck.push(playedCard);
@@ -134,7 +160,7 @@ public class Game implements ActionListener {
 	 * Checks if a players hand is empty and thus is the winner. If more than one
 	 * player places their last card during the same turn, these players draws one
 	 * more card. If the draw pile depletes the game ends as a draw.
-	 * 
+	 *
 	 * @return The name of the winner
 	 */
 	public String checkWin() {
@@ -172,9 +198,13 @@ public class Game implements ActionListener {
 		return null;
 	}
 
+	/**
+	 * Method to change the turn to the other player
+	 */
 	public void changeTurnForPlayers() {
 		Player currentPlayer = getCurrentPlayer();
 		currentPlayer.setTurn(false);
+
 		if (players.size() > (players.indexOf(currentPlayer) + 1)) {
 			players.get(players.indexOf(currentPlayer) + 1).setTurn(true);
 
@@ -184,6 +214,11 @@ public class Game implements ActionListener {
 		}
 	}
 
+	/**
+	 * Method that keeps track of the question if all players have confirmed that they want to replay after a game
+	 * if all players have confirmed, it returns true, starts a new game and resets the replaycounter variable, otherwise it returns false.
+	 * @return boolean for replay
+	 */
 	public Boolean confirmReplay() {
 		replayCounter++;
 		if (replayCounter == players.size()) {
@@ -192,6 +227,58 @@ public class Game implements ActionListener {
 			return true;
 		}
 		return false;
+	}
+
+	public void addGameListener(KlimatkollListener listener) {
+		gameListener.add(listener);
+	}
+
+	public Player getCurrentPlayer() {
+		return players.stream().filter(pl -> pl.isTurn() == (true)).findFirst().get();
+	}
+
+	/**
+	 * This method executes when the timer reaches its 40 seconds mark. The turn
+	 * shifts to the next player. After a player misses three consecutive turns they
+	 * lose.
+	 *
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		System.out.println("TIMER AKTIVERAS!");
+		System.out.println("Game id: " + Game.this.id);
+		Player currentPlayer = getCurrentPlayer();
+		currentPlayer.addMissedTurn();
+		if (currentPlayer.getMissedTurns() >= 3) {// Har spelaren har missat sin tur 3 ggr i rad?
+			timer.stop();
+			currentPlayer.resetMissedTurns();
+			Player p = players.stream().filter(pl -> !pl.equals(currentPlayer)).findFirst().get();
+			// Hämtar den som inte gjort walkover.
+			// Funkar bara för två spelare
+			for (KlimatkollListener listener : gameListener) {
+				listener.walkover(this, p);
+			}
+		}
+		changeTurnForPlayers();
+		for (KlimatkollListener listener : gameListener) {
+			listener.timerRunOut(Game.this);
+		}
+
+	}
+
+	// Getter and Setter methods
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public long getId() {
+		return this.id;
+	}
+
+	public int getNumberOfGames() {
+		return nGames;
 	}
 
 	public void setPlayer(Player player) {
@@ -219,50 +306,16 @@ public class Game implements ActionListener {
 		return replayCounter;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public int getMinCards() {
+		return this.minCards;
 	}
 
-	public long getId() {
-		return this.id;
+	public List<MappedCard> getTable() {
+		return this.table;
 	}
 
-	public int getNumberOfGames() {
-		return nGames;
+	public List<MappedCard> getMuck() {
+		return muck;
 	}
 
-	public void addGameListener(KlimatkollListener listener) {
-		gameListener.add(listener);
-	}
-
-	public Player getCurrentPlayer() {
-		return players.stream().filter(pl -> pl.isTurn() == (true)).findFirst().get();
-	}
-
-	/**
-	 * This method executes when the timer reaches its 40 seconds mark. The turn
-	 * shifts to the next player. After a player misses three consecutive turns they
-	 * lose.
-	 *
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-		System.out.println("TIMER AKTIVERAS!");
-		System.out.println("Game id: " + Game.this.id);
-		Player currentPlayer = getCurrentPlayer();
-		currentPlayer.addMissedTurn();
-		if (currentPlayer.getMissedTurns() >= 3) {// Har spelaren har missat sin tur 3 ggr i rad?
-			timer.stop();
-			currentPlayer.resetMissedTurns();
-			Player p = players.stream().filter(pl -> !pl.equals(currentPlayer)).findFirst().get();//Hämtar den som inte gjort walkover. Funkar bara för två spelare
-			for (KlimatkollListener listener : gameListener) {
-				listener.walkover(this, p);
-			}
-		}
-		changeTurnForPlayers();
-		for (KlimatkollListener listener : gameListener) {
-			listener.timerRunOut(Game.this);
-		}
-	}
 }

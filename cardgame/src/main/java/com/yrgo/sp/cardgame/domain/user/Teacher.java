@@ -8,6 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+/**
+ * @author ptemrz
+ * Domain class for teacher role
+ */
 @Entity
 public class Teacher {
 	
@@ -15,9 +19,14 @@ public class Teacher {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	/**
+	 * Collection of students (Users)
+	 */
 	@OneToMany
 	private Collection<User> students;
 
+	// Getter and Setter methods
+	
 	public Long getId() {
 		return id;
 	}

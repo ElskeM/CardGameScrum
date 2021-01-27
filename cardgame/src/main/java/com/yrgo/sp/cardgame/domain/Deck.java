@@ -22,10 +22,6 @@ import javax.persistence.ManyToMany;
  * @author ptemrz
  *
  */
-/**
- * @author elske
- *
- */
 @Entity
 public class Deck {
 
