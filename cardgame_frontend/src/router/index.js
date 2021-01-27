@@ -85,13 +85,7 @@ const routes = [
     name: "not found",
     component: () => import("../views/PageNotFound.vue"),
   },
-  {
-    path: "/slick",
-    name: "Slick",
-    component: () =>
-      import(/* webpackChunkName: "register" */ "../views/SlickGallery.vue"),
-  }
-
+ 
 
 ];
 

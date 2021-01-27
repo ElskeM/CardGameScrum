@@ -139,7 +139,7 @@ export default {
       //Kortlistor
       playerHand: [],
       playedCards: [],
-      muck: [], // lista med slängda kort
+      muck: [{backImage: "hej", id: 233333}, {backImage: "ooo", id: 455555}], // lista med slängda kort
 
       //Chat-variabler
       chatMessages: [],

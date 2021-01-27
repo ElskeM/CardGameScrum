@@ -27,28 +27,19 @@
 
 export default {
     props: {
-        muck: Array
+        muck: []
     },
     components: {
         VueSlickCarousel
     },
+   
 
-  /*  computed:  {
-                this.settings = {
-                //  "dots": true,
-                   // "fade": true,
-                    "infinite": true,
-                    "speed": 500,
-                    "slidesToShow": 1,
-                    "slidesToScroll": 1
-            } 
-    }, */
 
     data() {
         return {
             settings: { 
                     "dots": true,
-                  // "fade": true,
+                   "fade": true,
                   //  "lazyLoad": true,
                     "infinite": true,
                     "speed": 500,
@@ -58,11 +49,30 @@ export default {
         }
 
     },
-        methods: {
-            onInit() {
+
+    methods: {
+        onInit() {
                 console.log(this.muck)
+            },
+
+        carouselSettings() {
+            this.settings = 
+            { 
+                    "dots": true,
+                 //  "fade": true,
+                  //  "lazyLoad": true,
+                    "infinite": true,
+                    "speed": 500,
+                    "slidesToShow": 1,
+                    "slidesToScroll": 1
             }
+            console.log("SETTINGS!!!!")
         }
+
+
+        },
+
+        
  /*   data () {
        return {
            index: 0
