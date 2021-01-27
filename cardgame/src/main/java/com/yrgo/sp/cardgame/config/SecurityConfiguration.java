@@ -19,6 +19,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.yrgo.sp.cardgame.security.JwtAuthenticationEntryPoint;
 import com.yrgo.sp.cardgame.security.JwtRequestFilter;
 
+/**
+ * @author ptemrz
+ * SecurityConfiguration entity
+ */
 @Configuration
 @EnableWebSecurity
 @Profile("development")

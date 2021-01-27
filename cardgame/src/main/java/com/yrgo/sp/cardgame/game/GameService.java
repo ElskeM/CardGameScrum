@@ -2,6 +2,7 @@ package com.yrgo.sp.cardgame.game;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +21,16 @@ public class GameService implements CardGameApi {
 	@Override
 	public Game createGame(long id) {
 		Game game = new Game(id,2);
-		//Deck d = new Deck("Default","Admin",cardData.findAll().stream().collect(Collectors.toSet()));
-		//game.setDeck(d);
+		if(game.getMinCards() > cardData.count()) {
+			throw new IllegalStateException("Not enough cards in database to create this game!");
+		}
 		games.put(id, game);
 		return game;
 	}
 	
 	@Override
-	public Game getGameById(long id) {
-		return games.get(id);
+	public Optional<Game> getGameById(long id) {
+		return Optional.ofNullable(games.get(id));
 	}
 	
 	@Override

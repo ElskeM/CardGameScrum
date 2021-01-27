@@ -11,14 +11,6 @@ import javax.persistence.ManyToOne;
  * @author simon 
  * Entity that saves the picture of the card as a byte array in the database.
  */
-/**
- * @author elske
- *
- */
-/**
- * @author elske
- *
- */
 @Entity
 public class Card implements Comparable<Card> {
 
@@ -55,7 +47,7 @@ public class Card implements Comparable<Card> {
 
 	
 	/**
-	 * Constructor for that takes a title and score as parameter
+	 * Constructor for Card which takes a title and score as parameter
 	 * @param title
 	 * @param score
 	 */
