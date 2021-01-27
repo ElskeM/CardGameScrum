@@ -2,12 +2,30 @@
 
 import axios from "axios";
 import backend from "./backend";
+import authHeader from "./auth-header";
+import store from "../store/index";
 import Vue from "vue";
 
 const LOGIN_URL = backend.ROOT_URL + "/authenticate";
 const REGISTER_URL = backend.ROOT_URL + "/newPlayer";
+const USER_URL = backend.ROOT_URL + "/user";
 
 class AuthService {
+  fetchLoggedInUser() {
+    axios
+      .get(USER_URL, {
+        headers: authHeader(),
+      })
+      .then((res) => {
+        store.commit("addUser", { username: res.data.username });
+      })
+      .catch((err) => {
+        if (err.response.status === 403) {
+          this.logout();
+        }
+      });
+  }
+
   isLoggedIn() {
     let user = JSON.parse(localStorage.getItem("user"));
     if (user && user.token) {
@@ -25,7 +43,6 @@ class AuthService {
       .then((resp) => {
         if (resp.data.token) {
           localStorage.setItem("user", JSON.stringify(resp.data));
-
         }
         return resp.data;
       });
