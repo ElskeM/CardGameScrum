@@ -8,7 +8,9 @@
         <router-link to="/register">Registera</router-link> |
         <router-link to="/login">Logga in</router-link>
       </span>
-      <router-link v-else to="/login">Inloggad som {{user.username}} </router-link>
+      <router-link v-else to="/login">
+        Inloggad som {{ user.username }} (logga ut)
+      </router-link>
     </div>
     <router-view />
   </div>
@@ -18,15 +20,12 @@
 import AuthService from "../services/auth.service";
 import { mapGetters } from "vuex";
 
-
-
 export default {
-
   computed: mapGetters(["user"]),
   methods: {
     isLoggedIn() {
       return AuthService.isLoggedIn();
-    }
-  }
+    },
+  },
 };
 </script>

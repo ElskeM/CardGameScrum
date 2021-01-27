@@ -1,4 +1,5 @@
-<template><!--https://medium.com/js-dojo/how-to-create-an-animated-countdown-timer-with-vue-89738903823f-->
+<template
+  ><!--https://medium.com/js-dojo/how-to-create-an-animated-countdown-timer-with-vue-89738903823f-->
   <div class="base-timer">
     <svg
       class="base-timer__svg"
@@ -6,12 +7,7 @@
       xmlns="http://www.w3.org/2000/svg"
     >
       <g class="base-timer__circle">
-        <circle
-          class="base-timer__path-elapsed"
-          cx="50"
-          cy="50"
-          r="46.5"
-        />
+        <circle class="base-timer__path-elapsed" cx="50" cy="50" r="46.5" />
         <path
           :class="remainingPathColor"
           :stroke-dasharray="circleDasharray"
@@ -30,24 +26,21 @@
     </span>
   </div>
 </template>
+
 <script>
-const FULL_DASH_ARRAY = 283;//Kanske den här som behövr vara större för att färgringen ska täcka grå
+const FULL_DASH_ARRAY = 283; //Kanske den här som behövr vara större för att färgringen ska täcka grå
 const WARNING_THRESHOLD = 20;
 const ALERT_THRESHOLD = 10;
+
 export default {
   data() {
     return {
       timerInterval: null,
       timeLimit: 40,
-      timePassed: 0
+      timePassed: 0,
     };
   },
-  /*props: {
-    timeLeft: {
-      type: Number,
-      required: true
-    }
-  },*/
+
   computed: {
     timeLeft() {
       return this.timeLimit - this.timePassed;
@@ -65,18 +58,19 @@ export default {
     colorCodes() {
       return {
         info: {
-          color: "green"
+          color: "green",
         },
         warning: {
           color: "orange",
-          threshold: WARNING_THRESHOLD
+          threshold: WARNING_THRESHOLD,
         },
         alert: {
           color: "red",
-          threshold: ALERT_THRESHOLD
-        }
+          threshold: ALERT_THRESHOLD,
+        },
       };
     },
+
     remainingPathColor() {
       const { alert, warning, info } = this.colorCodes;
       if (this.timeLeft <= alert.threshold) {
@@ -86,25 +80,29 @@ export default {
       } else {
         return info.color;
       }
-    }
+    },
   },
+
   methods: {
     startTimer() {
       this.timerInterval = setInterval(() => (this.timePassed += 1), 1000);
     },
-    resetAndStartTimer(){
+
+    resetAndStartTimer() {
       this.timePassed = 0;
-      if(!this.timerInterval){
+      if (!this.timerInterval) {
         this.startTimer();
       }
     },
-    stopTimer(){
+
+    stopTimer() {
       clearInterval(this.timerInterval);
-      this.timerInterval=null;
-    }
-  }
+      this.timerInterval = null;
+    },
+  },
 };
 </script>
+
 <style scoped>
 /* Sets the containers height and width */
 .base-timer {
