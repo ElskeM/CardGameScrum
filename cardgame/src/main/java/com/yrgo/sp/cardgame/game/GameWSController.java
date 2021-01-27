@@ -25,7 +25,7 @@ public class GameWSController implements KlimatkollListener {
 	@SendTo("/cardgame/connected/{id}")
 	public boolean secondPlayerConnected(@DestinationVariable long id, @DestinationVariable String playerName) {
 		System.out.println("secondPlayerConnected: " + true + ", gameID: " + id);
-		Game g = game.getGameById(id);
+		Game g = game.getGameById(id).orElseThrow();
 		g.addPlayer(playerName);
 
 		System.out.println(g.getPlayers().get(1).getName());
@@ -40,7 +40,7 @@ public class GameWSController implements KlimatkollListener {
 	// @SendTo("/cardgame/startCard/{id}")
 	public void placeInitialCard(long gameId) {
 		System.out.println("DEALING FIRST CARD");
-		Game g = game.getGameById(gameId);
+		Game g = game.getGameById(gameId).orElseThrow();
 		game.fillDeck(gameId);
 		g.startNewGame();
 		g.addGameListener(this);
@@ -63,7 +63,7 @@ public class GameWSController implements KlimatkollListener {
 	public boolean cardPlayed(PlayerMove move, @DestinationVariable long id,
 			@DestinationVariable String playerName) {
 
-		Game g = game.getGameById(id);
+		Game g = game.getGameById(id).orElseThrow();
 
 		Optional<Player> p = g.getPlayers().stream().filter(pl -> pl.getName().equals(playerName)).findFirst();
 		Player currentPlayer = p.get();
