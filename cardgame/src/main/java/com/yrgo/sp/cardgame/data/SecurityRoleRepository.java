@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.yrgo.sp.cardgame.domain.user.SecurityRole;
 
 /**
- * @author 
+ * @author ptemrz
  * Repository interface for Security roles
  * Extends JpaRepository
  */

@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.yrgo.sp.cardgame.data.CardRepository;
 
+/**
+ * @author ptemrz, pontus, simon
+ * GameService Entity which implements CardGameApi interface
+ *
+ */
 @Service
 public class GameService implements CardGameApi {
 	
