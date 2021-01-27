@@ -88,7 +88,12 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   Vue.toasted.clear();
-  isServerUp(to, from, next).then(setUserName);
+  isServerUp(to, from, next)
+    .then(setUserName)
+    .catch(() => {
+      next("/");
+      Vue.toasted.error("Du har blivit utloggad!");
+    });
 });
 
 async function isServerUp(to, from, next) {
@@ -113,12 +118,12 @@ function authenticate(to, from, next) {
 }
 
 //hämtar username ifrån vårt api och sätter detta i vuex store
-function setUserName() {
+async function setUserName() {
   //if user is not logged in, don't request the username from backend
   if (!AuthService.isLoggedIn()) {
     return;
   }
-  AuthService.fetchLoggedInUser();
+  return await AuthService.fetchLoggedInUser();
 }
 
 export default router;

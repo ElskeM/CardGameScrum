@@ -67,7 +67,7 @@
             </button>
 
             <p class="forgot-password text-right">
-              Redan registrerad - 
+              Redan registrerad -
               <router-link to="/login">logga in?</router-link>
             </p>
           </fieldset>
@@ -80,19 +80,19 @@
 <script>
 import User from "../models/User";
 import AuthService from "../services/auth.service";
-import {ValidationObserver, ValidationProvider} from 'vee-validate';
+import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { extend } from "vee-validate";
-import { required, email,min } from "vee-validate/dist/rules";
+import { required, email, min } from "vee-validate/dist/rules";
 
-extend('required', required);
-extend('email', email);
-extend('min', min);
+extend("required", required);
+extend("email", email);
+extend("min", min);
 
 export default {
   name: "register",
   components: {
     ValidationObserver,
-    ValidationProvider
+    ValidationProvider,
   },
   data() {
     return {
@@ -100,10 +100,12 @@ export default {
       showStatus: false,
       status: "",
       isProcessing: false,
-      messages: {required: "Fältet är obligatoriskt",
-                 email: "Ogiltig mejladress", 
-                 min: "Lösenordet måste bestå av minst 8 tecken"},
-    }
+      messages: {
+        required: "Fältet är obligatoriskt",
+        email: "Ogiltig mejladress",
+        min: "Lösenordet måste bestå av minst 8 tecken",
+      },
+    };
   },
   methods: {
     register() {
@@ -122,8 +124,8 @@ export default {
     reset() {
       this.showStatus = false;
       this.isProcessing = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
