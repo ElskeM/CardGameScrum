@@ -30,10 +30,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.yrgo.sp.cardgame.data.PlayerRepository;
 import com.yrgo.sp.cardgame.data.SecurityRoleRepository;
 import com.yrgo.sp.cardgame.data.UserRepository;
-import com.yrgo.sp.cardgame.domain.Category;
 import com.yrgo.sp.cardgame.domain.user.Player;
 import com.yrgo.sp.cardgame.domain.user.User;
-import com.yrgo.sp.cardgame.exception.CategoryNotFoundException;
 import com.yrgo.sp.cardgame.exception.PlayerNotFoundException;
 import com.yrgo.sp.cardgame.security.annotations.IsPlayer;
 

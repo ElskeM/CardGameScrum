@@ -24,8 +24,8 @@ import com.yrgo.sp.cardgame.domain.Category;
 import com.yrgo.sp.cardgame.exception.CategoryNotFoundException;
 
 /**
- * Category controller class which takes care of the crossorigin and mapping for the clientproject
  * @author elske
+ * Category controller class which takes care of the crossorigin and mapping for the clientproject
  *
  */
 @RestController

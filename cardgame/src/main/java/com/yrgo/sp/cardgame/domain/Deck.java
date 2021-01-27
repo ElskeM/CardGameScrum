@@ -58,6 +58,10 @@ public class Deck {
 	@ManyToMany
 	private Set<Category> categories;
 
+	
+	/**
+	 * Empty contructor to create a deck object 
+	 */
 	public Deck() {
 	}
 
@@ -77,10 +81,16 @@ public class Deck {
 		autoComputeCategories();
 	}
 
+	
+	/**
+	 * Method to map and collect the different categories of the cards to a hashset
+	 */
 	private void autoComputeCategories() {
 		this.categories = this.cards.stream().map(c -> c.getCategory()).collect(Collectors.toSet());
 	}
 
+	//Getter and Setter methods
+	
 	public Long getId() {
 		return id;
 	}
@@ -129,18 +139,32 @@ public class Deck {
 		this.categories = categories;
 	}
 
+	
+	/** 
+	 * Method to add a card to deck
+	 * @param card
+	 */
 	public void addCard(Card c) {
 		if (this.cards.add(c)) {
 			autoComputeCategories();
 		}
 	}
 
+	
+	/**
+	 * Method to remove a card from the deck
+	 * @param card
+	 */
 	public void removeCard(Card c) {
 		if (this.cards.remove(c)) {
 			autoComputeCategories();
 		}
 	}
 	
+	/**
+	 * Method to draw a random card from the deck
+	 * @return random card
+	 */
 	public Card draw() {
 		List<Card> cardlist = this.cards.stream().collect(Collectors.toList());
 		Card random = cardlist.remove(new Random().nextInt(cardlist.size()));
@@ -148,6 +172,10 @@ public class Deck {
 		return random;
 	}
 	
+	/**
+	 * Method to shuffle the deck with the help of Collections
+	 * @return ArrayList consisting of a shuffled deck
+	 */
 	@Transient
 	public List<Card> getShuffled(){
 		List<Card> shuffled = new ArrayList<Card>(this.cards);

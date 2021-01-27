@@ -50,8 +50,18 @@ public class User implements UserDetails{
 	@ManyToMany(targetEntity = SecurityRole.class, fetch = FetchType.EAGER)
 	private Set<? extends GrantedAuthority> roles;
 	
+	/**
+	 * Empty constructor
+	 */
 	public User() {}
 	
+	/**
+	 * Constructor for the the User class
+	 * @param userName
+	 * @param email
+	 * @param password
+	 * @param roles
+	 */
 	public User(String userName, String email, String password, Collection<? extends GrantedAuthority> roles) {
 		this.username = userName;
 		this.email = email;
@@ -59,11 +69,17 @@ public class User implements UserDetails{
 		this.roles = new HashSet<>(roles);
 	}
 	
+	
+	/**
+	 * ToString method
+	 */
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", email=" + email + "]";
 	}
 	
+	
+	// Getter and Setter methods
 	public void setRoles(Set<? extends GrantedAuthority> roles) {
 		this.roles = roles;		
 	}
@@ -105,6 +121,8 @@ public class User implements UserDetails{
 	public String getUsername() {
 		return username;
 	}
+	
+	// Methods from UserDetail interface
 
 	@Override
 	public boolean isAccountNonExpired() {

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.yrgo.sp.cardgame.domain.Card;
 
 /**
- * @author 
+ * @author ptemrz
  * Repository interface for Cards
  * Extends JpaRepository
  */
