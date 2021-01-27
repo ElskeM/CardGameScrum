@@ -23,6 +23,12 @@ public class GameService implements CardGameApi {
 	
 	private Map<Long,Game> games = new HashMap<>();
 	
+	/**
+	 * Implementation of the Create game method
+	 * Checks if there are cards in the database, if not, a game can't be created.
+	 * @param id
+	 * @return Game
+	 */
 	@Override
 	public Game createGame(long id) {
 		Game game = new Game(id,2);
@@ -33,17 +39,29 @@ public class GameService implements CardGameApi {
 		return game;
 	}
 	
+	/**
+	 * Implementation of the getGameById method. 
+	 * @param Id
+	 * @return Game of specified id
+	 */
 	@Override
 	public Optional<Game> getGameById(long id) {
 		return Optional.ofNullable(games.get(id));
 	}
 	
+	/** @ToDo: method needs to be assessed! 
+	 * implementation of the placecard method
+	 * @param gameid
+	 */
 	@Override
 	public void placeCard(long gameId) {
 		Game game = games.get(gameId);
-//		game.giveCardTo(null);
 	}
 	
+	/**
+	 * Method to fill a deck for a game
+	 * @param gameId
+	 */
 	public void fillDeck(long gameId) {
 		Game game = games.get(gameId);
 		game.getDeck().fillDeck(cardData.findAll().stream().collect(Collectors.toSet()));
