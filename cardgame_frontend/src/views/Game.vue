@@ -54,29 +54,27 @@
         </div>
       </div>
 
-      <div id="icon-container"> 
-          
-          <div
-            id="menu-icon-container"
-            @click="$emit('hide')"
-            v-bind:class="{ invisible: hideChatSymbol }"
-            >
-        <!-- Av VisualEditor team - https://git.wikimedia.org/summary/mediawiki%2Fextensions%2FVisualEditor.git, MIT, https://commons.wikimedia.org/w/index.php?curid=26927425 -->
-            <img src="../assets/menu-icon.svg">
-          </div>
+      <div id="icon-container">
+        <div
+          id="menu-icon-container"
+          @click="$emit('hide')"
+          v-bind:class="{ invisible: hideChatSymbol }"
+        >
+          <!-- Av VisualEditor team - https://git.wikimedia.org/summary/mediawiki%2Fextensions%2FVisualEditor.git, MIT, https://commons.wikimedia.org/w/index.php?curid=26927425 -->
+          <img src="../assets/menu-icon.svg" />
+        </div>
 
-          <div
-            id="chat-icon-container"
-            @click="chatIconClicked"
-            v-bind:class="{ invisible: hideChatSymbol }"
-          >
-            <img src="../assets/chat-icon.png" id="chat-icon" />
-            <div id="chat-alert" v-bind:class="{ invisible: hideAlert }">
-              {{ unreadMessages }}
-            </div>
+        <div
+          id="chat-icon-container"
+          @click="chatIconClicked"
+          v-bind:class="{ invisible: hideChatSymbol }"
+        >
+          <img src="../assets/chat-icon.png" id="chat-icon" />
+          <div id="chat-alert" v-bind:class="{ invisible: hideAlert }">
+            {{ unreadMessages }}
           </div>
+        </div>
       </div>
-
     </div>
     <div v-if="this.connected">
       <span v-if="this.$refs.gameboard.playerTurn">Din tur</span>
@@ -131,7 +129,7 @@ export default {
       });
     }
 
-   // this.$emit("switch")
+    // this.$emit("switch")
   },
 
   data() {
@@ -226,14 +224,13 @@ export default {
         }
       );
 
-//När den andra spelaren går med görs en emit till APP som då gömmer nav-baren högst upp i fönstret
+      //När den andra spelaren går med görs en emit till APP som då gömmer nav-baren högst upp i fönstret
       this.stompClient.subscribe(
         backend.STOMP.BOTH_PLAYERS_CONNECTED + `/${this.gameId}`,
         () => {
-          this.$emit("hide")
+          this.$emit("hide");
         }
       );
-
     },
 
     onChatMessage() {
@@ -385,7 +382,6 @@ export default {
   font-size: 15px;
 }
 
-
 #menu-icon-container {
   width: 2rem;
   height: 2rem;
@@ -394,19 +390,17 @@ export default {
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  background-color:  #2d2f4e
+  background-color: #2d2f4e;
 }
 
 #menu-icon-container img {
   width: 100%;
-  height: 100%
+  height: 100%;
 }
 
 #menu-icon-container:hover {
-  cursor: pointer
+  cursor: pointer;
 }
-
-
 
 .flex {
   display: inline-flex;
