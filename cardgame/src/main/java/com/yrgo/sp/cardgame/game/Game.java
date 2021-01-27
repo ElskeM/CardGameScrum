@@ -86,7 +86,7 @@ public class Game implements ActionListener {
 	 * @param player
 	 * @param cardId
 	 * @param index  of the placement of the new card.
-	 * @return A boolean indicating if it was if it is the players turn.
+	 * @return A boolean indicating if the move was correct.
 	 */
 	public boolean makeMove(Player player, long cardId, int index) {
 		if (!player.isTurn()) {// Exception av slag här va? Det var inte den här spelarens tur!
@@ -209,21 +209,6 @@ public class Game implements ActionListener {
 
 	public int getCounter() {
 		return replayCounter;
-	}
-
-	public String startGame() {
-
-		while (players.size() != 2) {
-			try {
-				Thread.sleep(500);
-				System.out.println("HEEEEEEEJ");
-			} catch (InterruptedException e) {
-
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return "ok";
 	}
 
 	public void setId(long id) {
