@@ -3,10 +3,7 @@ import VueRouter from "vue-router";
 import AuthService from "../services/auth.service";
 import axios from "axios";
 import authHeader from "../services/auth-header";
-import store from '../store/index'
-
-
-
+import store from "../store/index";
 
 Vue.use(VueRouter);
 
@@ -35,13 +32,13 @@ const routes = [
     path: "/game",
     name: "Game",
     component: () => import(/* webpackChunkName: "game" */ "../views/Game.vue"),
-    beforeEnter: (to, from, next) => authenticate(to,from,next),
+    beforeEnter: (to, from, next) => authenticate(to, from, next),
   },
   {
     path: "/game/:id",
     name: "GameId",
     component: () => import(/* webpackChunkName: "game" */ "../views/Game.vue"),
-    beforeEnter: (to, from, next) => authenticate(to,from,next),
+    beforeEnter: (to, from, next) => authenticate(to, from, next),
   },
   {
     path: "/singlecard/:url",
@@ -63,7 +60,6 @@ const routes = [
     beforeEnter: (to, from, next) => {
       if (from.name != "Login" && AuthService.isLoggedIn()) {
         AuthService.logout();
-        Vue.toasted.success("Du är utloggad!");
       }
       next();
     },
@@ -84,9 +80,7 @@ const routes = [
     path: "*",
     name: "not found",
     component: () => import("../views/PageNotFound.vue"),
-  }
-
-
+  },
 ];
 
 const router = new VueRouter({
@@ -96,10 +90,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   Vue.toasted.clear();
-  isServerUp(to, from, next)
-  .then(
-    setUserName
-  );
+  isServerUp(to, from, next).then(setUserName);
 });
 
 async function isServerUp(to, from, next) {
@@ -114,7 +105,7 @@ async function isServerUp(to, from, next) {
   next();
 }
 
-function authenticate(to,from,next) {
+function authenticate(to, from, next) {
   if (!AuthService.isLoggedIn()) {
     next({ name: "Login", query: {from:to.path}});
     Vue.toasted.info("Var god logga in först");
@@ -125,12 +116,23 @@ function authenticate(to,from,next) {
 
 //hämtar username ifrån vårt api och sätter detta i vuex store
 async function setUserName() {
-  await axios.get("http://localhost:8080/user", {
-    headers: authHeader(),
-  })
-  .then(res => {
-    store.commit('addUser', {username: res.data.username})
-  })
+  //if user is not logged in, don't request the username from backend
+  if(!AuthService.isLoggedIn()){
+    return;
+  }
+
+  await axios
+    .get("http://localhost:8080/user", {
+      headers: authHeader(),
+    })
+    .then((res) => {
+        store.commit("addUser", { username: res.data.username });
+    })
+    .catch((err)=>{
+      if(err.response.status === 403) {
+        AuthService.logout();
+      }
+    });
 }
 
 export default router;

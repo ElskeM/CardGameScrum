@@ -7,30 +7,27 @@
           <button id="btn-start" @click="startGame" v-if="!this.gameId">
             Starta Spel
           </button>
-          <button id="btn-start" @click="startGame" v-else-if="!this.connected">
+          <button id="btn-start" @click="joinGame" v-else-if="!this.connected">
             Gå med
           </button>
           <div>
             <span v-if="this.linkToGame">
               Länk till spelet:
               <a :href="this.linkToGame" target="_blank">
-                {{ this.linkToGame }}</a
-              ></span
-            >
+                {{ this.linkToGame }}
+              </a>
+            </span>
           </div>
-
-          <!--<button @click="playerMove">TEST</button>-->
         </div>
 
-        <div
-          id="scoreboard"
-          class="game-gui"
-        >
+        <div id="scoreboard" class="game-gui">
           <div v-if="this.connected">
             <h3>Ansluten till spel: {{ this.gameId }}</h3>
             <div v-if="this.gameInfo">
-              <span id="matches">Spelade matcher: {{ this.gameInfo.matches }}</span
-              ><br />
+              <span id="matches">
+                Spelade matcher: {{ this.gameInfo.matches }}
+              </span>
+              <br />
               <b>Vinster</b>
               <div>
                 <span
@@ -42,20 +39,17 @@
                 </span>
               </div>
             </div>
-            <div v-else>Väntar på spel info...</div>
+            <div v-else>Väntar på andra spelare...</div>
           </div>
           <div v-else>
-            <h1>DISCONNECTED</h1>
+            <h1>KLIMATKOLL</h1>
           </div>
         </div>
-        <div
-          class="game-gui"
-          v-if="this.gameInfo"
-        >
+        <div class="game-gui" v-if="this.gameInfo">
           <Timer ref="timer" />
-          <span v-if="this.player">
-          Missade rundor: {{this.player.missedTurns}}<br />
-          Tre missade rundor i rad resulterar i förlust!
+          <span v-if="this.gameState.player">
+            Missade rundor: {{ this.gameState.player.missedTurns }}<br />
+            Tre missade rundor i rad resulterar i förlust!
           </span>
         </div>
       </div>
@@ -72,19 +66,19 @@
       </div>
     </div>
     <div v-if="this.connected">
-      <span v-if="this.$refs.gb.playerTurn">Din tur</span>
+      <span v-if="this.$refs.gameboard.playerTurn">Din tur</span>
       <span v-else>Andra spelares tur</span>
     </div>
 
     <GameBoard
       @moved="playerMove"
-      :playedCards="playedCards"
-      :playerHand="playerHand"
-      :muck="muck"
-      ref="gb"
+      :playedCards="gameState.table"
+      :playerHand="gameState.player.hand"
+      :muck="gameState.muck"
+      ref="gameboard"
     />
-    <Chat id="chat" 
-      
+    <Chat
+      id="chat"
       v-on:minimize="chatIconClicked"
       v-bind:class="{ invisible: hideChat }"
       v-on:messageSent="sendChatMessage"
@@ -96,16 +90,15 @@
 </template>
 
 <script>
-import axios from "axios";
 import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
-import "../services/auth-header";
-
 import GameBoard from "../components/GameBoard.vue";
 import Timer from "../components/Timer.vue";
-import authHeader from "../services/auth-header";
 import Chat from "../components/Chat.vue";
 import { mapGetters } from "vuex";
+import backend from "../services/backend";
+import GameService from "../services/game.service";
+import GameState from "../models/GameState";
 
 export default {
   computed: mapGetters(["user"]),
@@ -113,7 +106,7 @@ export default {
   components: {
     GameBoard,
     Chat,
-    Timer
+    Timer,
   },
 
   mounted() {
@@ -133,13 +126,10 @@ export default {
       linkToGame: "",
       playerName: "",
       gameInfo: null,
-      player: null,
-      //Timer
+      gameState: new GameState(),
 
-      //Kortlistor
-      playerHand: [],
-      playedCards: [],
-      muck: [], // lista med slängda kort
+      //Timer
+      timerOn: false,
 
       //Chat-variabler
       chatMessages: [],
@@ -159,173 +149,154 @@ export default {
 
     playerMove(value) {
       if (this.stompClient && this.stompClient.connected) {
-            this.stompClient.send(
-          `/app/connected/playerMove/${this.gameId}/${this.playerName}`,
+        this.stompClient.send(
+          backend.STOMP.MOVE + `/${this.gameId}/${this.playerName}`,
           JSON.stringify({
             playerName: this.playerName,
             cardPosition: value.index,
-            cardId: value.card
+            cardId: value.card,
           })
         );
-       
       }
     },
 
     sendChatMessage(message) {
       this.stompClient.send(
-        `/app/chatmessage/${this.gameId}`,
+        backend.STOMP.CHATSEND + `/${this.gameId}`,
         JSON.stringify(message)
-        
       );
     },
 
     confirmSecondPlayer() {
       if (this.stompClient && this.stompClient.connected) {
         this.stompClient.send(
-          `/app/connected/${this.gameId}/${this.playerName}`,
+          backend.STOMP.CONNECTED + `/${this.gameId}/${this.playerName}`,
           {}
         );
       }
     },
 
     changeTurns(bool) {
-      this.$refs.gb.setPlayerTurn(bool);
+      this.$refs.gameboard.setPlayerTurn(bool);
     },
 
     subscriptions() {
-      this.stompClient.subscribe(`/cardgame/gameInfo/${this.gameId}`, msg => {
-        this.gameInfo = JSON.parse(msg.body);
-      });
       this.stompClient.subscribe(
-        `/cardgame/startCard/${this.gameId}/${this.playerName}`,
-        tick => {
-          if(this.player){
-            this.$refs.timer.resetAndStartTimer(); //Behöver ny sub? Eller boolean för första rundan?
-          }
-          this.hideChatSymbol = false;
-          this.playedCards = JSON.parse(tick.body).table;
-          this.playerHand = JSON.parse(tick.body).player.hand;
-          this.player = JSON.parse(tick.body).player;
-          this.muck = JSON.parse(tick.body).muck;
-          if (JSON.parse(tick.body).winner != null) {
-            this.$refs.timer.stopTimer();
-            this.gameEnd = true;
-            this.winner = JSON.parse(tick.body).winner;
-            /*this.$alert(
-              "Vill du spela en gång till?",
-              "Vinnare är: " + this.winner + "!"
-            );*/
-            this.$refs.gb.setPlayerTurn(false);
-            this.$confirm(
-              "Vill du spela en gång till?",
-              "Vinnare är: " + this.winner + "!"
-            ).then(() => {
-              axios.get(`http://localhost:8080/game/${this.gameId}/confirm`, {
-                headers: authHeader()
-              });
-            });
-          } else {
-            this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
-          }
-          this.$refs.gb.setPlayerTurn(JSON.parse(tick.body).player.turn);
-          this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
-    
+        backend.STOMP.GAMEINFO + `/${this.gameId}`,
+        (msg) => {
+          this.gameInfo = JSON.parse(msg.body);
         }
       );
-      this.stompClient.subscribe(
-        `/cardgame/madeMove/${this.gameId}/${this.playerName}`,
-        (tick) => {
-          console.log(tick.body)
-          this.$refs.gb.setCorrectMove(JSON.parse(tick.body))      
 
-        })
-      
-      this.stompClient.subscribe(`/cardgame/chat/${this.gameId}`, (tick) => {
-        this.chatMessages.unshift(JSON.parse(tick.body));
-        if (JSON.parse(tick.body).name !== this.playerName) {
-          this.unreadMessages++;
-          if (this.hideChat) {
-            this.hideAlert = false;
-          }
+      this.stompClient.subscribe(
+        backend.STOMP.GAMESTATE_CHANGED + `/${this.gameId}/${this.playerName}`,
+        (tick) => {
+          this.gameState = JSON.parse(tick.body);
+          this.updateView();
         }
-      });
+      );
+
+      this.stompClient.subscribe(
+        backend.STOMP.MOVEINFO + `/${this.gameId}/${this.playerName}`,
+        (tick) => {
+          this.$refs.gameboard.setCorrectMove(JSON.parse(tick.body));
+        }
+      );
+
+      this.stompClient.subscribe(
+        backend.STOMP.CHATRECEIVE + `/${this.gameId}`,
+        (tick) => {
+          this.chatMessages.unshift(JSON.parse(tick.body));
+          this.onChatMessage();
+        }
+      );
+    },
+
+    onChatMessage() {
+      if (this.chatMessages[0].name !== this.playerName) {
+        this.unreadMessages++;
+        if (this.hideChat) {
+          this.hideAlert = false;
+        }
+      }
+    },
+
+    updateView() {
+      if (this.timerOn) {
+        this.$refs.timer.resetAndStartTimer();
+      } else {
+        this.timerOn = true;
+      }
+      this.hideChatSymbol = false;
+
+      if (this.gameState.winner != null) {
+        this.endGame();
+      }
+      this.$refs.gameboard.setPlayerTurn(this.gameState.player.turn);
+    },
+
+    endGame() {
+      this.gameEnd = true;
+      this.$refs.timer.stopTimer();
+      this.$refs.gameboard.setPlayerTurn(false);
+      this.$confirm(
+        "Vill du spela en gång till?",
+        "Vinnare är: " + this.gameState.winner + "!"
+      ).then(() => GameService.rematch(this.gameId));
     },
 
     initializeWebstomp() {
-      this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
+      this.socket = new SockJS(backend.WEBSOCKET_URL);
       this.stompClient = Stomp.over(this.socket);
     },
 
-    startGame() {
-      if (this.gameId) {
-        this.initializeWebstomp();
-        this.chatMessageColor = "blue";
-        this.stompClient.connect(
-          {},
-          () => {
-            this.connected = true;
-            this.subscriptions();
-            this.confirmSecondPlayer();
-          },
-          error => {
-            console.log(error);
-            this.connected = false;
-          }
-        );
-      } else {
-        axios
-          .get(`http://localhost:8080/game/${this.playerName}`, {
-            headers: authHeader()
-          })
-          .then((response) => (this.gameId = response.data.id))
-          .then(() => {
-            this.initializeWebstomp();
-            this.stompClient.connect(
-              {},
-              (frame) => {
-                console.log("HÄR ÄR JAG!");
-                console.log(this.gameId);
-                console.log(frame);
-                this.connected = true;
-                this.$router.push(`/game/${this.gameId}`);
-                this.linkToGame = `http://localhost:8081/game/${this.gameId}`;
-                this.chatMessageColor = "green";
-                this.subscriptions();
-              },
-              error => {
-                console.log(error);
-                this.connected = false;
-              }
-            );
-          });
-      }
-    }
-
-    /*
-   start() {
-      axios
-        .get(`${this.linkToGame}/${this.playerName}/${this.playerNumber}`, {
-          headers: authHeader()
-        })
-        .then(response => (this.whoWon = response.data));
-    }
-    
-    */
-
-    /*    createGame() {
-            axios.get('http://localhost:8080/game/')
-            .then(this.playerNumber = this.playerNumberHolder)
-            .catch(error => console.log(error))
+    joinGame() {
+      this.linkToGame = window.location.origin + `/game/${this.gameId}`;
+      this.initializeWebstomp();
+      this.chatMessageColor = "blue";
+      this.stompClient.connect(
+        {},
+        () => {
+          //on success
+          this.connected = true;
+          this.subscriptions();
+          this.confirmSecondPlayer();
         },
-        setNumber() {
-            fetch(`http://localhost:8080/game/start/${this.playerNumber}`)
-        },
-        whoWins() {
-            fetch('http://localhost:8080/game/play')
+        () => {
+          //on error
+          this.connected = false;
+          this.$toasted.error("FEL: KUNDE INTE GÅ MED I SPELET");
         }
+      );
+    },
 
-        */
-  }
+    startGame() {
+      GameService.startGame(this.playerName)
+        .then((gameId) => {
+          this.gameId = gameId;
+          this.initializeWebstomp();
+          this.stompClient.connect(
+            {},
+            () => {
+              //on success
+              this.connected = true;
+              this.$router.push(`/game/${this.gameId}`);
+              this.linkToGame = window.location.origin + `/game/${this.gameId}`;
+              this.chatMessageColor = "green";
+              this.subscriptions();
+            },
+            () => {
+              //on failure
+              this.connected = false;
+              this.$toasted.error("FEL: KUNDE INTE STARTA SPELET");
+            }
+          );
+        })
+        .catch(() =>
+          this.$toasted.error("Kunde inte starta spelet (internt serverfel)")
+        );
+    },
+  },
 };
 </script>
 
@@ -355,7 +326,7 @@ export default {
 }
 
 #chat-icon-container:hover {
-  cursor: pointer
+  cursor: pointer;
 }
 
 #chat-icon {
@@ -377,8 +348,6 @@ export default {
   color: white;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 15px;
-  
-
 }
 
 .flex {

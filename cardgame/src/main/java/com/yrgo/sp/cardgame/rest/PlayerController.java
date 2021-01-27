@@ -40,29 +40,57 @@ import com.yrgo.sp.cardgame.security.annotations.IsPlayer;
 @CrossOrigin(origins = "http://localhost:8081")
 public class PlayerController {
 
+	/**
+	 * Logger to log all method calls and exceptions that are casted
+	 */
 	private static final Logger LOG = LoggerFactory.getLogger(PlayerController.class);
-			
+	
+	/**
+	 * An autowire to the player repository
+	 */
 	@Autowired
 	private PlayerRepository playerData;
 	
+	/**
+	 * An autowire to the user repository
+	 */
 	@Autowired
 	private UserRepository userData;
 	
+	/**
+	 * An autowire to the securityRole repository
+	 */
 	@Autowired
 	private SecurityRoleRepository roleData;
 	
+	/**
+	 * Hashset for the default roles
+	 */
 	private Set<? extends GrantedAuthority> defaultRoles;
 	
+	/**
+	 * An autowire to the passwordEncoder
+	 */
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	/**
+	 * Method to set the default role to player.
+	 * 
+	 */
 	@PostConstruct
 	private void initializeController() {
 		defaultRoles = roleData.findByAuthority("PLAYER").stream().collect(Collectors.toSet());
 	}
 	
+	/**
+	 * Method that calls upon the find by username method in the repository
+	 * if the method doesn't return a player a playerisnotfound exception is casted and details are logged
+	 * @param username
+	 * @return ResponseEntity and found player
+	 */
 	@IsPlayer
-	@GetMapping("/player/{userName}")
+	@GetMapping("/player/{username}")
 	public ResponseEntity<Player> findByUserName(@PathVariable String username) {
 		LOG.info("Method FindByUserName called with following parameter: " + username);
 		User userByUN = userData.findByUsername(username).get();
@@ -76,6 +104,12 @@ public class PlayerController {
 		return new ResponseEntity<>(playerByUN, HttpStatus.OK);
 	}
 
+	/**
+	 * Method that calls upon the find player by email method in the repository
+	 * if the method doesn't return a player a playerisnotfound exception is casted and details are logged
+	 * @param email
+	 * @return ResponseEntity and found player
+	 */
 	@IsPlayer
 	@GetMapping("/player")
 	public ResponseEntity<Player> findByEmail(@RequestParam String email) {
@@ -92,13 +126,19 @@ public class PlayerController {
 	}
 	
 
+	/**
+	 * Method to create a new player.
+	 * If the password field is empty an IllegalArgument Exception is casted.
+	 * @param user
+	 * @return ResponseEntity to the created player
+	 */
 	@PostMapping("/newPlayer")
 	@Transactional
 	public ResponseEntity<Object> createPlayer(@RequestBody User user) {
 		LOG.info("Method CreatePlayer called with following parameter: " + user.toString());
 		
 		if(user.getPassword().isEmpty()) {
-			throw new IllegalArgumentException("password must not be empty!");
+			throw new IllegalArgumentException("password cannot be empty!");
 		}
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setRoles(defaultRoles);
@@ -114,6 +154,13 @@ public class PlayerController {
 		return ResponseEntity.created(location).build();
 	}
 
+	/**
+	 * Method to update/change a player
+	 * Fetches the player by id and throws a playernotfoundexception if the player doesn't exist. 
+	 * @param player
+	 * @param id
+	 * @return ResponseEntity and the updated player
+	 */
 	@IsPlayer
 	@PutMapping("/player/{id}")
 	public ResponseEntity<Object> updatePlayer(@RequestBody Player player, @PathVariable Long id) {
@@ -137,10 +184,26 @@ public class PlayerController {
 		return new ResponseEntity<>(player, HttpStatus.OK);
 	}
 
+	/**
+	 * Method to delete a player.
+	 * Fetches the player by id and throws a playernotfoundexception if the player doesn't exist.
+	 * If the player exists, the method deletebyid is called through the repository
+	 * @param id
+	 * @return No Content ResponseEntity
+	 */
 	@IsPlayer
 	@DeleteMapping("/player/{id}")
 	public ResponseEntity<HttpStatus> deletePlayer(@PathVariable Long id) {
 		LOG.info("Method deletePlayer called for Player with id: " + id);
+		Optional<Player> p = playerData.findById(id);
+		
+		LOG.info("Check if ID is valid and Player exists");
+		if (p.isEmpty()) {
+			LOG.info("Invalid parameter, casting PlayerNotFoundException");
+			throw new PlayerNotFoundException();
+		}
+		
+		LOG.info("Deleting player");
 		playerData.deleteById(id);
 		
 		LOG.info("Player deleted from Repository, no content status returned to client");

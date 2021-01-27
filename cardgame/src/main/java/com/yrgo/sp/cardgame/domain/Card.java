@@ -8,11 +8,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 /**
- * @author simon Entity that saves the picture of the card as a byte array in
- *         the database.
+ * @author simon 
+ * Entity that saves the picture of the card as a byte array in the database.
  */
 @Entity
 public class Card implements Comparable<Card> {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -38,20 +39,33 @@ public class Card implements Comparable<Card> {
 //	@Basic(fetch = FetchType.LAZY)
 	private String backImage;
 
-	public Card() {
-		// TODO Auto-generated constructor stub
-	}
+	
+	/**
+	 * Empty constructor to create a card object
+	 */
+	public Card() {}
 
+	
+	/**
+	 * Constructor for Card which takes a title and score as parameter
+	 * @param title
+	 * @param score
+	 */
 	public Card(String title, Integer score) {
 		this.title = title;
 		this.score = score;
 	}
 
+	/**
+	 * ToString method
+	 */
 	@Override
 	public String toString() {
 		return "Card: " + title + ", Description: " + description + ", Score: " + score;
 	}
 
+	// Getter and Setter methods
+	
 	public Long getId() {
 		return id;
 	}
@@ -146,6 +160,10 @@ public class Card implements Comparable<Card> {
 	public void setBackImage(String backImage) {
 		this.backImage = backImage;
 	}
+	
+	/**
+	 * CompareTo method for score
+	 */
 	@Override
 	public int compareTo(Card o) {
 		return score.compareTo(o.getScore());
