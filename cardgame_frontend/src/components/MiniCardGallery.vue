@@ -7,7 +7,7 @@
         </div>
     </VueSlickCarousel>
     <!-- det första kortet visas istället som en vanlig img -->
-    <img v-if="muck.length === 1" :src="muck[0].backImage">
+    <img v-else-if="muck.length === 1" :src="muck[0].backImage">
     </div>
 </template>
 
