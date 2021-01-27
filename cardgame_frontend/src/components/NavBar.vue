@@ -10,7 +10,6 @@
       </span>
       <router-link v-else to="/login">Inloggad som {{user.username}} </router-link>
     </div>
-    <router-view />
   </div>
 </template>
 
