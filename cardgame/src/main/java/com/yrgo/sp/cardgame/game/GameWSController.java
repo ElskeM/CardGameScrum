@@ -30,8 +30,10 @@ public class GameWSController implements KlimatkollListener {
 
 		System.out.println(g.getPlayers().get(1).getName());
 		placeInitialCard(id);
+		
 		return true;
 	}
+	
 
 	/*
 	 * Denna prenumererar båda spelarna på och får på så vis tillgång till spelets

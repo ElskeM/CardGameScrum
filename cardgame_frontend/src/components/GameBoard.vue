@@ -74,7 +74,10 @@
 
 
       <div id="muck-card">
-          <MiniCardGallery :muck="muck" id="mini-gallery" ref="carousel"/>
+          <MiniCardGallery 
+          :muck="muck" id="mini-gallery" 
+          :playedCards ="playedCards"
+          ref="carousel"/>
       </div>  
     </div>
   </div>

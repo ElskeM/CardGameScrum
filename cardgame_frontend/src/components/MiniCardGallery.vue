@@ -8,6 +8,9 @@
     </VueSlickCarousel>
     <!-- det första kortet visas istället som en vanlig img -->
     <img v-else-if="muck.length === 1" :src="muck[0].backImage">
+    <div v-else-if="muck.length === 0 && playedCards.length > 0" id="muck-platshållare">
+        <p>Kort som lagts på fel position</p>
+    </div>
     </div>
 </template>
 
@@ -19,7 +22,8 @@
 
 export default {
     props: {
-        muck: []
+        muck: [],
+        playedCards: []
     },
     components: {
         VueSlickCarousel
@@ -32,12 +36,11 @@ export default {
             settings: { 
                     "dots": true,
                    "fade": true,
-                  //  "lazyLoad": true,
                     "infinite": true,
                     "speed": 500,
                     "slidesToShow": 1,
                     "slidesToScroll": 1
-            }
+            },
         }
 
     },
@@ -45,49 +48,9 @@ export default {
     methods: {
         onInit() {
                 console.log(this.muck)
-            },
-
-        carouselSettings() {
-            this.settings = 
-            { 
-                    "dots": true,
-                 //  "fade": true,
-                  //  "lazyLoad": true,
-                    "infinite": true,
-                    "speed": 500,
-                    "slidesToShow": 1,
-                    "slidesToScroll": 1
             }
-            console.log("SETTINGS!!!!")
+
         }
-
-
-        },
-
-        
- /*   data () {
-       return {
-           index: 0
-       }
-    },
-    methods: {
-        previousCard() {
-            if(this.index > 0) {
-                this.index--
-            }
-            else {
-                this.index = this.muck.length - 1
-            }
-        },
-        nextCard() {
-            if(this.index < this.muck.length-1){
-                this.index++
-            }
-            else {
-                this.index = 0
-            }
-        }
-    } */
     
 }
 </script>
@@ -105,6 +68,25 @@ export default {
 img {
     border-radius: 1rem
 }
+
+#muck-platshållare{
+    border: solid white 5px;
+    width: 200px;
+    height: 300px;
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1d1f48;;
+    
+}
+
+#muck-platshållare p {
+    text-align: center;
+    padding: 3px;
+    font-size: 25px;
+}
+
 
 
  /*   #card-container {
