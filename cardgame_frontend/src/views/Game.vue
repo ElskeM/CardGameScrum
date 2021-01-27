@@ -54,45 +54,37 @@
         </div>
       </div>
 
-      <div id="icon-container">
-        <div
-          id="menu-icon-container"
-          @click="$emit('hide')"
-          v-bind:class="{ invisible: hideChatSymbol }"
-        >
+      <div id="icon-container" v-show="showControlIcons">
+        <div id="menu-icon-container" @click="$emit('hide')">
           <!-- Av VisualEditor team - https://git.wikimedia.org/summary/mediawiki%2Fextensions%2FVisualEditor.git, MIT, https://commons.wikimedia.org/w/index.php?curid=26927425 -->
           <img src="../assets/menu-icon.svg" />
         </div>
 
-        <div
-          id="chat-icon-container"
-          @click="chatIconClicked"
-          v-bind:class="{ invisible: hideChatSymbol }"
-        >
+        <div id="chat-icon-container" @click="chatIconClicked">
           <img src="../assets/chat-icon.png" id="chat-icon" />
-          <div id="chat-alert" v-bind:class="{ invisible: hideAlert }">
+          <div id="chat-alert" v-show="unreadMessages > 0">
             {{ unreadMessages }}
           </div>
         </div>
       </div>
+      <!--/flex-->
     </div>
-    <div v-if="this.connected">
-      <span v-if="this.$refs.gameboard.playerTurn">Din tur</span>
-      <span v-else>Andra spelares tur</span>
-    </div>
+    <!--/center-text-->
 
     <GameBoard
+      v-if="this.connected"
       @moved="playerMove"
       :playedCards="gameState.table"
       :playerHand="gameState.player.hand"
       :muck="gameState.muck"
       ref="gameboard"
     />
+
     <Chat
       id="chat"
-      v-on:minimize="chatIconClicked"
-      v-bind:class="{ invisible: hideChat }"
-      v-on:messageSent="sendChatMessage"
+      @minimize="chatIconClicked"
+      @messageSent="sendChatMessage"
+      v-show="showChat"
       :playerName="playerName"
       :chatMessages="chatMessages"
       :chatMessageColor="chatMessageColor"
@@ -128,8 +120,6 @@ export default {
         duration: null,
       });
     }
-
-    // this.$emit("switch")
   },
 
   data() {
@@ -147,17 +137,15 @@ export default {
       //Chat-variabler
       chatMessages: [],
       chatMessageColor: "",
-      hideChat: true,
-      hideAlert: true,
-      hideChatSymbol: true,
+      showChat: false,
+      showControlIcons: false,
       unreadMessages: 0,
     };
   },
   methods: {
     chatIconClicked() {
-      this.hideChat = !this.hideChat;
+      this.showChat = !this.showChat;
       this.unreadMessages = 0;
-      this.hideAlert = true;
     },
 
     playerMove(value) {
@@ -234,11 +222,9 @@ export default {
     },
 
     onChatMessage() {
-      if (this.chatMessages[0].name !== this.playerName) {
+      if (!this.showChat && this.chatMessages[0].name !== this.playerName) {
+        //If chat is hidden and the latest message was sent by another player
         this.unreadMessages++;
-        if (this.hideChat) {
-          this.hideAlert = false;
-        }
       }
     },
 
@@ -248,7 +234,7 @@ export default {
       } else {
         this.timerOn = true;
       }
-      this.hideChatSymbol = false;
+      this.showControlIcons = true;
 
       if (this.gameState.winner != null) {
         this.endGame();
@@ -307,7 +293,7 @@ export default {
               this.subscriptions();
             },
             () => {
-              //on failure
+              //on error
               this.connected = false;
               this.$toasted.error("FEL: KUNDE INTE STARTA SPELET");
             }
@@ -434,9 +420,5 @@ h3 {
   position: fixed;
   bottom: 0%;
   left: 1%;
-}
-
-.invisible {
-  opacity: 0%;
 }
 </style>

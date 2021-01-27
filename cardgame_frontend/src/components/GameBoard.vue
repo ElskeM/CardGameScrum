@@ -1,91 +1,77 @@
 <template>
-  <!-- https://learnvue.co/2020/01/how-to-add-drag-and-drop-to-your-vuejs-project/-->
-  <div class="board">
-    <div class="scrollbar">
-      <draggable
-        class="played-cards card-holder"
-        group="cards"
-        :disabled="allowPlay()"
-        v-bind="dragOptions"
-        @end="onDrop"
-        id="played-cards"
-        v-bind:class="{ correct: correctMove, wrong: wrongMove }"
-        tag="ul"
-      >
-      <!-- Här hamnar de spelade korten. Är även en drag and drop-yta som bara blir aktiv om spelaren drar ett kort från handen. -->
-  <!--      <div
-          v-for="card in playedCards"
-          :value="card.id"
-          :key="card.id"
-          class="card"
-        >
-          <div>
-            <img class="card-image" :src="card.backImage" />
-          </div>
-        </div>  -->
-
-
-
-         <transition-group type="transition" name="card-holder" id="played">
-          <li
-            v-for="card in playedCards"
-            :value="card.id"
-            :key="card.id"
-            class="card list-group-item player-card"
-            id="hoola"
-          >
-      
-              <img class="card-image" :src="card.backImage" />
-      
-          </li>
-        </transition-group>
-
-      
-
-      </draggable>
-   
+  <div>
+    <div class="center-text">
+      <span v-if="this.playerTurn">Din tur</span>
+      <span v-else>Andra spelares tur</span>
     </div>
+    <!-- https://learnvue.co/2020/01/how-to-add-drag-and-drop-to-your-vuejs-project/-->
+    <div class="board">
+      <div class="scrollbar">
+        <draggable
+          class="played-cards card-holder"
+          group="cards"
+          :disabled="allowPlay()"
+          v-bind="dragOptions"
+          @end="onDrop"
+          id="played-cards"
+          :class="{ correct: correctMove, wrong: wrongMove }"
+          tag="ul"
+        >
+          <!-- Här hamnar de spelade korten. Är även en drag and drop-yta som bara blir aktiv om spelaren drar ett kort från handen. -->
 
-    <div id="player-board"> 
-       <draggable
-        group="cards"
-        class="card-holder"
-     
-        @start="dragging = true"
-        @end="onDrop"
-        v-bind="dragOptions"
-        id="player-hand"
-      >
-      <!-- Korten i spelarens hand. Drag and drop-funktionen är bara aktiv om det är spelarens tur. -->
-        <transition-group type="transition" name="card-holder" id="hand">
-          <li
-            v-for="card in playerHand"
-            :value="card.id"
-            :key="card.id"
-            class="card list-group-item player-card"
-          >
+          <transition-group type="transition" name="card-holder" id="played">
+            <li
+              v-for="card in playedCards"
+              :value="card.id"
+              :key="card.id"
+              class="card list-group-item player-card"
+              id="hoola"
+            >
+              <img class="card-image" :src="card.backImage" />
+            </li>
+          </transition-group>
+        </draggable>
+      </div>
+
+      <div id="player-board">
+        <draggable
+          group="cards"
+          class="card-holder"
+          @start="dragging = true"
+          @end="onDrop"
+          v-bind="dragOptions"
+          id="player-hand"
+        >
+          <!-- Korten i spelarens hand. Drag and drop-funktionen är bara aktiv om det är spelarens tur. -->
+          <transition-group type="transition" name="card-holder" id="hand">
+            <li
+              v-for="card in playerHand"
+              :value="card.id"
+              :key="card.id"
+              class="card list-group-item player-card"
+            >
               <img class="card-image" :src="card.frontImage" />
-          </li>
-        </transition-group>
-      </draggable>
+            </li>
+          </transition-group>
+        </draggable>
 
-
-
-
-
-      <div id="muck-card">
-          <MiniCardGallery 
-          :muck="muck" id="mini-gallery" 
-          :playedCards ="playedCards"
-          ref="carousel"/>
-      </div>  
+        <div id="muck-card">
+          <MiniCardGallery
+            :muck="muck"
+            id="mini-gallery"
+            :playedCards="playedCards"
+            ref="carousel"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import draggable from "vuedraggable";
-import MiniCardGallery from './MiniCardGallery.vue'
+import MiniCardGallery from "./MiniCardGallery.vue";
+
 export default {
   components: {
     draggable,
@@ -94,22 +80,20 @@ export default {
   props: {
     playedCards: Array, //Spelade korten
     playerHand: Array, //Spelarens hand
-    muck: [] //Slänghögen, kort som lagts fel
+    muck: Array, //Slänghögen, kort som lagts fel
   },
   data() {
     return {
       dragging: false, // Boolean som aktiverar funktionen att dra och släppa kort i playedCards
       playerTurn: false, // Indikerar on det är denna spelarens tur
       correctMove: false, // om true ger klassen correct till played-cards vilket startar en grön animation
-      wrongMove: false  // om true ger klassen correct till played-cards vilket startar en röd animation
-
+      wrongMove: false, // om true ger klassen correct till played-cards vilket startar en röd animation
     };
   },
   methods: {
-
     async setCorrectMove(bool) {
-      this.correctMove = bool
-      this.wrongMove = !bool
+      this.correctMove = bool;
+      this.wrongMove = !bool;
     },
 
     allowPlay() {
@@ -120,8 +104,7 @@ export default {
     },
     onDrop(evt) {
       //Metod som körs när spelaren släpper kort på spelplanen. evt innehåller vilket kort och vilket index det släpps på
-     console.log("EEEEVVENNNNNNNTTT!!")
-     console.log(evt);
+      console.log(evt);
       if (evt.to.getAttribute("id") == "played") {
         console.log(evt.newIndex); //Index i listan man lägger kortet
         console.log(evt.item.getAttribute("value")); //Hämtar det som är sparat i :value för  de släppta objektet. I vårat fall card.id.
@@ -134,14 +117,13 @@ export default {
         this.$emit("moved", move); //Bubblar upp att ett move har gjorts
       }
       this.dragging = false;
-   
     },
     setPlayerTurn(turn) {
       console.log(turn);
       this.playerTurn = turn;
-      if(turn) {
-        this.correctMove = false
-        this.wrongMove = false
+      if (turn) {
+        this.correctMove = false;
+        this.wrongMove = false;
       }
     },
   },
@@ -159,15 +141,11 @@ export default {
 </script>
 
 <style scoped>
-
-
-
 .card {
   display: inline-block;
   margin: 10px;
-
 }
-.card-image{
+.card-image {
   border-radius: 1rem;
 }
 
@@ -186,13 +164,18 @@ export default {
 .correct {
   animation-name: correctmove;
   animation-duration: 1s;
-
 }
 
 @keyframes correctmove {
-  0% {background-color:grey}
-  50% {background-color: green}
-  100% {background-color: grey}
+  0% {
+    background-color: grey;
+  }
+  50% {
+    background-color: green;
+  }
+  100% {
+    background-color: grey;
+  }
 }
 
 .wrong {
@@ -201,17 +184,22 @@ export default {
 }
 
 @keyframes wrongmove {
-  0% {background-color:grey}
-  50% {background-color: red}
-  100% {background-color: grey}
+  0% {
+    background-color: grey;
+  }
+  50% {
+    background-color: red;
+  }
+  100% {
+    background-color: grey;
+  }
 }
-
 
 #player-board {
   width: 80%;
   display: flex;
   justify-content: center;
-  margin-left: 20%
+  margin-left: 20%;
 }
 
 #player-hand {
@@ -224,7 +212,7 @@ export default {
   width: 25%;
   display: flex;
   justify-content: center;
-  align-items: center
+  align-items: center;
 }
 .scrollbar {
   overflow-x: auto;
@@ -232,12 +220,12 @@ export default {
 
 .ghost {
   opacity: 100;
-  box-shadow: 10px 10px 5px -1px rgba(0,0,0,0.14);
-  border-radius: 1rem
+  box-shadow: 10px 10px 5px -1px rgba(0, 0, 0, 0.14);
+  border-radius: 1rem;
 }
 
 li {
-  background-color: rgba(0,0,0,0.14);
+  background-color: rgba(0, 0, 0, 0.14);
   border-radius: 1rem;
 }
 </style>
