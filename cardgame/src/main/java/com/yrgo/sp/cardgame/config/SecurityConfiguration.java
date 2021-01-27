@@ -39,6 +39,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	/**
+	 * @param auth
+	 * @throws Exception
+	 */
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		// configure AuthenticationManager so that it knows from where to load
@@ -47,12 +51,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder);
 	}
 
+	/**
+	 * returns authenticationmanagerbean from websecurityconfigureradapter
+	 * @throws Exception
+	 */
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
 
+	/**
+	 * @param httpsecurity
+	 */
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and()
 				// authenticate this particular request
@@ -66,6 +77,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 
+	/**
+	 * method for setting the configuration for httpmethods
+	 * @param websecurity
+	 * @throws Exception
+	 */
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		super.configure(web);

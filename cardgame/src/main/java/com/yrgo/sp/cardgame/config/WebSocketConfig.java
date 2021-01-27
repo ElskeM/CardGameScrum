@@ -7,24 +7,33 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+/**
+ * @author pontus
+ * Entity for the configuration of the websocket
+ */
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+	/**
+	 * Method to configure the messagebroker
+	 * @param MessageBrokerRegistry 
+	 */
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		config.enableSimpleBroker("/cardgame");
-	//	config.enableSimpleBroker("/chat");
 		config.setApplicationDestinationPrefixes("/app");
 		
 	}
 	
+	/**
+	 * Method to register StompEndpoints
+	 * @param StompEndpointRegistry 
+	 */
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/gs-guide-websocket")
-		.setAllowedOrigins("http://localhost:8081"
-				//,"chrome-extension://ggnhohnkfcpcanfekomdkjffnfcjnjam"
-				)
+		.setAllowedOrigins("http://localhost:8081")
 		.withSockJS();
 		
 	}

@@ -2,7 +2,7 @@
     <div>
         <div id="container">
             <p id="message">
-                SERVER NERe, FÖRSÖK IGEN SENARE
+                SERVER NERE, FÖRSÖK IGEN SENARE
             </p>
         </div>
     </div>
