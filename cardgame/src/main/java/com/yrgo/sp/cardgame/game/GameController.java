@@ -32,7 +32,7 @@ public class GameController {
 	@GetMapping(value = "/{firstPlayerName}")
 	public ResponseEntity<Game> startGame(@PathVariable String firstPlayerName) {
 		Game game = gameService.createGame(++lastId);
-		game.addPlayer(firstPlayerName);// .getPlayers().get(0).setName(firstPlayerName);
+		game.addPlayer(firstPlayerName);
 		System.out.println("Storlek på listan spelare: " + game.getPlayers().size());
 		System.out.println(game.getPlayers().get(0).getName());
 
@@ -42,7 +42,7 @@ public class GameController {
 	@GetMapping(value = "/{id}/confirm")
 	public ResponseEntity<String> restartGame(@PathVariable Long id) {
 
-		Game g = gameService.getGameById(id);
+		Game g = gameService.getGameById(id).orElseThrow();
 		if (g.confirmReplay() == true) {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("table", g.getTable());
