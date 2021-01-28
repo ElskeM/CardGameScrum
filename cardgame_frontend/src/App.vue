@@ -1,14 +1,11 @@
 <template>
   <div id="app">
-    <div v-show="showNavBar">
-      <div id="header">
-        <a href="/">
-          <img src="./assets/header.png" />
-        </a>
-      </div>
-      <NavBar />
+    <div id="header" v-show="!hide">
+      <a href="/">
+        <img src="./assets/header.png" />
+      </a>
     </div>
-    <router-view @hide="switchVisibility" />
+    <NavBar :hidden="hide" @hide="hide=!hide"/>
   </div>
 </template>
 <script>
@@ -22,13 +19,8 @@ export default {
 
   data() {
     return {
-      showNavBar: true,
+      hide: false,
     };
-  },
-  methods: {
-    switchVisibility() {
-      this.showNavBar = !this.showNavBar;
-    },
   },
 };
 </script>
