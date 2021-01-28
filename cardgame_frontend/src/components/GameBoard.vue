@@ -112,7 +112,6 @@ export default {
       this.dragging = false;
     },
     setPlayerTurn(turn) {
-      console.log(turn);
       this.playerTurn = turn;
       if (turn) {
         this.correctMove = false;
@@ -159,6 +158,8 @@ export default {
 #played-cards {
   background-image: url("../assets/wood-background.png");
   background-color: grey;
+  width: fit-content;
+  min-width: 100%;
 }
 
 .correct {

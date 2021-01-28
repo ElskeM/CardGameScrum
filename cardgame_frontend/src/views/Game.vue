@@ -273,6 +273,7 @@ export default {
     initializeWebstomp() {
       this.socket = new SockJS(backend.WEBSOCKET_URL);
       this.stompClient = Stomp.over(this.socket);
+      this.stompClient.debug = () => {}; //disable debug messages
     },
 
     joinGame() {
