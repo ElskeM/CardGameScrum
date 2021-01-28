@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * @author elske, ptemrz, pontus, simon.
  * Entity for Game class, which contains all methods to play a game.
+ * TODO: this is not an entity...
  *
  */
 public class Game implements ActionListener {
@@ -29,9 +30,12 @@ public class Game implements ActionListener {
 	private List<MappedCard> table;
 	private LinkedList<MappedCard> muck;// Slängda kort aka slasken
 	private List<KlimatkollListener> gameListener = new ArrayList<KlimatkollListener>();
+	private List<InactivityListener> inactivityListeners = new ArrayList<>();
 	private int replayCounter = 0;
 	private Timer timer;
+	private Timer inactivityTimer;
 	private int turnTime = 40000; // 40 sek i millisek
+	private int timeBeforeInactive = 5000;//1000 * 60 * 5; // 5 minuter
 
 	@JsonIgnore
 	private int minCards;
@@ -54,7 +58,17 @@ public class Game implements ActionListener {
 		this.deck = new Deck();
 		this.id = id;
 		timer = new Timer(turnTime, this);
+		inactivityTimer = new Timer(timeBeforeInactive, new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for(InactivityListener l: inactivityListeners) {
+					l.hasGoneInactive(id);
+				}
+			}
+			
+		});
+		inactivityTimer.setRepeats(false);
 	}
 
 
@@ -65,6 +79,7 @@ public class Game implements ActionListener {
 	 * Then it draws three cards for each player which will be added to their respective hand.
 	 */
 	public void startNewGame() {
+		this.inactivityTimer.restart();
 		this.table.clear();
 		this.muck.clear();
 		turns = 0;
@@ -153,6 +168,7 @@ public class Game implements ActionListener {
 			}
 		}
 		timer.restart();
+		this.inactivityTimer.restart();
 		return true;
 	}
 
@@ -316,6 +332,12 @@ public class Game implements ActionListener {
 
 	public List<MappedCard> getMuck() {
 		return muck;
+	}
+
+
+	public void addInactivityListener(InactivityListener listener) {
+		this.inactivityListeners.add(listener);
+		
 	}
 
 }

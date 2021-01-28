@@ -2,6 +2,7 @@ package com.yrgo.sp.cardgame.game;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -16,13 +17,13 @@ import com.yrgo.sp.cardgame.data.CardRepository;
  *
  */
 @Service
-public class GameService implements CardGameApi {
-	
+public class GameService implements CardGameApi, InactivityListener {
+
 	@Autowired
 	private CardRepository cardData;
-	
-	private Map<Long,Game> games = new HashMap<>();
-	
+
+	private Map<Long, Game> games = new HashMap<>();
+
 	/**
 	 * Implementation of the Create game method
 	 * Checks if there are cards in the database, if not, a game can't be created.
@@ -31,14 +32,15 @@ public class GameService implements CardGameApi {
 	 */
 	@Override
 	public Game createGame(long id) {
-		Game game = new Game(id,2);
-		if(game.getMinCards() > cardData.count()) {
+		Game game = new Game(id, 2);
+		if (game.getMinCards() > cardData.count()) {
 			throw new IllegalStateException("Not enough cards in database to create this game!");
 		}
+		game.addInactivityListener(this);
 		games.put(id, game);
 		return game;
 	}
-	
+
 	/**
 	 * Implementation of the getGameById method. 
 	 * @param Id
@@ -65,6 +67,15 @@ public class GameService implements CardGameApi {
 	public void fillDeck(long gameId) {
 		Game game = games.get(gameId);
 		game.getDeck().fillDeck(cardData.findAll().stream().collect(Collectors.toSet()));
-		
+
+	}
+
+	public void delete(long gameId) {
+		games.remove(gameId);
+	}
+
+	@Override
+	public void hasGoneInactive(long gameId) {
+		delete(gameId);		
 	}
 }
