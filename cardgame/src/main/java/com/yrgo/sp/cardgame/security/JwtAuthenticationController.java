@@ -18,6 +18,10 @@ import com.yrgo.sp.cardgame.data.UserRepository;
 import com.yrgo.sp.cardgame.domain.user.User;
 
 
+/**
+ * @author ptemrz
+ * Controller entity for JWT Authentication
+ */
 @RestController
 @CrossOrigin
 @Profile("development")
@@ -35,6 +39,12 @@ public class JwtAuthenticationController {
 	@Autowired
 	private UserRepository userRepository;
 
+	/**
+	 * This method creates an authentication token for the user.
+	 * @param authenticationRequest
+	 * @return ResponseEntity, token and jwtResponseUser
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
@@ -48,6 +58,12 @@ public class JwtAuthenticationController {
 		return ResponseEntity.ok(new JwtResponse(token, new JwtResponseUser(user)));
 	}
 
+	/**
+	 * Method to authenticate user credentials.
+	 * @param username
+	 * @param password
+	 * @throws Exception
+	 */
 	private void authenticate(String username, String password) throws Exception {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

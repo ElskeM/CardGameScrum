@@ -8,12 +8,21 @@ import org.springframework.stereotype.Component;
 import com.yrgo.sp.cardgame.data.SecurityRoleRepository;
 import com.yrgo.sp.cardgame.domain.user.SecurityRole;
 
+/**
+ * @author ptemrz
+ * SecurityRoleManager entity to manage the different available roles in the system
+ *
+ */
 @Component("SecurityRoleManager")
 public class SecurityRoleManager {
 	
 	@Autowired
 	private SecurityRoleRepository roleData;
 	
+	/**
+	 * Method to setup default roles
+	 * Available roles are: Admin, Player and Teacher
+	 */
 	@PostConstruct
 	private void setUpDefaultRoles() {
 		SecurityRole player = new SecurityRole("PLAYER");
