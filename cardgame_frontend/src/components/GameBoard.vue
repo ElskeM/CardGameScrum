@@ -157,6 +157,8 @@ export default {
 
 #played-cards {
   background-color: grey;
+  width: fit-content;
+  min-width: 100%;
 }
 
 .correct {
