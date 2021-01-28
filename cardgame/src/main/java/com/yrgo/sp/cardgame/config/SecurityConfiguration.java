@@ -21,7 +21,7 @@ import com.yrgo.sp.cardgame.security.JwtRequestFilter;
 
 /**
  * @author ptemrz
- * SecurityConfiguration entity
+ * SecurityConfiguration class
  */
 @Configuration
 @EnableWebSecurity

@@ -8,7 +8,7 @@ import com.yrgo.sp.cardgame.domain.Category;
 
 /**
  * @author elske
- * CategoryList Entity
+ * CategoryList class
  */
 @JsonRootName(value = "categories")
 public class CategoryList {

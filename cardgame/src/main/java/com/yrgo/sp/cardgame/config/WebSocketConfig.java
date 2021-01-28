@@ -9,7 +9,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 /**
  * @author pontus
- * Entity for the configuration of the websocket
+ * Class for the configuration of the websocket
  */
 @Configuration
 @EnableWebSocketMessageBroker

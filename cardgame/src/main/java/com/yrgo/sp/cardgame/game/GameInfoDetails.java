@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * @author ptemrz, simon
- * GameInfoDetails entity 
+ * GameInfoDetails class 
  *
  */
 public class GameInfoDetails {

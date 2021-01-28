@@ -15,7 +15,7 @@ import com.yrgo.sp.cardgame.domain.user.User;
 
 /**
  * @author ptemrz
- * Usercontroller entity which takes care of the user mapping for the client project
+ * Usercontroller class which takes care of the user mapping for the client project
  *
  */
 @RestController

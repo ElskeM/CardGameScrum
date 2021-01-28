@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * @author ptemrz
- * JwtResponse entity
+ * JwtResponse class
  */
 public class JwtResponse implements Serializable {
 

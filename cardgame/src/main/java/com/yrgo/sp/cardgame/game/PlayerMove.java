@@ -2,7 +2,7 @@ package com.yrgo.sp.cardgame.game;
 
 /**
  * @author pontus
- * Playermove entity
+ * Playermove class
  */
 public class PlayerMove {
 	

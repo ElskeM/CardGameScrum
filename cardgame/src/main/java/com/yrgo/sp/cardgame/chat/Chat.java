@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * @author pontus
- * Chat entity which contains a messagelist and a method to add a message to that list
+ * Chat class which contains a messagelist and a method to add a message to that list
  *
  */
 public class Chat {

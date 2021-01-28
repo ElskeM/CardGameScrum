@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author ptemrz
- * JwtAuthenticationEntryPoint entity which implements both AuthenticationEntryPoint and Serializable interfaces.
+ * JwtAuthenticationEntryPoint class which implements both AuthenticationEntryPoint and Serializable interfaces.
  */
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
