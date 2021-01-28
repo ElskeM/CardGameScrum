@@ -12,13 +12,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {};
-  },
-};
-</script>
 <style scoped>
 .overall {
   margin-top: 30px;

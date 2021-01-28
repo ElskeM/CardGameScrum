@@ -1,21 +1,14 @@
-
-
 <template>
-  <form
-  id="newCardForm"
-    @submit="createCard"
-    method="post"
-  >
-    <span>Title:</span><br>
-    <input v-model="cardData.title"><br>
+  <form id="newCardForm" @submit="createCard" method="post">
+    <span>Title:</span><br />
+    <input v-model="cardData.title" /><br />
 
-    <span>Description:</span><br>
+    <span>Description:</span><br />
     <textarea v-model="cardData.description"></textarea>
-    <br>
+    <br />
     <span>Category:</span>
-    <br>
+    <br />
     <select v-model="cardData.category">
-
       <option
         v-for="category in formData.categories"
         :value="category"
@@ -24,26 +17,22 @@
         {{ category.category }}
       </option>
     </select>
-    <br>
-    <span>Score:</span><br>
-    <input
-      type="number"
-      v-model="cardData.score"
-    ><br><br>
+    <br />
+    <span>Score:</span><br />
+    <input type="number" v-model="cardData.score" /><br /><br />
 
     <button type="submit">Send</button>
   </form>
 </template>
 
 <script>
-import axios from "axios";
+import CardService from "../services/card.service";
 
 export default {
-  async mounted() {
-    axios.get("http://localhost:8080/categories").then(response => {
-      console.warn(response);
-      this.formData.categories = response.data.categories;
-    });
+  mounted() {
+    CardService.fetchAllCategories().then(
+      (categories) => (this.formData.categories = categories)
+    );
   },
   data() {
     return {
@@ -51,23 +40,18 @@ export default {
         title: null,
         score: null,
         description: null,
-        category: null
+        category: null,
       },
       formData: {
-        categories: []
-      }
+        categories: [],
+      },
     };
   },
   methods: {
     createCard(e) {
-      console.warn(this.cardData);
       e.preventDefault();
-      axios
-        .post("http://localhost:8080/newCard", this.cardData)
-        .then(result => {
-          console.warn(result);
-        });
-    }
-  }
+      CardService.createCard(this.cardData);
+    },
+  },
 };
 </script>

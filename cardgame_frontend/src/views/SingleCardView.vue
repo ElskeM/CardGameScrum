@@ -1,21 +1,13 @@
 <template>
-    <div>
+  <div>
+    SINGLE CARD VIEW
 
-        SINGLE CARD VIEW
-
-       {{this.$route.params.url}} 
-    </div>
-
+    {{ this.$route.params.url }}
+  </div>
 </template>
 
-
 <script>
-export default {
-    
-}
+export default {};
 </script>
 
-
-<style scoped>
-
-</style>
+<style scoped></style>
