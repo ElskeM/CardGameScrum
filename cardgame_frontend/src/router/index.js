@@ -91,8 +91,10 @@ router.beforeEach((to, from, next) => {
   isServerUp(to, from, next)
     .then(setUserName)
     .catch(() => {
-      next("/");
-      Vue.toasted.error("Du har blivit utloggad!");
+      if (AuthService.isLoggedIn()) {
+        next("/");
+        Vue.toasted.error("Du har blivit utloggad!");
+      }
     });
 });
 
