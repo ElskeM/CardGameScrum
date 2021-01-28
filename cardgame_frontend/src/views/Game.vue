@@ -62,7 +62,7 @@
             v-bind:class="{ invisible: hideChatSymbol }"
             >
         <!-- Av VisualEditor team - https://git.wikimedia.org/summary/mediawiki%2Fextensions%2FVisualEditor.git, MIT, https://commons.wikimedia.org/w/index.php?curid=26927425 -->
-            <img src="../assets/menu-icon.svg">
+            <img src="../assets/menu.icon2.png">
           </div>
 
           <div
@@ -389,7 +389,7 @@ export default {
 #menu-icon-container {
   width: 2rem;
   height: 2rem;
-  border: white solid 2px;
+ /* border: white solid 2px; */
   display: flex;
   justify-content: center;
   align-items: center;

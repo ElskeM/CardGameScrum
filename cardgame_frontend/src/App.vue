@@ -1,12 +1,15 @@
 <template>
   <div id="app">
     <div id="header" v-bind:class="{ invisibility: hideNavBar }">
-      <a href="/">
-        <img src="./assets/header.png"/>
+      <a href="/" id="klimatkoll">
+       <img src="./assets/header.png"/>
+       
       </a>
     </div>
-    <NavBar v-bind:class="{ invisibility: hideNavBar }"/>
-     <router-view @hide="switchVisibility"/>
+    
+   <NavBar v-bind:class="{ invisibility: hideNavBar }"/>
+    <router-view @hide="switchVisibility"/>
+      
   </div>
 </template>
 <script>
@@ -44,14 +47,15 @@ export default {
 #header img {
   width: 20em;
 }
+
 #nav {
   font-family: Arial, Helvetica, sans-serif;
-  background: #1d1f48;
   color: #f4efec;
   text-align: center;
 }
 a {
   color: #f4efec;
+  text-decoration: none;
 }
 #app {
   color: #f4efec;
