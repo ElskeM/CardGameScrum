@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="nav">
+    <div id="nav" v-if="!hidden">
       <router-link class="link" to="/">HEM</router-link> 
       <router-link  class="link" to="/about">OM KLIMATKOLL</router-link> 
       <router-link  class="link" to="/game">SPELA</router-link> 
@@ -10,6 +10,7 @@
       </span>
       <router-link  class="link" v-else to="/login">INLOGGAD SOM {{user.username}} </router-link>
     </div>
+    <router-view @hide="$emit('hide')" />
   </div>
 </template>
 
@@ -17,16 +18,16 @@
 import AuthService from "../services/auth.service";
 import { mapGetters } from "vuex";
 
-
-
 export default {
-
   computed: mapGetters(["user"]),
+  props: {
+    hidden: Boolean
+  },
   methods: {
     isLoggedIn() {
       return AuthService.isLoggedIn();
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -36,7 +37,7 @@ export default {
 #nav {
   display: flex;
   justify-content: center;
-  background-color: #3e4172
+  background-color: #3e4172;
 }
 
 

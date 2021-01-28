@@ -22,7 +22,7 @@
 
         <div id="scoreboard" class="game-gui">
           <div v-if="this.connected">
-              <h3>{{this.playerName}}</h3>
+            <h3>{{ this.playerName }}</h3>
             <!--<h3>Ansluten till spel: {{ this.gameId }}</h3>-->
             <div v-if="this.gameInfo">
               <span id="matches">
@@ -40,15 +40,19 @@
                 </span>
               </div>
             </div>
-            <div v-else>Väntar på andra spelare...
+            <div v-else>
+              Väntar på andra spelare...
               <div>
-            <span v-if="this.linkToGame">
-              Länk till spelet:
-              <a :href="this.linkToGame" target="_blank">
-                {{ this.linkToGame }}
-              </a>
-            </span>
-          </div>
+                <span v-if="this.linkToGame">
+                  Länk till spelet:
+                  <a :href="this.linkToGame" target="_blank">
+                    {{ this.linkToGame }}
+                  </a>
+                </span>
+
+                <Loading/>
+
+              </div>
             </div>
           </div>
           <div v-else class="game-title">
@@ -56,51 +60,46 @@
           </div>
         </div>
         <div class="game-gui" v-if="this.gameInfo">
-          <Timer ref="timer" :playerTurn="this.$refs.gameboard.playerTurn" :missedTurns="this.gameState.player.missedTurns" v-if="this.gameState.player"/>
-          
+          <Timer
+            ref="timer"
+            :playerTurn="this.$refs.gameboard.playerTurn"
+            :missedTurns="this.gameState.player.missedTurns"
+            v-if="this.gameState.player"
+          />
         </div>
       </div>
 
-      <div id="icon-container"> 
-          
-          <div
-            id="menu-icon-container"
-            @click="$emit('hide')"
-            v-bind:class="{ invisible: hideChatSymbol }"
-            >
-        <!-- Av VisualEditor team - https://git.wikimedia.org/summary/mediawiki%2Fextensions%2FVisualEditor.git, MIT, https://commons.wikimedia.org/w/index.php?curid=26927425 -->
-            <img src="../assets/menu.icon2.png">
-          </div>
+      <div id="icon-container" v-show="showControlIcons">
+        <div id="menu-icon-container" @click="$emit('hide')">
+          <!-- Av VisualEditor team - https://git.wikimedia.org/summary/mediawiki%2Fextensions%2FVisualEditor.git, MIT, https://commons.wikimedia.org/w/index.php?curid=26927425 -->
+           <img src="../assets/menu.icon2.png">
+        </div>
 
-          <div
-            id="chat-icon-container"
-            @click="chatIconClicked"
-            v-bind:class="{ invisible: hideChatSymbol }"
-          >
-            <img src="../assets/chat-icon.png" id="chat-icon" />
-            <div id="chat-alert" v-bind:class="{ invisible: hideAlert }">
-              {{ unreadMessages }}
-            </div>
+        <div id="chat-icon-container" @click="chatIconClicked">
+          <img src="../assets/chat-icon.png" id="chat-icon" />
+          <div id="chat-alert" v-show="unreadMessages > 0">
+            {{ unreadMessages }}
           </div>
+        </div>
       </div>
-
+      <!--/flex-->
     </div>
-    <div v-if="this.gameInfo" id="turn-shower" class="center-text">
-      
-    </div>
+    <!--/center-text-->
 
     <GameBoard
+      v-if="this.connected"
       @moved="playerMove"
       :playedCards="gameState.table"
       :playerHand="gameState.player.hand"
       :muck="gameState.muck"
       ref="gameboard"
     />
+
     <Chat
       id="chat"
-      v-on:minimize="chatIconClicked"
-      v-bind:class="{ invisible: hideChat }"
-      v-on:messageSent="sendChatMessage"
+      @minimize="chatIconClicked"
+      @messageSent="sendChatMessage"
+      v-show="showChat"
       :playerName="playerName"
       :chatMessages="chatMessages"
       :chatMessageColor="chatMessageColor"
@@ -118,6 +117,7 @@ import { mapGetters } from "vuex";
 import backend from "../services/backend";
 import GameService from "../services/game.service";
 import GameState from "../models/GameState";
+import Loading from "../components/Loading.vue"
 
 export default {
   computed: mapGetters(["user"]),
@@ -126,6 +126,7 @@ export default {
     GameBoard,
     Chat,
     Timer,
+    Loading
   },
 
   mounted() {
@@ -136,8 +137,6 @@ export default {
         duration: null,
       });
     }
-
-   // this.$emit("switch")
   },
 
   data() {
@@ -155,17 +154,15 @@ export default {
       //Chat-variabler
       chatMessages: [],
       chatMessageColor: "",
-      hideChat: true,
-      hideAlert: true,
-      hideChatSymbol: true,
+      showChat: false,
+      showControlIcons: false,
       unreadMessages: 0,
     };
   },
   methods: {
     chatIconClicked() {
-      this.hideChat = !this.hideChat;
+      this.showChat = !this.showChat;
       this.unreadMessages = 0;
-      this.hideAlert = true;
     },
 
     playerMove(value) {
@@ -232,22 +229,19 @@ export default {
         }
       );
 
-//När den andra spelaren går med görs en emit till APP som då gömmer nav-baren högst upp i fönstret
+      //När den andra spelaren går med görs en emit till APP som då gömmer nav-baren högst upp i fönstret
       this.stompClient.subscribe(
         backend.STOMP.BOTH_PLAYERS_CONNECTED + `/${this.gameId}`,
         () => {
-          this.$emit("hide")
+          this.$emit("hide");
         }
       );
-
     },
 
     onChatMessage() {
-      if (this.chatMessages[0].name !== this.playerName) {
+      if (!this.showChat && this.chatMessages[0].name !== this.playerName) {
+        //If chat is hidden and the latest message was sent by another player
         this.unreadMessages++;
-        if (this.hideChat) {
-          this.hideAlert = false;
-        }
       }
     },
 
@@ -257,7 +251,7 @@ export default {
       } else {
         this.timerOn = true;
       }
-      this.hideChatSymbol = false;
+      this.showControlIcons = true;
 
       if (this.gameState.winner != null) {
         this.endGame();
@@ -317,7 +311,7 @@ export default {
               this.subscriptions();
             },
             () => {
-              //on failure
+              //on error
               this.connected = false;
               this.$toasted.error("FEL: KUNDE INTE STARTA SPELET");
             }
@@ -340,9 +334,9 @@ export default {
   display: table;
   height: 100px;
 }
-.game-gui p{
-  margin-top:0px;
-  margin-bottom:5px;
+.game-gui p {
+  margin-top: 0px;
+  margin-bottom: 5px;
   font-weight: bolder;
 }
 
@@ -400,7 +394,6 @@ export default {
   font-size: 15px;
 }
 
-
 #menu-icon-container {
   width: 2rem;
   height: 2rem;
@@ -409,19 +402,17 @@ export default {
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  background-color:  #2d2f4e
+  background-color: #2d2f4e;
 }
 
 #menu-icon-container img {
   width: 100%;
-  height: 100%
+  height: 100%;
 }
 
 #menu-icon-container:hover {
-  cursor: pointer
+  cursor: pointer;
 }
-
-
 
 .flex {
   display: inline-flex;
@@ -437,7 +428,7 @@ export default {
 h3 {
   margin: 5px;
 }
-#turn-shower{
+#turn-shower {
   text-align: center;
 }
 #btn-start {
@@ -458,15 +449,12 @@ h3 {
   bottom: 0%;
   left: 1%;
 }
-.game-title{
+.game-title {
   margin: 0;
   position: absolute;
   top: 50%;
   left: 50%;
   -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%)
-}
-.invisible {
-  opacity: 0%;
+  transform: translate(-50%, -50%);
 }
 </style>

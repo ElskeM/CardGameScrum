@@ -1,37 +1,27 @@
 <template>
   <div id="app">
-    <div id="header" v-bind:class="{ invisibility: hideNavBar }">
-      <a href="/" id="klimatkoll">
-       <img src="./assets/header.png"/>
-       
+    <div id="header" v-show="!hide">
+      <a href="/">
+        <img src="./assets/header.png" />
       </a>
     </div>
-    
-   <NavBar v-bind:class="{ invisibility: hideNavBar }"/>
-    <router-view @hide="switchVisibility"/>
-      
+    <NavBar :hidden="hide" @hide="hide=!hide"/>
   </div>
 </template>
 <script>
 import NavBar from "@/components/NavBar.vue";
 
 export default {
-  name: "test",
+  name: "app",
   components: {
     NavBar,
   },
 
   data() {
     return {
-      hideNavBar: false
-    }
+      hide: false,
+    };
   },
- methods: {
-    switchVisibility() {
-      this.hideNavBar = !this.hideNavBar
-    }
-
-  }
 };
 </script>
 <style>
@@ -69,38 +59,12 @@ body {
   min-height: 98%;
   background: #1d1f48;
 }
-.center-text{
+.center-text {
   text-align: center;
 }
 .center-div {
   display: flex;
   justify-content: center;
   margin-top: 2em;
-
 }
-
-.invisibility {
-  display: none
-}
-/*
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}*/
 </style>

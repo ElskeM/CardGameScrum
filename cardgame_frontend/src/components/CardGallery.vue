@@ -1,21 +1,19 @@
 <template>
   <div>
-    <div class="gallery" v-bind:class="{ blurred: isBlurred }">
+    <div class="gallery" :class="{ blurred: isBlurred }">
       <div
-        @click="showBigCard"
-        class="card"
+        @click="toggleBigCard"
         v-for="card in wholeCollection"
         :key="card.id"
       >
-        <DisplayCard v-bind:card="card" v-on:displaycard-clicked="setBigCard" />
+        <DisplayCard :card="card" @click="setBigCard" />
       </div>
     </div>
-    <div
-      class="big-card"
-      v-bind:class="{ visible: isVisible, invisible: isInvisible }"
-    >
-      <BigCardInfo :bigCard="bigCard" v-on:left="hideBigCard" />
-    </div>
+    <BigCardInfo
+      :visible="isVisible"
+      :bigCard="bigCard"
+      @hide="toggleBigCard"
+    />
   </div>
 </template>
 
@@ -27,12 +25,9 @@ import BigCardInfo from "./BigCardInfo.vue";
 export default {
   name: "CardGallery",
   computed: { ...mapGetters(["wholeCollection", "numberOfCards"]) },
+
   created() {
-    this.fetchFullDeck().then((fulldeck) => {
-      if (fulldeck.length === 0) {
-        this.showError();
-      }
-    });
+    this.fetchFullDeck();
   },
 
   components: {
@@ -44,42 +39,20 @@ export default {
     return {
       isVisible: false,
       isBlurred: false,
-      isInvisible: true,
-      bigCard: "",
+      bigCard: {},
     };
   },
+
   methods: {
     ...mapActions(["fetchFullDeck"]),
 
-    showError() {
-      this.$toasted.show(
-        "Warning: No cards in database<br>Is the backend set-up correctly?",
-        {
-          position: "bottom-center",
-          type: "error",
-          singleton: true,
-          duration: 5000,
-        }
-      );
-    },
-
     setBigCard(card) {
       this.bigCard = card;
-      console.log(this.bigCard.score);
     },
 
-    showBigCard() {
-      console.log("trycker showBigCard");
+    toggleBigCard() {
       this.isVisible = !this.isVisible;
       this.isBlurred = !this.isBlurred;
-      this.isInvisible = !this.isInvisible;
-      console.log(this.isVisible);
-    },
-
-    hideBigCard() {
-      this.isVisible = !this.isVisible;
-      this.isBlurred = !this.isBlurred;
-      this.isInvisible = !this.isInvisible;
     },
   },
 };
@@ -99,28 +72,5 @@ export default {
   transition: 0.5s -webkit-filter linear;
   -webkit-filter: blur(5px);
   filter: blur(5px);
-}
-
-.card {
-  margin: 10px;
-}
-
-.big-card {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-  visibility: hidden;
-  width: 100%;
-  height: 100%;
-}
-
-.invisible {
-  opacity: 0;
-}
-
-.visible {
-  visibility: visible;
 }
 </style>

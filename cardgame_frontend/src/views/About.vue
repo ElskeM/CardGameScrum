@@ -18,9 +18,10 @@
         </p>
         <p>
           Då är du varmt välkommen till Klimatkolls officiella
-          <a href="https://www.kortspeletklimatkoll.se/" target="_blank"
-            >webbsida</a
-          >.
+          <a href="https://www.kortspeletklimatkoll.se/" target="_blank">
+            webbsida
+          </a>
+          .
         </p>
       </div>
     </div>

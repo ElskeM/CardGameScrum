@@ -78,25 +78,27 @@ export default {
     };
   },
   methods: {
+    redirect() {
+      if (this.$route.query.from) {
+        this.$router.replace(this.$route.query.from);
+      } else {
+        this.$router.replace("/");
+      }
+    },
+
     login: function(e) {
+      e.preventDefault();
+
       AuthService.login(this.user)
-        .then((res) => {
-          this.$store.commit(
-            "addUser",
-            res.user
-            //{username: res.user.username, email: res.user.email}
-          );
-          if (this.$route.query.from) {
-            this.$router.replace(this.$route.query.from);
-          } else {
-            this.$router.replace("/");
-          }
+        .then(() => {
+          this.redirect();
           this.$toasted.success("Du är inloggad!");
         })
-        .catch(() =>
-          this.$toasted.error("Någonting gick fel. Stämmer dina inlogningsuppgifter?")
-        );
-      e.preventDefault();
+        .catch(() => {
+          this.$toasted.error(
+            "Någonting gick fel. Stämmer dina inlogningsuppgifter?"
+          );
+        });
     },
   },
 };
