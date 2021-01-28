@@ -156,8 +156,8 @@ export default {
 }
 
 #played-cards {
-  background-image: url("../assets/wood-background.png"); /*https://dlpng.com/png/6739547*/
-  background-color: grey;
+/*  background-image: url("../assets/wood-background.png"); ttps://dlpng.com/png/6739547 */
+  background-color: #D2691E;
   width: fit-content;
   min-width: 100%;
 }
@@ -165,35 +165,37 @@ export default {
 .correct {
   animation-name: correctmove;
   animation-duration: 1s;
+  animation-timing-function: ease-out;
 }
 
 @keyframes correctmove {
   0% {
-    background-color: grey;
+    background-color:  #D2691E;;
   }
   50% {
     background-color: green;
   }
   100% {
-    background-color: grey;
+    background-color:  #D2691E;;
   }
 }
 
 .wrong {
   animation-name: wrongmove;
   animation-duration: 1s;
+  animation-timing-function: ease-out;
 }
 
 @keyframes wrongmove {
   0% {
-    background-color: grey;
-  }
+    background-color:  #D2691E;;
+  } 
   50% {
     background-color: red;
   }
   100% {
-    background-color: grey;
-  }
+    background-color:  #D2691E;;
+  } 
 }
 
 #player-board {
