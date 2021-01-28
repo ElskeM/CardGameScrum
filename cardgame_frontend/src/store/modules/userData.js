@@ -1,37 +1,26 @@
-
-
-
 const state = {
-    user: { 
-  
-    } 
-    
-}
+  user: {},
+};
 
 const getters = {
-    user: (state) => state.user
-}
+  user: (state) => state.user,
+};
 
 const actions = {
-
-    setUser({commit, user}) {
-          commit('addUser', user)
-
-    } 
-
-
-}
+  setUser({ commit, user }) {
+    commit("addUser", user);
+  },
+};
 
 const mutations = {
-    addUser(state, user) {
-        state.user = user
-    }
-
-}
+  addUser(state, user) {
+    state.user = user;
+  },
+};
 
 export default {
-    state,
-    getters,
-    actions,
-    mutations,
-}
+  state,
+  getters,
+  actions,
+  mutations,
+};

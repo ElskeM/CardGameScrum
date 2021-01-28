@@ -1,111 +1,96 @@
 <template>
-    <div class="outer-container" @click="leave" >
-        <div class="container">
-       
-        <div class="flip-container" @click.stop="handleClick">
-            <vue-flip  v-model="model" height="400px" width="75%">
-                <template v-slot:front class="front">
-                     <div class="img">
-                         <img class="card" :src="bigCard.frontImage">
-                   </div>
-
-                </template>
-                 <template v-slot:back class="back">
-                      <div class="img">
-                           <img class="card" :src="bigCard.backImage">
-                     </div>
-
-                </template>
-            
-            </vue-flip>
+  <div class="outermost-container" v-show="visible">
+    <div class="outer-container" @click="leave">
+      <div class="container">
+        <div class="flip-container" @click.stop>
+          <vue-flip active-click v-model="isFlipped" height="400px" width="75%">
+            <template v-slot:front>
+              <div class="img">
+                <img class="card" :src="bigCard.frontImage" />
+              </div>
+            </template>
+            <template v-slot:back>
+              <div class="img">
+                <img class="card" :src="bigCard.backImage" />
+              </div>
+            </template>
+          </vue-flip>
         </div>
-
+      </div>
     </div>
-    </div>
+  </div>
 </template>
 
-
 <script>
-import VueFlip from 'vue-flip';
+import VueFlip from "vue-flip";
 
 export default {
-    data() {
-        return {
-            model: false,
-           
-        }
-    },
-
-    components: {
-        'vue-flip': VueFlip
+  data() {
+    return {
+      isFlipped: false,
+    };
   },
-    props: ['bigCard'],
 
-    methods: {
-        leave() {
-            this.$emit("left")
-            this.model = false;
-          
-        },
-        handleClick() {
-            this.model = !this.model;
-            console.log(this.model)
-        }
-    } 
-    
-}
+  components: {
+    "vue-flip": VueFlip,
+  },
+
+  props: { bigCard: Object, visible: Boolean },
+
+  methods: {
+    leave() {
+      this.$emit("hide");
+      this.isFlipped = false;
+      this.visible = false;
+    },
+  },
+};
 </script>
 
-
 <style scoped>
+.outermost-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
 
 .outer-container {
-
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: -1
+  width: 100%;
+  height: 100%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: -1;
 }
 
 .container {
-    height: 500px;
-    width: 300px;
-    background: white;  
-    border-radius: 3rem;
-    display:flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    border: 0.5rem solid purple;
+  height: 500px;
+  width: 300px;
+  background: white;
+  border-radius: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border: 0.5rem solid purple;
 }
 
 .flip-container {
-    width: 100%;
-    height: 100%;
-   
-    display: flex;
-    justify-content: center;
-    align-items: center
-    
-}
-
-.flip {
-    height: 400px;
-    width: 75%; 
- 
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 img {
-    border-radius: 1rem;
-    /*scale: 120%; */
-    width: 100%;
-    height: 100%;
-    border: 1px solid black;
+  border-radius: 1rem;
+  width: 100%;
+  height: 100%;
+  border: 1px solid black;
 }
-.invisible {
-    opacity: 0;
-}
-
 </style>
