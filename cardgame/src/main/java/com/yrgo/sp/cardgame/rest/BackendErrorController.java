@@ -13,11 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BackendErrorController implements ErrorController {
 
+	/** 
+	 * @return String
+	 */
 	@RequestMapping("/error")
 	public String handleError() {
 		return "An error has occured";
 	}
 
+	/**
+	 * @return String
+	 */
 	@Override
 	public String getErrorPath() {
 		return "/error";

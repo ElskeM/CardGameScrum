@@ -32,6 +32,10 @@ import com.yrgo.sp.cardgame.domain.Card;
 import com.yrgo.sp.cardgame.rest.CardController;
 
 
+/**
+ * @author elske
+ * Tests of all methods in the CardController Class
+ */
 @WebMvcTest(CardController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class CardControllerTest {

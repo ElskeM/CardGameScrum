@@ -3,6 +3,10 @@ package com.yrgo.sp.cardgame.game;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author ptemrz, pontus, simon
+ * Player entity for the game context
+ */
 public class Player {
 
 	private String name;
@@ -11,15 +15,25 @@ public class Player {
 	private int wins = 0;
 	private int missedTurns=0;
 
-	public void addCardToHand(MappedCard card) {
-		hand.add(card);
-	}
 
+	/**
+	 * Constructor for the game player class
+	 * @param name
+	 */
 	public Player(String name) {
 		this.name = name;
 		this.hand = new ArrayList<MappedCard>();
 	}
 
+	/** Method to add a card to the players hand
+	 * @param card
+	 */
+	public void addCardToHand(MappedCard card) {
+		hand.add(card);
+	}
+	
+	// Getter and Setter methods
+	
 	public String getName() {
 		return name;
 	}

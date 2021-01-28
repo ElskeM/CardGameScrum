@@ -31,6 +31,10 @@ import com.yrgo.sp.cardgame.domain.user.Player;
 import com.yrgo.sp.cardgame.domain.user.User;
 import com.yrgo.sp.cardgame.rest.PlayerController;
 
+/**
+ * @author elske
+ * Tests for all methods in the PlayerController CLass
+ */
 @WebMvcTest(PlayerController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class PlayerControllerTest {
