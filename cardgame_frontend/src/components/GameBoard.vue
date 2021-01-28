@@ -156,7 +156,7 @@ export default {
 }
 
 #played-cards {
-  background-image: url("../assets/wood-background.png");
+  background-image: url("../assets/wood-background.png"); /*https://dlpng.com/png/6739547*/
   background-color: grey;
   width: fit-content;
   min-width: 100%;

@@ -39,6 +39,8 @@ export default {
 
   methods: {
     leave() {
+            console.log("LEEEEAVE")
+
       this.$emit("hide");
       this.isFlipped = false;
       this.visible = false;

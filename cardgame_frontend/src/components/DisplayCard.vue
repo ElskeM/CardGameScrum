@@ -2,6 +2,7 @@
     <div class="container">
       <img
         class="card"
+        v-bind:class="{hover : hoverOn}"
         :src="card.frontImage"
         :href="card.frontImage"
         @click="$emit('click', card)"
@@ -12,7 +13,7 @@
 <script>
 export default {
   name: "DisplayCard",
-  props: ["card"],
+  props: ["card", "hoverOn"],
 };
 </script>
 
@@ -32,7 +33,7 @@ img {
   border-radius: 1rem;
 }
 
-.card:hover {
+.hover:hover {
   transform: scale(1.15);
 }
 </style>

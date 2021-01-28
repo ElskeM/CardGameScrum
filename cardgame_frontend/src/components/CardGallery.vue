@@ -6,13 +6,13 @@
         v-for="card in wholeCollection"
         :key="card.id"
       >
-        <DisplayCard :card="card" @click="setBigCard" />
+        <DisplayCard :card="card" @click="setBigCard" :hoverOn="hoverOn" />
       </div>
     </div>
     <BigCardInfo
       :visible="isVisible"
       :bigCard="bigCard"
-      @hide="toggleBigCard"
+      ref="bigcard"
     />
   </div>
 </template>
@@ -40,6 +40,8 @@ export default {
       isVisible: false,
       isBlurred: false,
       bigCard: {},
+      hoverOn: true
+      
     };
   },
 
@@ -53,6 +55,9 @@ export default {
     toggleBigCard() {
       this.isVisible = !this.isVisible;
       this.isBlurred = !this.isBlurred;
+      this.hoverOn = !this.hoverOn
+      this.$refs.bigcard.leave()
+
     },
   },
 };
@@ -72,5 +77,6 @@ export default {
   transition: 0.5s -webkit-filter linear;
   -webkit-filter: blur(5px);
   filter: blur(5px);
+  
 }
 </style>
