@@ -92,8 +92,8 @@ router.beforeEach((to, from, next) => {
     .then(setUserName)
     .catch(() => {
       if (AuthService.isLoggedIn()) {
+        AuthService.logout();
         next("/");
-        Vue.toasted.error("Du har blivit utloggad!");
       }
     });
 });

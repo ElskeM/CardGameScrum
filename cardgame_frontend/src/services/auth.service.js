@@ -20,7 +20,6 @@ class AuthService {
       store.commit("addUser", { username: res.data.username });
     } catch (err) {
       if (err.response.status === 403) {
-        this.logout();
         throw Error("Unauthorized");
       }
     }
