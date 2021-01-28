@@ -360,6 +360,7 @@ export default {
 
 #chat-icon-container:hover {
   cursor: pointer;
+  opacity: 50%
 }
 
 #chat-icon {
@@ -402,8 +403,14 @@ export default {
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  background-color: #2d2f4e;
+
 }
+
+#menu-icon-container:hover {
+  opacity: 50%
+}
+
+
 
 #menu-icon-container img {
   width: 100%;

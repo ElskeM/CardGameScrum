@@ -157,6 +157,7 @@ export default {
 }
 
 #played-cards {
+  background-image: url("../assets/wood-background.png");
   background-color: grey;
 }
 
