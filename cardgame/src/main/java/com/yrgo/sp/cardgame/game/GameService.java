@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.yrgo.sp.cardgame.data.CardRepository;
@@ -21,6 +22,9 @@ public class GameService implements CardGameApi, InactivityListener {
 
 	@Autowired
 	private CardRepository cardData;
+	
+	@Autowired
+	private SimpMessagingTemplate template;
 
 	private Map<Long, Game> games = new HashMap<>();
 
@@ -37,6 +41,7 @@ public class GameService implements CardGameApi, InactivityListener {
 			throw new IllegalStateException("Not enough cards in database to create this game!");
 		}
 		game.addInactivityListener(this);
+		
 		games.put(id, game);
 		return game;
 	}
@@ -77,5 +82,6 @@ public class GameService implements CardGameApi, InactivityListener {
 	@Override
 	public void hasGoneInactive(long gameId) {
 		delete(gameId);		
+		this.template.convertAndSend(("/cardgame/connected/" + gameId), "error");
 	}
 }
