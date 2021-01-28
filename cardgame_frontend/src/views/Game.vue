@@ -2,7 +2,7 @@
   <div>
     <div class="center-text">
       <div class="flex">
-        <div id="gamecontroller">
+        <div id="gamecontroller" v-if="!this.connected">
           <input type="text" v-model="playerName" placeholder="Ditt namn" />
           <button id="btn-start" @click="startGame" v-if="!this.gameId">
             Starta Spel
@@ -22,7 +22,8 @@
 
         <div id="scoreboard" class="game-gui">
           <div v-if="this.connected">
-            <h3>Ansluten till spel: {{ this.gameId }}</h3>
+            <h3>{{ this.playerName }}</h3>
+            <!--<h3>Ansluten till spel: {{ this.gameId }}</h3>-->
             <div v-if="this.gameInfo">
               <span id="matches">
                 Spelade matcher: {{ this.gameInfo.matches }}
@@ -39,18 +40,29 @@
                 </span>
               </div>
             </div>
-            <div v-else>Väntar på andra spelare...</div>
+            <div v-else>
+              Väntar på andra spelare...
+              <div>
+                <span v-if="this.linkToGame">
+                  Länk till spelet:
+                  <a :href="this.linkToGame" target="_blank">
+                    {{ this.linkToGame }}
+                  </a>
+                </span>
+              </div>
+            </div>
           </div>
-          <div v-else>
+          <div v-else class="game-title">
             <h1>KLIMATKOLL</h1>
           </div>
         </div>
         <div class="game-gui" v-if="this.gameInfo">
-          <Timer ref="timer" />
-          <span v-if="this.gameState.player">
-            Missade rundor: {{ this.gameState.player.missedTurns }}<br />
-            Tre missade rundor i rad resulterar i förlust!
-          </span>
+          <Timer
+            ref="timer"
+            :playerTurn="this.$refs.gameboard.playerTurn"
+            :missedTurns="this.gameState.player.missedTurns"
+            v-if="this.gameState.player"
+          />
         </div>
       </div>
 
@@ -245,6 +257,7 @@ export default {
     endGame() {
       this.gameEnd = true;
       this.$refs.timer.stopTimer();
+      this.timerOn = false;
       this.$refs.gameboard.setPlayerTurn(false);
       this.$confirm(
         "Vill du spela en gång till?",
@@ -312,13 +325,21 @@ export default {
   border: 1px solid;
   margin: 10px;
   padding: 10px;
-  width: fit-content;
+  width: 320px;
+  display: table;
+  height: 100px;
 }
+.game-gui p {
+  margin-top: 0px;
+  margin-bottom: 5px;
+  font-weight: bolder;
+}
+
 #header img {
   width: 10em;
 }
 #scoreboard {
-  min-width: 320px;
+  position: relative;
 }
 
 #chat-icon-container {
@@ -402,7 +423,9 @@ export default {
 h3 {
   margin: 5px;
 }
-
+#turn-shower {
+  text-align: center;
+}
 #btn-start {
   width: 4rem;
   height: 4rem;
@@ -420,5 +443,13 @@ h3 {
   position: fixed;
   bottom: 0%;
   left: 1%;
+}
+.game-title {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 </style>

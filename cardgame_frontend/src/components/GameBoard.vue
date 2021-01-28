@@ -1,8 +1,31 @@
 <template>
-  <div>
-    <div class="center-text">
-      <span v-if="this.playerTurn">Din tur</span>
-      <span v-else>Andra spelares tur</span>
+  <!-- https://learnvue.co/2020/01/how-to-add-drag-and-drop-to-your-vuejs-project/-->
+  <div class="board">
+    <div class="scrollbar">
+      <draggable
+        class="card-holder"
+        group="cards"
+        :disabled="allowPlay()"
+        v-bind="dragOptions"
+        @end="onDrop"
+        id="played-cards"
+        v-bind:class="{ correct: correctMove, wrong: wrongMove }"
+        tag="ul"
+      >
+      <!-- Här hamnar de spelade korten. Är även en drag and drop-yta som bara blir aktiv om spelaren drar ett kort från handen. -->
+
+         <transition-group type="transition" name="card-holder" id="played">
+          <li
+            v-for="card in playedCards"
+            :value="card.id"
+            :key="card.id"
+            class="card"
+          >
+              <img class="card-image" :src="card.backImage" />
+          </li>
+        </transition-group>
+      </draggable>
+   
     </div>
     <!-- https://learnvue.co/2020/01/how-to-add-drag-and-drop-to-your-vuejs-project/-->
     <div class="board">
@@ -19,51 +42,35 @@
         >
           <!-- Här hamnar de spelade korten. Är även en drag and drop-yta som bara blir aktiv om spelaren drar ett kort från handen. -->
 
-          <transition-group type="transition" name="card-holder" id="played">
-            <li
-              v-for="card in playedCards"
-              :value="card.id"
-              :key="card.id"
-              class="card list-group-item player-card"
-              id="hoola"
-            >
-              <img class="card-image" :src="card.backImage" />
-            </li>
-          </transition-group>
-        </draggable>
-      </div>
-
-      <div id="player-board">
-        <draggable
-          group="cards"
-          class="card-holder"
-          @start="dragging = true"
-          @end="onDrop"
-          v-bind="dragOptions"
-          id="player-hand"
-        >
-          <!-- Korten i spelarens hand. Drag and drop-funktionen är bara aktiv om det är spelarens tur. -->
-          <transition-group type="transition" name="card-holder" id="hand">
-            <li
-              v-for="card in playerHand"
-              :value="card.id"
-              :key="card.id"
-              class="card list-group-item player-card"
-            >
+    <div id="player-board"> 
+       <draggable
+        group="cards"
+        class="card-holder"
+     
+        @start="dragging = true"
+        @end="onDrop"
+        v-bind="dragOptions"
+        id="player-hand"
+        tag="ul"
+      >
+      <!-- Korten i spelarens hand. Drag and drop-funktionen är bara aktiv om det är spelarens tur. -->
+        <transition-group type="transition" name="card-holder" id="hand">
+          <li
+            v-for="card in playerHand"
+            :value="card.id"
+            :key="card.id"
+            class="card"
+          >
               <img class="card-image" :src="card.frontImage" />
-            </li>
-          </transition-group>
-        </draggable>
-
-        <div id="muck-card">
-          <MiniCardGallery
-            :muck="muck"
-            id="mini-gallery"
-            :playedCards="playedCards"
-            ref="carousel"
-          />
-        </div>
-      </div>
+          </li>
+        </transition-group>
+      </draggable>
+      <div id="muck-card">
+          <MiniCardGallery 
+          :muck="muck" id="mini-gallery" 
+          :playedCards ="playedCards"
+          ref="carousel"/>
+      </div>  
     </div>
   </div>
 </template>
@@ -141,6 +148,11 @@ export default {
 </script>
 
 <style scoped>
+#hand{
+  min-width: 200px;
+  min-height: 200px ;
+}
+
 .card {
   display: inline-block;
   margin: 10px;
@@ -155,6 +167,7 @@ export default {
 .card-holder {
   text-align: center;
   white-space: nowrap;
+  padding: 0em;
 }
 
 #played-cards {

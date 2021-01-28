@@ -32,6 +32,10 @@ import com.yrgo.sp.cardgame.domain.Category;
 import com.yrgo.sp.cardgame.exception.CardNotFoundException;
 import com.yrgo.sp.cardgame.security.annotations.IsCreator;
 
+/**
+ * @author pontus, simon
+ * CardController entity which takes care of the cross origin and mapping for the client project
+ */
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")
 public class CardController {
@@ -44,6 +48,11 @@ public class CardController {
 	@Autowired
 	private CategoryRepository categoryData;
 
+	/**
+	 * Method that calls upon the findall method in the cardRepository
+	 * If the list is empty an no content httpstatus is returned
+	 * @return ResponseEntity with Cardlist with all cards
+	 */
 	@GetMapping("/allCards")
 	public ResponseEntity<CardList> allCards() {
 		LOG.info("Method findAllCards called");
@@ -60,6 +69,12 @@ public class CardController {
 		return new ResponseEntity<>(cards, HttpStatus.OK);
 	}
 
+	/**
+	 * Method that returns card images as an array of bytes to the client
+	 * @param String name
+	 * @return Array of bytes
+	 * @throws IOException
+	 */
 	@GetMapping(value = "/images/{name}", produces = MediaType.IMAGE_JPEG_VALUE)
 	@ResponseBody
 	public byte[] getImage(@PathVariable String name) throws IOException {
@@ -74,6 +89,12 @@ public class CardController {
 		return allBytes;
 	}
 
+	/**
+	 * Method to find a card with a specific id
+	 * If the card doesn't exist, a cardnotfoundexception will be casted
+	 * @param id
+	 * @return ResponseEntity and found card
+	 */
 	@GetMapping("/card/{id}")
 	public ResponseEntity<Card> findCard(@PathVariable long id) {
 		LOG.info("Method findCard called with following parameter: " + id);
@@ -87,6 +108,11 @@ public class CardController {
 		return new ResponseEntity<>(foundCard.get(), HttpStatus.OK);
 	}
 
+	/**
+	 * Method to create a new card in the db, can only be called when one has a creator role
+	 * @param card
+	 * @return ResponseEntity and the uri to new card
+	 */
 	@IsCreator
 	@PostMapping("/newCard")
 	public ResponseEntity<Card> createNewCard(@RequestBody Card card) {
@@ -102,6 +128,12 @@ public class CardController {
 		return ResponseEntity.created(location).build();
 	}
 
+	/**
+	 * Method to import the cards in the form of json data into the db 
+	 * This method can be used to fill the database with cards
+	 * @param cards
+	 * @return String
+	 */
 	@PostMapping("/import_json")
 	public String importJSONData(@RequestBody List<Card> cards) {
 		LOG.info("Method importJSONData called with following parameter: " + cards.toString());
@@ -120,6 +152,12 @@ public class CardController {
 		return "Success!";
 	}
 
+	/**
+	 * Method to update a card in the db. It can only be called when one has a creator role.
+	 * @param card
+	 * @param id
+	 * @return ResponseEntity and the updated card
+	 */
 	@IsCreator
 	@PutMapping("/card/{id}")
 	public ResponseEntity<Object> updateCard(@RequestBody Card card, @PathVariable Long id) {
@@ -144,6 +182,11 @@ public class CardController {
 		return new ResponseEntity<>(card, HttpStatus.OK);
 	}
 
+	/**
+	 * Method to delete a card from the db. This can only be done when one has a creator role.
+	 * @param id
+	 * @return ResponseEntity
+	 */
 	@IsCreator
 	@DeleteMapping("/card/{id}")
 	public ResponseEntity<HttpStatus> deleteCard(@PathVariable Long id) {
