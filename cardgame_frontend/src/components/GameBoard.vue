@@ -112,7 +112,6 @@ export default {
       this.dragging = false;
     },
     setPlayerTurn(turn) {
-      console.log(turn);
       this.playerTurn = turn;
       if (turn) {
         this.correctMove = false;
