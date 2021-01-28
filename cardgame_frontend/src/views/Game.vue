@@ -193,6 +193,17 @@ export default {
       this.$refs.gameboard.setPlayerTurn(bool);
     },
 
+    disconnect(error = false) {
+      this.stompClient.disconnect();
+      this.socket.close();
+      if (error) {
+        this.$toasted.error("SPELET HAR AVSLUTATS");
+      } else {
+        this.$toasted.info("Spelet är slut");
+      }
+      setTimeout(() => this.$router.push("/"), 5000);
+    },
+
     subscriptions() {
       this.stompClient.subscribe(
         backend.STOMP.GAMEINFO + `/${this.gameId}`,
@@ -204,8 +215,12 @@ export default {
       this.stompClient.subscribe(
         backend.STOMP.GAMESTATE_CHANGED + `/${this.gameId}/${this.playerName}`,
         (tick) => {
-          this.gameState = JSON.parse(tick.body);
-          this.updateView();
+          if(tick.body != "error"){
+            this.gameState = JSON.parse(tick.body);
+            this.updateView();
+          } else {
+            this.disconnect(true);
+          }
         }
       );
 
@@ -227,7 +242,10 @@ export default {
       //När den andra spelaren går med görs en emit till APP som då gömmer nav-baren högst upp i fönstret
       this.stompClient.subscribe(
         backend.STOMP.BOTH_PLAYERS_CONNECTED + `/${this.gameId}`,
-        () => {
+        (message) => {
+          if(message.body === "error"){
+            this.disconnect(true);
+          }
           this.$emit("hide");
         }
       );
