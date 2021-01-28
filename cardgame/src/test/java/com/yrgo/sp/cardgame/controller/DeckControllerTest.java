@@ -35,6 +35,10 @@ import com.yrgo.sp.cardgame.domain.Card;
 import com.yrgo.sp.cardgame.domain.Deck;
 import com.yrgo.sp.cardgame.rest.DeckController;
 
+/**
+ * @author elske
+ * Tests for all methods in the DeckController Class
+ */
 @WebMvcTest(DeckController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class DeckControllerTest {

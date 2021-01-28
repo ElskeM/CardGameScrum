@@ -32,6 +32,10 @@ import com.yrgo.sp.cardgame.data.CategoryRepository;
 import com.yrgo.sp.cardgame.domain.Category;
 import com.yrgo.sp.cardgame.rest.CategoryController;
 
+/**
+ * @author elske
+ * Tests for all methods in the CategoryController Class
+ */
 @WebMvcTest(CategoryController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class CategoryControllerTest {
