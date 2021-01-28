@@ -147,7 +147,7 @@ export default {
 
   /* Size should match the parent container */
   width: 95px;
-  height: -webkit-fill-available;
+  height: 95px;
   /* Keep the label aligned to the top */
   top: 0;
   /* Create a flexible box that centers content vertically and horizontally */
