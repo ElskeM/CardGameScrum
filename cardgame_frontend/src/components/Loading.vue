@@ -15,8 +15,8 @@
         animation-name: dot1-animation;
         animation-duration: 1s;
         animation-iteration-count: infinite;
-        animation-timing-function: ease-in-out;
-    }
+        animation-delay: 0.1s;
+        animation-timing-function: ease-out;    }
 
     @keyframes dot1-animation {
         0%{opacity: 100%}
@@ -28,9 +28,8 @@
         animation-name: dot2-animation;
         animation-duration: 1s;
         animation-iteration-count: infinite;
-        animation-delay: 0.05s;
-        animation-timing-function: ease-in-out;
-
+        animation-delay: 0.2s;
+        animation-timing-function: ease-out;
     }
 
     @keyframes dot2-animation {
@@ -43,8 +42,7 @@
         animation-name: dot3-animation;
         animation-duration: 1s;
         animation-iteration-count: infinite;
-        animation-delay: 0.1s;
-        animation-timing-function: ease-in-out;
+        animation-timing-function: ease-out;
 
     }
 
