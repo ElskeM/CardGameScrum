@@ -6,7 +6,7 @@ import com.yrgo.sp.cardgame.domain.Category;
 
 /**
  * @author ptemrz
- * MappedCard Entity
+ * MappedCard class
  */
 public class MappedCard implements Comparable<MappedCard> {
 

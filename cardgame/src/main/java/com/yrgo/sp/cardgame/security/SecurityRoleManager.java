@@ -10,7 +10,7 @@ import com.yrgo.sp.cardgame.domain.user.SecurityRole;
 
 /**
  * @author ptemrz
- * SecurityRoleManager entity to manage the different available roles in the system
+ * SecurityRoleManager class to manage the different available roles in the system
  *
  */
 @Component("SecurityRoleManager")

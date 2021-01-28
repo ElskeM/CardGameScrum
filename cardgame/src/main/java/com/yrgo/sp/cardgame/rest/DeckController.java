@@ -28,7 +28,7 @@ import com.yrgo.sp.cardgame.exception.DeckNotFoundException;
 
 /**
  * @author ptemrz
- * Deckcontroller entity that takes care of the crossorigin and mapping for the client project
+ * Deckcontroller class that takes care of the crossorigin and mapping for the client project
  *
  */
 @RestController

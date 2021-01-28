@@ -16,7 +16,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
  * @author ptemrz
- * JwtTokenUtil entity
+ * JwtTokenUtil class
  */
 @Component
 public class JwtTokenUtil implements Serializable {

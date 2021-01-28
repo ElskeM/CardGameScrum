@@ -34,7 +34,7 @@ import com.yrgo.sp.cardgame.security.annotations.IsCreator;
 
 /**
  * @author pontus, simon
- * CardController entity which takes care of the cross origin and mapping for the client project
+ * CardController class which takes care of the cross origin and mapping for the client project
  */
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")

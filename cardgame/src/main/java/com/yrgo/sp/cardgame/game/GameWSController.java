@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 
 /**
  * @author ptemrz, pontus, simon
- * GameWSController entity which implements KlimatkollListener interface
+ * GameWSController class which implements KlimatkollListener interface
  */
 @Controller
 public class GameWSController implements KlimatkollListener {

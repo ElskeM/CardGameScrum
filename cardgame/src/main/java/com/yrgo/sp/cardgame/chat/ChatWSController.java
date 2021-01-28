@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 
 /**
  * @author pontus
- * ChatWSController entity which takes care of the chatmessage mapping for the client project 
+ * ChatWSController class which takes care of the chatmessage mapping for the client project 
  *
  */
 @Controller

@@ -12,7 +12,7 @@ import com.yrgo.sp.cardgame.data.CardRepository;
 
 /**
  * @author ptemrz, pontus, simon
- * GameService Entity which implements CardGameApi interface
+ * GameService class which implements CardGameApi interface
  *
  */
 @Service

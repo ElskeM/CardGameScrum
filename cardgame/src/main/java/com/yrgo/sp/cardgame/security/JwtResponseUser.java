@@ -8,7 +8,7 @@ import com.yrgo.sp.cardgame.domain.user.User;
 
 /**
  * @author ptemrz
- * JwtResponseUser entity
+ * JwtResponseUser class
  */
 public class JwtResponseUser {
 

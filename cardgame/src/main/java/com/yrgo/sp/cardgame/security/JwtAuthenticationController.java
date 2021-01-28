@@ -20,7 +20,7 @@ import com.yrgo.sp.cardgame.domain.user.User;
 
 /**
  * @author ptemrz
- * Controller entity for JWT Authentication
+ * Controller class for JWT Authentication
  */
 @RestController
 @CrossOrigin

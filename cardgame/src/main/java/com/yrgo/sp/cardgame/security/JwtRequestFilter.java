@@ -19,7 +19,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 
 /**
  * @author ptemrz
- * JwtRequestFilter entity, extends OncePerRequestFilter, to filter jwtrequests
+ * JwtRequestFilter class, extends OncePerRequestFilter, to filter jwtrequests
  */
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {

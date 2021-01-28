@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author pontus
- * ServerHealthController entity to check on the servers status
+ * ServerHealthController class to check on the servers status
  */
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")

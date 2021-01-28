@@ -9,7 +9,7 @@ import com.yrgo.sp.cardgame.data.UserRepository;
 
 /**
  * @author ptemrz
- * JwtUserDetailService entity, implements UserDetailService interface
+ * JwtUserDetailService class, implements UserDetailService interface
  */
 @Service
 public class JwtUserDetailsService implements UserDetailsService {

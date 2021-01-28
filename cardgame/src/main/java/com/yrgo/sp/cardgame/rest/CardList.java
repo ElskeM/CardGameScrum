@@ -7,7 +7,7 @@ import com.yrgo.sp.cardgame.domain.Card;
 
 /**
  * @author ptemrz
- * CardList Entity
+ * CardList class
  *
  */
 @JsonRootName(value = "cards")
