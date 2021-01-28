@@ -2,7 +2,7 @@ package com.yrgo.sp.cardgame.chat;
 
 /**
  * @author pontus
- * Chatmessage entity
+ * Chatmessage class
  */
 public class ChatMessage {
 	

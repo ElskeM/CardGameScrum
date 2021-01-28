@@ -2,7 +2,7 @@ package com.yrgo.sp.cardgame.game;
 
 /**
  * @author ptemrz
- * GameInfoPlayer entity, which creates gameinfodetails on a player level
+ * GameInfoPlayer class, which creates gameinfodetails on a player level
  *
  */
 public class GameInfoPlayer {

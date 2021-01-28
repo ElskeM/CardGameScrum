@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 
 /**
  * @author ptemrz, pontus, simon
- *
+ * GameWSController class which implements KlimatkollListener interface
  */
 @Controller
 public class GameWSController implements KlimatkollListener {
@@ -24,7 +24,12 @@ public class GameWSController implements KlimatkollListener {
 	@Autowired
 	private SimpMessagingTemplate template;
 
-	// Webklienten prenumererar på dessa med id:t ifrån Gameinstansen
+	/**
+	 * Webklienten prenumererar på dessa med id:t ifrån Gameinstansen
+	 * @param id
+	 * @param playerName
+	 * @return
+	 */
 	@MessageMapping("/connected/{id}/{playerName}")
 	@SendTo("/cardgame/connected/{id}")
 	public boolean secondPlayerConnected(@DestinationVariable long id, @DestinationVariable String playerName) {
@@ -39,11 +44,11 @@ public class GameWSController implements KlimatkollListener {
 	}
 	
 
-	/*
+	/**
 	 * Denna prenumererar båda spelarna på och får på så vis tillgång till spelets
 	 * startkort till spelets startkort så snart spelare 2 anslutit sig till spelet
+	 * @param gameId
 	 */
-	// @SendTo("/cardgame/startCard/{id}")
 	public void placeInitialCard(long gameId) {
 		System.out.println("DEALING FIRST CARD");
 		Game g = game.getGameById(gameId).orElseThrow();
@@ -59,11 +64,23 @@ public class GameWSController implements KlimatkollListener {
 
 	}
 
+	/**
+	 * Method to send the gameinfo (details) to the client
+	 * @param game
+	 */
 	private void sendGameInfo(Game g) {
 		this.template.convertAndSend(("/cardgame/gameInfo/" + g.getId()), new GameInfoDetails(g));
 		
 	}
 
+	/**
+	 * Method that registers the played card by a player, 
+	 * sets the turn to the other player and updates the game accordingly.
+	 * @param move
+	 * @param id
+	 * @param playerName
+	 * @return
+	 */
 	@MessageMapping("/connected/playerMove/{id}/{playerName}")
 	@SendTo("/cardgame/madeMove/{id}/{playerName}")
 	public boolean cardPlayed(PlayerMove move, @DestinationVariable long id,
@@ -83,6 +100,11 @@ public class GameWSController implements KlimatkollListener {
 		return correctMove;
 	}
 
+	/**
+	 * method that keeps track if a game is draw 
+	 * (both players have played their last card in the same round)
+	 * @param game
+	 */
 	@Override
 	public void gameIsDraw(Game g) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -93,6 +115,9 @@ public class GameWSController implements KlimatkollListener {
 		sendPlayerData(g, map);
 	}
 
+	/** Method to send game updates to the client.
+	 * @param game
+	 */
 	private void sendGameUpdate(Game g) {
 		HashMap<String, Object> map = createGameExportMap(g);
 		String winner = g.checkWin();
@@ -102,6 +127,12 @@ public class GameWSController implements KlimatkollListener {
 		}
 		sendPlayerData(g, map);
 	}
+	
+	/** 
+	 * Method to send playerdata to the client 
+	 * @param game
+	 * @param map
+	 */
 	private void sendPlayerData(Game g, HashMap<String, Object> map) {
 		for (Player player : g.getPlayers()) {
 			map.replace("player", player);
@@ -109,11 +140,20 @@ public class GameWSController implements KlimatkollListener {
 		}
 
 	}
+	/**
+	 * method sends an update to the client when the timer runs out
+	 * @param game
+	 */
 	@Override
 	public void timerRunOut(Game g) {
 		sendGameUpdate(g);
 	}
 
+	/**
+	 * Method sends updated info after a player has missed their turn three times in a row
+	 * The other player automatically wins then.
+	 *@param game, player
+	 */
 	@Override
 	public void walkover(Game g, Player winner) {
 		HashMap<String, Object> map = createGameExportMap(g);
@@ -122,6 +162,11 @@ public class GameWSController implements KlimatkollListener {
 		sendPlayerData(g, map);
 	}
 	
+	/**
+	 * method returns a hashmap with table, muck and player info
+	 * @param game
+	 * @return hashmap
+	 */
 	private HashMap<String, Object> createGameExportMap(Game g){
 		HashMap<String, Object> map = new HashMap<String, Object>();// Innehåller informationen som skickas till klienten
 		map.put("table", g.getTable());
@@ -129,32 +174,5 @@ public class GameWSController implements KlimatkollListener {
 		map.put("player", null);
 		return map;
 	}
-
-	/*
-	 * Kallas så fort spelaren drar sitt kort. Om true har kommit två gånger via
-	 * prenumerationen så har båda spelarna dragit ett kort och spelet kan starta
-	 */
-
-	/*
-	 * 
-	 * @MessageMapping("{id}/{playerName}/drawCard")
-	 * 
-	 * @SendTo("/cardgame/drawn/{id}") public boolean drawCard(@DestinationVariable
-	 * long id, @DestinationVariable String playerName) { Game g =
-	 * game.getGameById(id); // g.giveCardTo(null);
-	 * 
-	 * return true; }
-	 * 
-	 */
-
-	/*
-	 * Kallas när spelaren lägger ut sitt kort
-	 * 
-	 * @MessageMapping("{id}/putCard")
-	 * 
-	 * @SendTo("/topic/put/{id}") public Card putCard(@DestinationVariable String
-	 * id, Card card){ return card; }
-	 * 
-	 */
 
 }

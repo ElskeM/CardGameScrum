@@ -4,17 +4,44 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yrgo.sp.cardgame.domain.Card;
 import com.yrgo.sp.cardgame.domain.Category;
 
+/**
+ * @author ptemrz
+ * MappedCard class
+ */
 public class MappedCard implements Comparable<MappedCard> {
 
 	@JsonIgnore
 	Card card;
 	Long gameId;
 
+	/**
+	 * Constructor for the MappedCard class
+	 * @param card
+	 * @param id
+	 */
 	public MappedCard(Card c, Long id) {
 		this.card = c;
 		this.gameId = id;
 	}
 
+	/**
+	 * CompareTo method
+	 */
+	@Override
+	public int compareTo(MappedCard o) {
+		return card.compareTo(o.getCard());
+	}
+	
+	/**
+	 * ToString Method
+	 */
+	@Override
+	public String toString() {
+		return card.toString();
+	}
+	
+	// Getter and Setter methods
+	
 	public Long getId() {
 		return gameId;
 	}
@@ -23,15 +50,6 @@ public class MappedCard implements Comparable<MappedCard> {
 		return card;
 	}
 
-	@Override
-	public int compareTo(MappedCard o) {
-		return card.compareTo(o.getCard());
-	}
-
-	@Override
-	public String toString() {
-		return card.toString();
-	}
 
 	public String getTitle() {
 		return card.getTitle();

@@ -1,15 +1,21 @@
 package com.yrgo.sp.cardgame.game;
 
+/**
+ * @author pontus
+ * Playermove class
+ */
 public class PlayerMove {
 	
 	private String playerName;
 	private long cardId;
 	private int cardPosition;
 	
-	public PlayerMove() {
-		
-	}
+	/**
+	 * Empty constructor
+	 */
+	public PlayerMove() {}
 	
+	// Getter and Setter methods
 	
 	public String getPlayerName() {
 		return playerName;

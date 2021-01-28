@@ -7,7 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * @author ptemrz
- * Entity for passwordconfiguration 
+ * Passwordconfiguration class 
  */
 @Configuration
 public class PasswordConfiguration {

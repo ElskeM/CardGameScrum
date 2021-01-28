@@ -26,8 +26,13 @@ import com.yrgo.sp.cardgame.data.DeckRepository;
 import com.yrgo.sp.cardgame.domain.Deck;
 import com.yrgo.sp.cardgame.exception.DeckNotFoundException;
 
+/**
+ * @author ptemrz
+ * Deckcontroller class that takes care of the crossorigin and mapping for the client project
+ *
+ */
 @RestController
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8081") 
 public class DeckController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DeckController.class);
@@ -38,6 +43,12 @@ public class DeckController {
 	@Autowired
 	private CardRepository cardData;
 
+	/**
+	 * Methods calls on the findAll method in the deck repository.
+	 * If the method returns an empty list, a no content response entity is returned to the client
+	 * @param String name
+	 * @return ResponseEntity and a list of decks
+	 */
 	@GetMapping("/decks")
 	public ResponseEntity<List<Deck>> decks(@RequestParam(required = false) String name) {
 		//TODO: implement searchByName
@@ -53,6 +64,12 @@ public class DeckController {
 		return new ResponseEntity<>(allDecks, HttpStatus.OK);
 	}
 
+	/**
+	 * method calls upon the findbyid method in the deck repository. 
+	 * If the deck isn't found, a decknotfoundexception will be casted
+	 * @param id
+	 * @return ResponseEntity and found deck
+	 */
 	@GetMapping("/decks/{id}")
 	public ResponseEntity<Object> findDeck(@PathVariable long id) {
 		LOG.info("Method findDeck called with following parameter: " + id);
@@ -66,6 +83,11 @@ public class DeckController {
 		return new ResponseEntity<>(foundDeck.get(), HttpStatus.OK);
 	}
 
+	/**
+	 * Method to create a new deck
+	 * @param deck 
+	 * @return ResponseEntity and the created deck
+	 */
 	@PostMapping("/newDeck")
 	public ResponseEntity<Object> createDeck(@RequestBody Deck deck) {
 		LOG.info("Method createDeck called with following parameter: " + deck.toString());
@@ -80,6 +102,14 @@ public class DeckController {
 		return ResponseEntity.created(location).build();
 	}
 
+	/**
+	 * Method to update a deck. 
+	 * It calls upon the findbyid method from the deck repository to fetch the deck.
+	 * If the deck is not found, a decknotfoundexception will be casted
+	 * @param deck
+	 * @param id
+	 * @return ResponseEntity and the updated deck
+	 */
 	@PutMapping("/decks/{id}")
 	public ResponseEntity<Object> updateDeck(@RequestBody Deck deck, @PathVariable Long id) {
 		LOG.info("Method updateDeck called for Deck with id: " + id);
@@ -104,6 +134,12 @@ public class DeckController {
 		return new ResponseEntity<>(deck, HttpStatus.OK);
 	}
 
+	/**
+	 * Method to delete a deck from the db
+	 * It calls upon the deletebyid method in the deckrepository
+	 * @param id
+	 * @return ResponseEntity
+	 */
 	@DeleteMapping("/decks/{id}")
 	public ResponseEntity<HttpStatus> deleteDeck(@PathVariable Long id) {
 		LOG.info("Method deleteDeck called for Deck with id: " + id);
@@ -113,6 +149,10 @@ public class DeckController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
+	/** 
+	 * Method to set up decks in the db
+	 * @return String
+	 */
 	@GetMapping("/decks/setUpData")
 	public String setUpData() {
 

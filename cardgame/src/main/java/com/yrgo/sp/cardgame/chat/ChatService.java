@@ -6,7 +6,7 @@ import java.util.Map;
 
 /**
  * @author pontus
- * Chatservice entity
+ * Chatservice class
  *
  */
 public class ChatService {

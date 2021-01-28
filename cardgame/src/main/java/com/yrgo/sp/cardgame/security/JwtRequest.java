@@ -2,6 +2,10 @@ package com.yrgo.sp.cardgame.security;
 
 import java.io.Serializable;
 
+/**
+ * @author ptemrz
+ * JwtRequest class
+ */
 public class JwtRequest implements Serializable {
 
 	private static final long serialVersionUID = 5926468583005150707L;
@@ -9,16 +13,26 @@ public class JwtRequest implements Serializable {
 	private String username;
 	private String password;
 
-//need default constructor for JSON Parsing
+	
+	/**
+	 * Default constructor for JSON Parsing 
+	 */
 	public JwtRequest() {
 
 	}
 
+	/**
+	 * Constructor for jwtrequest
+	 * @param username
+	 * @param password
+	 */
 	public JwtRequest(String username, String password) {
 		this.setUsername(username);
 		this.setPassword(password);
 	}
 
+	// Getter and Setter methods
+	
 	public String getUsername() {
 		return this.username;
 	}

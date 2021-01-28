@@ -3,7 +3,7 @@
   <div class="board">
     <div class="scrollbar">
       <draggable
-        class="played-cards card-holder"
+        class="card-holder"
         group="cards"
         :disabled="allowPlay()"
         v-bind="dragOptions"
@@ -13,35 +13,17 @@
         tag="ul"
       >
       <!-- Här hamnar de spelade korten. Är även en drag and drop-yta som bara blir aktiv om spelaren drar ett kort från handen. -->
-  <!--      <div
-          v-for="card in playedCards"
-          :value="card.id"
-          :key="card.id"
-          class="card"
-        >
-          <div>
-            <img class="card-image" :src="card.backImage" />
-          </div>
-        </div>  -->
-
-
 
          <transition-group type="transition" name="card-holder" id="played">
           <li
             v-for="card in playedCards"
             :value="card.id"
             :key="card.id"
-            class="card list-group-item player-card"
-            id="hoola"
+            class="card"
           >
-      
               <img class="card-image" :src="card.backImage" />
-      
           </li>
         </transition-group>
-
-      
-
       </draggable>
    
     </div>
@@ -55,6 +37,7 @@
         @end="onDrop"
         v-bind="dragOptions"
         id="player-hand"
+        tag="ul"
       >
       <!-- Korten i spelarens hand. Drag and drop-funktionen är bara aktiv om det är spelarens tur. -->
         <transition-group type="transition" name="card-holder" id="hand">
@@ -62,17 +45,12 @@
             v-for="card in playerHand"
             :value="card.id"
             :key="card.id"
-            class="card list-group-item player-card"
+            class="card"
           >
               <img class="card-image" :src="card.frontImage" />
           </li>
         </transition-group>
       </draggable>
-
-
-
-
-
       <div id="muck-card">
           <MiniCardGallery 
           :muck="muck" id="mini-gallery" 
@@ -159,8 +137,10 @@ export default {
 </script>
 
 <style scoped>
-
-
+#hand{
+  min-width: 200px;
+  min-height: 200px ;
+}
 
 .card {
   display: inline-block;
@@ -177,6 +157,7 @@ export default {
 .card-holder {
   text-align: center;
   white-space: nowrap;
+  padding: 0em;
 }
 
 #played-cards {
@@ -186,7 +167,6 @@ export default {
 .correct {
   animation-name: correctmove;
   animation-duration: 1s;
-
 }
 
 @keyframes correctmove {

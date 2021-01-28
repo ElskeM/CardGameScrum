@@ -12,7 +12,7 @@ import com.yrgo.sp.cardgame.data.CardRepository;
 
 /**
  * @author ptemrz, pontus, simon
- * GameService Entity which implements CardGameApi interface
+ * GameService class which implements CardGameApi interface
  *
  */
 @Service
@@ -49,7 +49,7 @@ public class GameService implements CardGameApi {
 		return Optional.ofNullable(games.get(id));
 	}
 	
-	/** @ToDo: method needs to be assessed! 
+	/** @deprecated
 	 * implementation of the placecard method
 	 * @param gameid
 	 */

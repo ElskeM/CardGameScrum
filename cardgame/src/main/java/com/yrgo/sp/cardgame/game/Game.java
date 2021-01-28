@@ -13,7 +13,7 @@ import javax.swing.Timer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- * @author elske, ptemrz, pontus, simon. 
+ * @author elske, ptemrz, pontus, simon.
  * Entity for Game class, which contains all methods to play a game.
  *
  */
@@ -49,7 +49,7 @@ public class Game implements ActionListener {
 		this.minCards = numberOfPlayers * 3 + 2;
 		this.table = new ArrayList<MappedCard>();
 		this.muck = new LinkedList<MappedCard>();
-		
+
 		// skapar en deck som fylls med kort i Decks konstruktor
 		this.deck = new Deck();
 		this.id = id;
@@ -68,7 +68,7 @@ public class Game implements ActionListener {
 		this.table.clear();
 		this.muck.clear();
 		turns = 0;
-		
+
 		// Draw two cards that will be on the table at the start of the game
 		this.table.add(this.deck.draw());
 		this.table.add(this.deck.draw());
@@ -109,11 +109,11 @@ public class Game implements ActionListener {
 	/**
 	 * Adds a card to the table if the card was correctly placed, otherwise it ends
 	 * up in the muck.
-	 * 
+	 *
 	 * @param player
 	 * @param cardId
 	 * @param index  of the placement of the new card.
-	 * @return A boolean indicating if it was if it is the players turn.
+	 * @return A boolean indicating if the move was correct.
 	 */
 	public boolean makeMove(Player player, long cardId, int index) {
 		if (!player.isTurn()) {// Exception av slag här va? Det var inte den här spelarens tur!
@@ -122,29 +122,30 @@ public class Game implements ActionListener {
 
 		timer.stop();
 		player.resetMissedTurns();
-		
+
 		Optional<MappedCard> pc = player.getHand()
 				.stream()
 				.filter(card -> card.getId() == cardId)
 				.findFirst();
-		
+
 		MappedCard playedCard = pc.get();
 		player.getHand().remove(playedCard);
 		table.add(index, playedCard);
-		
+
 		List<MappedCard> temp = new ArrayList<MappedCard>(table);
 		Collections.sort(table);
-		
+
 		if (!(table.equals(temp))) {
 			table.remove(playedCard);
 			muck.push(playedCard);
 			try {
 
 				player.addCardToHand(deck.draw());
+				timer.restart();
 				return false;
 			} catch (IllegalArgumentException e) {
 				// Deck is empty
-				// DRAW
+				// Game is a DRAW
 				for (KlimatkollListener listener : gameListener) {
 					listener.gameIsDraw(this);
 				}
@@ -159,7 +160,7 @@ public class Game implements ActionListener {
 	 * Checks if a players hand is empty and thus is the winner. If more than one
 	 * player places their last card during the same turn, these players draws one
 	 * more card. If the draw pile depletes the game ends as a draw.
-	 * 
+	 *
 	 * @return The name of the winner
 	 */
 	public String checkWin() {
@@ -203,7 +204,7 @@ public class Game implements ActionListener {
 	public void changeTurnForPlayers() {
 		Player currentPlayer = getCurrentPlayer();
 		currentPlayer.setTurn(false);
-		
+
 		if (players.size() > (players.indexOf(currentPlayer) + 1)) {
 			players.get(players.indexOf(currentPlayer) + 1).setTurn(true);
 
@@ -227,27 +228,6 @@ public class Game implements ActionListener {
 		}
 		return false;
 	}
-
-	
-	/**
-	 * @deprecated
-	 * @return String confirmation
-	 */
-	public String startGame() {
-
-		while (players.size() != 2) {
-			try {
-				Thread.sleep(500);
-				System.out.println("HEEEEEEEJ");
-			} catch (InterruptedException e) {
-
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return "ok";
-	}
-
 
 	public void addGameListener(KlimatkollListener listener) {
 		gameListener.add(listener);
@@ -325,11 +305,11 @@ public class Game implements ActionListener {
 	public int getCounter() {
 		return replayCounter;
 	}
-	
+
 	public int getMinCards() {
 		return this.minCards;
 	}
-	
+
 	public List<MappedCard> getTable() {
 		return this.table;
 	}

@@ -37,7 +37,7 @@ import com.yrgo.sp.cardgame.security.annotations.IsPlayer;
 
 /**
  * @author elske
- * PlayerController entity that handles and maps all requests from the frontend project
+ * PlayerController class that handles and maps all requests from the frontend project
  */
 @DependsOn("SecurityRoleManager")
 @RestController
