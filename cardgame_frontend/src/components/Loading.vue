@@ -15,7 +15,7 @@
         animation-name: dot1-animation;
         animation-duration: 1s;
         animation-iteration-count: infinite;
-        animation-delay: 0.1s;
+        animation-delay: 0.33s;
         animation-timing-function: ease-out;    }
 
     @keyframes dot1-animation {
@@ -28,7 +28,7 @@
         animation-name: dot2-animation;
         animation-duration: 1s;
         animation-iteration-count: infinite;
-        animation-delay: 0.2s;
+        animation-delay: 0.66s;
         animation-timing-function: ease-out;
     }
 

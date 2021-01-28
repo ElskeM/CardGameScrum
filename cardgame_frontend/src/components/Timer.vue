@@ -28,7 +28,7 @@
     </div>
     <span id="timer-info">
       <p v-if="this.playerTurn" :class="remainingPathColor">DIN TUR</p>
-      <p v-else>ANNAN SPELARES TUR</p>
+      <p v-else>MOTSTÅNDARENS TUR</p>
       Missade rundor: {{ this.missedTurns }}<br />
       Tre missade rundor i rad<br />resulterar i förlust!
     </span>

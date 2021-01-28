@@ -41,7 +41,7 @@
               </div>
             </div>
             <div v-else>
-              Väntar på andra spelare...
+              Väntar på motståndare
               <div>
                 <span v-if="this.linkToGame">
                   Länk till spelet:
