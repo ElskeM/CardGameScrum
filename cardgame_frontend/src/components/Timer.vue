@@ -8,12 +8,7 @@
         xmlns="http://www.w3.org/2000/svg"
       >
         <g class="base-timer__circle">
-          <circle
-            class="base-timer__path-elapsed"
-            cx="50"
-            cy="50"
-            r="46.5"
-          />
+          <circle class="base-timer__path-elapsed" cx="50" cy="50" r="46.5" />
           <path
             :class="remainingPathColor"
             :stroke-dasharray="circleDasharray"
@@ -32,10 +27,7 @@
       </span>
     </div>
     <span id="timer-info">
-      <p
-        v-if="this.playerTurn"
-        :class="remainingPathColor"
-      >DIN TUR</p>
+      <p v-if="this.playerTurn" :class="remainingPathColor">DIN TUR</p>
       <p v-else>ANNAN SPELARES TUR</p>
       Missade rundor: {{ this.missedTurns }}<br />
       Tre missade rundor i rad<br />resulterar i förlust!
@@ -60,8 +52,8 @@ export default {
     playerTurn: Boolean,
     missedTurns: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     timeLeft() {
@@ -118,8 +110,8 @@ export default {
     stopTimer() {
       clearInterval(this.timerInterval);
       this.timerInterval = null;
-    }
-  }
+    },
+  },
 };
 </script>
 
